@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react";
+import { useState, useEffect} from "react";
 import { Container, ContainerTable } from "./styles"
 // components
 import BtnNavigate from "../../../components/btns/btnNavigate"
@@ -17,7 +17,7 @@ import { PiUserListFill , PiHandTapFill  } from "react-icons/pi";
 import { BsCreditCard,  BsFillTelephonePlusFill } from "react-icons/bs";
 import { BiSolidCity } from "react-icons/bi";
 import { HiMiniStar } from "react-icons/hi2";
-import { FaEdit, FaInfoCircle, FaWhatsapp  } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { IoLogoWhatsapp } from "react-icons/io";
 // hooks
