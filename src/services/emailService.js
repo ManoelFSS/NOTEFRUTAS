@@ -1,20 +1,48 @@
-import { getDocs, collection } from "firebase/firestore";
-import {  db } from "../services/firebase";
-const checkEmailExists = async (email,  setMessege) => {
-    try {
-        // Verifica se o e-mail existe na coleção "users"
-        const querySnapshot = await getDocs(collection(db, "users"));
-        // Verifica se algum dos documentos contém o e-mail desejado
-        const exists = querySnapshot.docs.some(doc => doc.data().email === email);
-        return exists; // Retorna true se o e-mail existir, false caso contrário
-    } catch (error) {
-        console.error("Erro ao verificar o e-mail:");
-        setTimeout(() => {
-            setMessege({success: false, title: "Erro email não encontrado", message: "Por favor, verifique o email e tente novamente"});
-        }, 2000);
-        return;
-    }
-};
+
+import { supabase } from './supabaseClient'; // ajuste o caminho para o seu cliente
+// const checkEmailExists = async (email,  setMessege) => {
+//     try {
+//         // Verifica se o e-mail existe na coleção "users"
+//         const querySnapshot = await getDocs(collection(db, "users"));
+//         // Verifica se algum dos documentos contém o e-mail desejado
+//         const exists = querySnapshot.docs.some(doc => doc.data().email === email);
+//         return exists; // Retorna true se o e-mail existir, false caso contrário
+//     } catch (error) {
+//         console.error("Erro ao verificar o e-mail:");
+//         setTimeout(() => {
+//             setMessege({success: false, title: "Erro email não encontrado", message: "Por favor, verifique o email e tente novamente"});
+//         }, 2000);
+//         return;
+//     }
+// };
+
+
+
+    const checkEmailExists = async (email, setMessege) => {
+        try {
+            // Consulta a tabela "users" no Supabase
+            const { data, error } = await supabase
+            .from('users')
+            .select('id') // ou outro campo, só precisa de um
+            .eq('email', email)
+            .limit(1); // otimiza a consulta
+
+            if (error) throw error;
+
+            // Se encontrar ao menos um usuário com o e-mail, retorna true
+            return data.length > 0;
+        } catch (error) {
+            console.error("Erro ao verificar o e-mail:", error.message);
+            setTimeout(() => {
+            setMessege({
+                success: false,
+                title: "Erro: e-mail não encontrado",
+                message: "Por favor, verifique o e-mail e tente novamente",
+            });
+            }, 2000);
+            return false;
+        }
+    };
 
 
 // envio de email
@@ -89,7 +117,7 @@ export const sendEmail = async (email, recoveryCode, setMessege, setLoading) => 
         };
     
         // Enviar o e-mail com o Nodemailer
-        const response = await fetch("https://trin-flow.netlify.app/.netlify/functions/sendEmail", {
+        const response = await fetch("https://notefrutas.netlify.app/.netlify/functions/sendEmail", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(mailOptions), // Passa os dados do e-mail
