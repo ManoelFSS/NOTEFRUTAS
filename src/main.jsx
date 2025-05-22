@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext';
 import { ClientesProvider } from './context/ClientesContext.jsx';
 import { ProductProvider} from './context/ProductContext.jsx';
+import {FornecedoresProvider } from './context/FornecedoresContext.jsx';
 import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
@@ -12,9 +13,11 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AuthProvider>
         <ClientesProvider>
-          <ProductProvider>
-            <App />
-          </ProductProvider>
+          <FornecedoresProvider>
+            <ProductProvider>
+              <App />
+            </ProductProvider>
+          </FornecedoresProvider>
         </ClientesProvider>
       </AuthProvider>
     </BrowserRouter>

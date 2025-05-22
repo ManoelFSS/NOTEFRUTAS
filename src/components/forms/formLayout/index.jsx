@@ -3,11 +3,13 @@ import { Container } from "./styles"
 import { useAuthContext } from "../../../context/AuthContext"
 import { useClientes } from "../../../context/ClientesContext"
 import { useProduct } from "../../../context/ProductContext"
+import { useFornecedores } from "../../../context/FornecedoresContext"
 
 const FormLayout = ({ children, $height, state, $color }) => {
 
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
     const { cadastrarCliente, caunterClientes, idClient, estado, editarCliente  } = useClientes()
+    const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
     const { signInUser, registerUser, updateUserPassword, selectForm, userId } = useAuthContext()
 
     const handleSubmit = async (event) => {
@@ -46,6 +48,28 @@ const FormLayout = ({ children, $height, state, $color }) => {
             phone: event.target.phone?.value || "",
             city: event.target.city?.value || "",
             state: estado  || "",
+        };
+
+        const editarForneced = {
+            name: event.target.name?.value || "",
+            cpf: event.target.cpf?.value || undefined ,
+            phone: event.target.phone?.value || "",
+            city: event.target.city?.value || "",
+            state: estado  || "",
+        };
+
+
+        const userFornecedor = {
+            name: event.target.name?.value || "",
+            cpf: event.target.cpf?.value || undefined ,
+            phone: event.target.phone?.value || "",
+            city: event.target.city?.value || "",
+            state: estadoFornecedor  || "",
+            createdat: new Date(),
+            status: "Nada a Pagar",
+            adminid: userId,
+            caunterfornecedor: caunterFornecedores + 1,
+            divided:false,
         };
 
         const Product = {
@@ -89,6 +113,13 @@ const FormLayout = ({ children, $height, state, $color }) => {
             case "editar cliente":
                 await editarCliente(editClient, idClient);
                 break;   
+            case "cadastrar fornecedor":
+                if(  estadoFornecedor  === "Escolha o estado") return alert("Escolha um estado");
+                await cadastrarFornecedor(userFornecedor);
+                break;  
+            case "editar fornecedor":
+                await editarFornecedor(editarForneced, idFornecedor);
+                break;
             case "cadastrar produto":
                 if(category === "Escolha uma categoria") return alert("Escolha uma categoria");
                 await cadastrarProduct(Product);

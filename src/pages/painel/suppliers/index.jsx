@@ -5,7 +5,7 @@ import BtnNavigate from "../../../components/btns/btnNavigate"
 import Select from "../../../components/select"
 import Search from "../../../components/search"
 import Pagination from "../../../components/pagination"
-import ClientForm from "../../../components/forms/systemForm/clientForm";
+import FornecedorForm from "../../../components/forms/systemForm/fornecedorForm";
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import ClientCard from "../../../components/cards/clientCard";
@@ -24,30 +24,30 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import useSelect from "../../../hooks/useSelect"
 // context
 import { useAuthContext } from "../../../context/AuthContext"
-import { useClientes } from "../../../context/ClientesContext"
+import { useFornecedores } from "../../../context/FornecedoresContext"
 //image
 import Perfil from "../../../assets/perfil.png"
 
-const Client = () => {
+const Fornecedores = () => {
 
     const {
         messege, 
         setMessege, 
         closeModal, 
         setCloseModal, 
-        buscarClientesPorAdmin, 
-        clientes, 
-        setClientes, 
-        caunterClientes,  
-        buscarClienteSeach,
+        buscarFornecedoresPorAdmin, 
+        fornecedores, 
+        setFornecedores, 
+        caunterFornecedores,  
+        buscarFornecedoresSeach,
         setName,
         setPhone,
         setCpf,
         setCity,
         setEstado,
-        setIdClient,
-        deletarCliente,
-    } = useClientes();
+        setIdFornecedor,
+        deletarFornecedor,
+    } = useFornecedores();
 
     const { setSelectForm, userId } = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
@@ -57,7 +57,7 @@ const Client = () => {
 
     const [deleteControl, setDeleteControl] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
-    const [idClientItem, setIdClientItem] = useState(null);
+    const [idFornecedorItem, setIdFornecedorItem] = useState(null);
     
     const dataHeader = [
         {icon: <IoMdPerson className="icon" />},
@@ -71,8 +71,8 @@ const Client = () => {
     ]
 
     const data = [
-        { category: "Em Dias" },
-        { category: "Débitos Pendentes" },
+        { category: "Nada a Pagar" },
+        { category: "Débitos a Pagar" },
     ];
 
     const img = Perfil;
@@ -80,15 +80,15 @@ const Client = () => {
     const [paginacao, setPaginacao] = useState(1);
 
     const itemsPorPage = 10;
-    const totalPages = Math.ceil(caunterClientes / itemsPorPage);
+    const totalPages = Math.ceil(caunterFornecedores / itemsPorPage);
 
     useEffect(() => {
-        const hendlerGetcliente = async () => {
-            const clientes = await  buscarClientesPorAdmin(userId, itemsPorPage, paginacao);
-            if(clientes.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-            setClientes(clientes)
+        const  hendlerGetFornecedores = async () => {
+            const fornecedores = await  buscarFornecedoresPorAdmin(userId, itemsPorPage, paginacao);
+            if(fornecedores.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+            setFornecedores(fornecedores)
         }
-        hendlerGetcliente();
+        hendlerGetFornecedores();
         
     }, [closeModal, paginacao, deleteControl]);
 
@@ -96,27 +96,26 @@ const Client = () => {
         const searchLength = valueSearch.split("").length;
 
         if(searchLength <= 0) {
-            const hendlerGetcliente = async () => {
-                const clientes = await  buscarClientesPorAdmin(userId, itemsPorPage, paginacao);
-                if(clientes.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-                setClientes(clientes)
+            const  hendlerGetFornecedores = async () => {
+                const fornecedores = await  buscarFornecedoresPorAdmin(userId, itemsPorPage, paginacao);
+                if(fornecedores.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+                setFornecedores(fornecedores)
             }
-            hendlerGetcliente();
+            hendlerGetFornecedores();
         }
     }, [valueSearch]);
 
-    const hendlerGetclienteSearch = async () => {
-        const clientSeach = await  buscarClienteSeach(valueSearch, userId);
-        if(clientSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-        setClientes(clientSeach)
-        console.log(clientes)
+    const hendlerGetFornecedorSearch = async () => {
+        const fornecedorSeach = await  buscarFornecedoresSeach(valueSearch, userId);
+        if(fornecedorSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+        setFornecedores(fornecedorSeach)
     }
 
     useEffect(() => {
-        if(!idClientItem) return
+        if(!idFornecedorItem) return
         
         const deletaItem = async () => {
-            await deletarCliente(idClientItem);
+            await deletarFornecedor(idFornecedorItem);
             setDeleteControl(!deleteControl)
             setMessege(null);
             setConfirmDelete(false);
@@ -125,9 +124,9 @@ const Client = () => {
         console.log("confirmDelete", confirmDelete);
     }, [confirmDelete]);
 
-    const hendledeliteCliente = (id) => {
-        setMessege({success: true, title: "Tem certeza que deseja deletar esse Cliente ?", message: "Atenção ao deletar o cliente ele sera removido permanentemente e informações relacionadas ao mesmo"});
-        setIdClientItem(id);
+    const hendledeliteFornecedor = (id) => {
+        setMessege({success: true, title: "Tem certeza que deseja deletar esse Fornecedor ?", message: "Atenção ao deletar o Fornecedor ele sera removido permanentemente e informações relacionadas ao mesmo"});
+        setIdFornecedorItem(id);
     }
 
     return (
@@ -138,7 +137,7 @@ const Client = () => {
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
-                        setSelectForm("cadastrar cliente") 
+                        setSelectForm("cadastrar fornecedor") 
                     }}
                 />
                 <div className="box-icon">
@@ -162,9 +161,9 @@ const Client = () => {
                     setValueSearch={setValueSearch}
                     $height={"35px"}
                     $width={"210px"}
-                    onClick={hendlerGetclienteSearch}
+                    onClick={hendlerGetFornecedorSearch}
                 />
-                {caunterClientes > 10 && <Pagination 
+                {caunterFornecedores > 10 && <Pagination 
                     $totalPages={totalPages} 
                     $paginacao={paginacao} 
                     $setPaginacao={setPaginacao}
@@ -174,9 +173,9 @@ const Client = () => {
                 {
                     cardList ? ( // 👈 substitua "condicao" pela condição que você quer
                     <>
-                        {clientes.length > 0 ? (
+                        {fornecedores.length > 0 ? (
                         <div className="body-card">
-                            {clientes
+                            {fornecedores
                             .filter(item => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
@@ -225,7 +224,7 @@ const Client = () => {
                                                     setCity(item.city)
                                                     setEstado(item.state)
                                                     setPhone(item.phone)
-                                                    setIdClient(item.id)
+                                                    setIdFornecedor(item.id)
                                                     setBtnName("Editar Cliente");
                                                     setSelectForm("editar cliente")
                                                 }}
@@ -235,7 +234,7 @@ const Client = () => {
                                         icon: <MdDeleteForever 
                                                 className="icon" 
                                                 style={{ color: "rgb(224, 2, 2)" }} 
-                                                onClick={() => hendledeliteCliente(item.id)}    
+                                                onClick={() => hendledeliteFornecedor(item.id)}    
                                             />,
                                     },
                                 ]}
@@ -261,9 +260,9 @@ const Client = () => {
                             ))}
                         </ul>
                         </div>
-                        {clientes.length > 0 ? (
+                        {fornecedores.length > 0 ? (
                         <div className="body">
-                            {clientes
+                            {fornecedores
                             .filter(item => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
@@ -283,7 +282,7 @@ const Client = () => {
                                 <li>{item.city}</li>
                                 <li>{item.state}</li>
                                 <li>
-                                    <span style={{ color: item.status === "Em Dias" ? "green" : "red" }}>
+                                    <span style={{ color: item.status === "Nada a Pagar" ? "green" : "red" }}>
                                     {item.status}
                                     </span>
                                 </li>
@@ -306,15 +305,15 @@ const Client = () => {
                                             setCity(item.city)
                                             setEstado(item.state)
                                             setPhone(item.phone)
-                                            setIdClient(item.id)
-                                            setBtnName("Editar Cliente");
-                                            setSelectForm("editar cliente")
+                                            setIdFornecedor(item.id)
+                                            setBtnName("Editar Fornecedor");
+                                            setSelectForm("editar fornecedor")
                                         }}
                                     />
                                     <MdDeleteForever 
                                         className="icon" 
                                         style={{ color: "rgb(224, 2, 2)" }} 
-                                        onClick={() => hendledeliteCliente(item.id)}
+                                        onClick={() => hendledeliteFornecedor(item.id)}
                                     />
                                 </li>
                                 </ul>
@@ -332,12 +331,12 @@ const Client = () => {
                 }
                 </ContainerTable>
 
-            {closeModal && <ClientForm setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+            {closeModal && <FornecedorForm  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
             { messege && <Messege $buttonText="Cancelar" button={<BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )
 }
 
-export default Client
+export default Fornecedores
 

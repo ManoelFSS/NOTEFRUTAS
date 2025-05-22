@@ -1,36 +1,37 @@
-// context/ClientesContext.js
 import { createContext, useContext, useState } from "react";
-import { db } from "../services/firebase";
-import { collection, addDoc, query, where, getDocs, getCountFromServer, doc, updateDoc, limit, orderBy, deleteDoc } from "firebase/firestore";
 import { registerClientSchema } from "../validationSchemas/Schemas"
 import { supabase } from '../services/supabase';
 
-const ClientesContext = createContext();
 
-export const ClientesProvider = ({ children }) => {
+const FornecedoresContext = createContext();
+
+export const FornecedoresProvider = ({ children }) => {
     
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
     const [closeModal, setCloseModal] = useState(false);
-    const [clientes, setClientes] = useState([]);// lista de clientes
-    const [caunterClientes, setCaunterClientes] = useState(0);
+    const [fornecedores, setFornecedores] = useState([]);// lista de clientes
+    const [caunterFornecedores, setCaunterFornecedores] = useState(0);
 
     const [name, setName] = useState('');// controle do campo name
     const [phone, setPhone] = useState('');// controle do campo phone
     const [cpf, setCpf] = useState('');
     const [city, setCity] = useState('');
-    const [estado, setEstado] = useState('Escolha o estado');
-    const [idClient, setIdClient] = useState('');// controle do campo idClient
+    const [estadoFornecedor, setEstadoFornecedor] = useState('Escolha o estado');
+    const [idFornecedor, setIdFornecedor] = useState('');// controle do campo idClient
 
 
     // Função para cadastrar cliente
-    const cadastrarCliente = async (clienteData) => {
+    const cadastrarFornecedor = async (FornecedorData) => {
         setLoading(true);
-        console.log(clienteData);
+        
+        const tamanhoEmBytes = new TextEncoder().encode(JSON.stringify(FornecedorData)).length;
+        const tamanhoEmKB = (tamanhoEmBytes / 1024).toFixed(2);
+        console.log(`Tamanho: ${tamanhoEmKB} KB`);
 
         try {
             // Valida o objeto com Zod
-            const validatedClient = registerClientSchema.parse(clienteData);
+            const validatedClient = registerClientSchema.parse(FornecedorData);
 
             if (!validatedClient) {
             // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
@@ -44,21 +45,21 @@ export const ClientesProvider = ({ children }) => {
 
             // Insere o cliente na tabela "clientes"
             const { data, error } = await supabase
-            .from("clientes")
-            .insert([clienteData]);
+            .from("fornecedores")
+            .insert([FornecedorData]);
 
             if (error) throw error;
 
-            console.log("Cliente cadastrado com ID:", data);
+            console.log("fornecedor cadastrado com ID:", data);
             setCloseModal(false);
             setName('');
             setPhone('');
             setCpf('');
             setCity('');
-            setEstado('Escolha o estado');
+            setEstadoFornecedor('Escolha o estado');
 
         } catch (error) {
-            console.error("Erro ao cadastrar cliente:", error);
+            console.error("Erro ao cadastrar fornecedor:", error);
             setTimeout(() => {
             setMessege({
                 success: false,
@@ -76,21 +77,21 @@ export const ClientesProvider = ({ children }) => {
     };
 
 
-    const editarCliente = async (novosDados, id) => {
+    const editarFornecedor = async (novosDados, id) => {
         setLoading(true);
 
         try {
             const { error } = await supabase
-            .from("clientes")
+            .from("fornecedores")
             .update(novosDados)
             .eq("id", id);
 
             if (error) throw error;
 
-            console.log("Cliente atualizado com sucesso!");
+            console.log("Fornecedor atualizado com sucesso!");
             setCloseModal(false);
         } catch (error) {
-            console.error("Erro ao atualizar o cliente:", error.message || error);
+            console.error("Erro ao atualizar o fornecedor:", error.message || error);
         } finally {
             setTimeout(() => {
             setLoading(false);
@@ -99,27 +100,27 @@ export const ClientesProvider = ({ children }) => {
     };
 
 
-    const deletarCliente = async (idDoCliente) => {
+    const deletarFornecedor = async (idDoCliente) => {
         try {
             const { error } = await supabase
-            .from("clientes")
+            .from("fornecedores")
             .delete()
             .eq("id", idDoCliente);
 
             if (error) throw error;
 
-            console.log("Cliente deletado com sucesso!");
+            console.log("Fornecedor deletado com sucesso!");
         } catch (error) {
-            console.error("Erro ao deletar Cliente:", error.message || error);
+            console.error("Erro ao deletar fornecedor:", error.message || error);
         }
     };
 
 
 
    // Função para contar total de clientes de um admin
-    const contarClientes = async (adminId) => {
+    const contarFornecedores = async (adminId) => {
         const { count, error } = await supabase
-            .from("clientes")
+            .from("fornecedores")
             .select("*", { count: "exact", head: true })
             .eq("adminid", adminId);
 
@@ -131,16 +132,16 @@ export const ClientesProvider = ({ children }) => {
     };
 
     // Função principal para buscar clientes de um admin com paginação
-    const buscarClientesPorAdmin = async (adminId, limitepage, paginacao) => {
+    const buscarFornecedoresPorAdmin = async (adminId, limitepage, paginacao) => {
         try {
             // Validar parâmetros
             if (!adminId || limitepage <= 0 || paginacao < 1) {
-            throw new Error("Parâmetros inválidos: adminId, limitepage ou paginacao");
+                throw new Error("Parâmetros inválidos: adminId, limitepage ou paginacao");
             }
 
             // Contar total de clientes
-            const totalClientes = await contarClientes(adminId);
-            setCaunterClientes(totalClientes); // <-- setar em seu estado
+            const totalClientes = await contarFornecedores(adminId);
+            setCaunterFornecedores(totalClientes); // <-- setar em seu estado
 
             // Calcular range para paginação
             const page = paginacao;
@@ -150,23 +151,23 @@ export const ClientesProvider = ({ children }) => {
 
             // Buscar clientes do admin com paginação e ordenação
             const { data, error } = await supabase
-            .from("clientes")
+            .from("fornecedores")
             .select("*")
             .eq("adminid", adminId)
-            .order("caunterclient", { ascending: true })
+            .order("caunterfornecedor", { ascending: true })
             .range(from, to);
 
             if (error) throw error;
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar clientes:", error);
+            console.error("Erro ao buscar fornecedores:", error);
             throw error;
         }
     };
 
     
-    const buscarClienteSeach = async (searchText, adminId) => {
+    const buscarFornecedoresSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];
 
         try {
@@ -175,7 +176,7 @@ export const ClientesProvider = ({ children }) => {
 
             // Busca múltiplas colunas com `or`
             const { data, error } = await supabase
-            .from("clientes")
+            .from("fornecedores")
             .select("*")
             .eq("adminid", adminId)
             .or(`name.ilike.${texto},cpf.ilike.${texto},phone.ilike.${texto},city.ilike.${texto}`);
@@ -184,35 +185,35 @@ export const ClientesProvider = ({ children }) => {
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar clientes:", error.message || error);
+            console.error("Erro ao buscar Fornecedores:", error.message || error);
             return [];
         }
     };
 
 
     return (
-        <ClientesContext.Provider value={{ 
-                cadastrarCliente, 
-                buscarClientesPorAdmin,
+        <FornecedoresContext.Provider value={{ 
+                cadastrarFornecedor, 
+                buscarFornecedoresPorAdmin,
                 loading, setLoading,
                 messege, setMessege,
                 closeModal, setCloseModal,
-                clientes, setClientes,
-                caunterClientes,
-                buscarClienteSeach,
-                editarCliente,
-                deletarCliente,
+                fornecedores, setFornecedores,
+                caunterFornecedores, setCaunterFornecedores,
+                buscarFornecedoresSeach,
+                editarFornecedor,
+                deletarFornecedor,
                 name, setName,
                 phone, setPhone,
                 cpf, setCpf,
                 city, setCity,
-                estado, setEstado,
-                idClient, setIdClient,
+                estadoFornecedor, setEstadoFornecedor,
+                idFornecedor, setIdFornecedor,
             }}>
         {children}
-        </ClientesContext.Provider>
+        </FornecedoresContext.Provider>
     );
-    };
+};
 
 // Hook para usar o contexto
-export const useClientes = () => useContext(ClientesContext);
+export const useFornecedores = () => useContext(FornecedoresContext);

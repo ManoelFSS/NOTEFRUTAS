@@ -11,7 +11,7 @@ import Select from "../../../select"
 import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa";
 // context
-import { useClientes } from "../../../../context/ClientesContext"
+import { useFornecedores } from "../../../../context/FornecedoresContext" 
 
 
 
@@ -45,11 +45,7 @@ const data = [
     { category: "Tocantins" }
 ];
 
-
-
-
-
-const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
+const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
 
     const {
         loading,
@@ -57,10 +53,10 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
         phone, setPhone,
         cpf, setCpf,
         city, setCity,
-        estado, setEstado,
-    } = useClientes();
+        estadoFornecedor, setEstadoFornecedor,
+    } =  useFornecedores();
 
-    const [select, setSelect] = useState(estado);
+    const [select, setSelect] = useState(estadoFornecedor);
 
     const handlePhoneChange = (event) => {
         const { value } = event.target;
@@ -89,7 +85,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
     return (
         <Container>
             <div className="form-area">
-                <FormLayout state={estado}>
+                <FormLayout state={estadoFornecedor}>
                     <div className="close">
                         <FaWindowClose className="close-icon" 
                             onClick={() => {
@@ -99,13 +95,13 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                                 setPhone("")
                                 setCpf("")
                                 setCity("")
-                                setEstado("Escolha o Estado")
+                                setEstadoFornecedor("Escolha o Estado")
                             }}
                         />
                     </div>
                     <section className="logo">
                         <FaUserPlus className="icon" />
-                        <Title $text="Cadastrar Cliente"  $cor={"var(  --color-text-primary )"}  />
+                        <Title $text="Cadastrar Fornecedor"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
                         <LabelComponent $text="Nome" $htmlFor="name" />
@@ -115,7 +111,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                             $value={name} 
                             $onchange={(e) => setName(e.target.value.trim())}
                             $name="name" 
-                            $placeholder="Digite o nome do cliente" 
+                            $placeholder="Digite o nome do Fornecedor" 
                             $autoComplete="current-name" 
                             $required 
                         />
@@ -166,7 +162,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                             data={data} 
                             $width={"100%"}
                             $ocult={true}
-                            setState={setEstado}
+                            setState={setEstadoFornecedor}
                         />
                     </section>
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
@@ -177,4 +173,4 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
     )
 }
 
-export default ClientForm
+export default FornecedorForm
