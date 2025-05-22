@@ -1,5 +1,5 @@
 
-import { supabase } from './supabaseClient'; // ajuste o caminho para o seu cliente
+import { supabase } from '../services/supabase'; // ajuste o caminho para o seu cliente
 // const checkEmailExists = async (email,  setMessege) => {
 //     try {
 //         // Verifica se o e-mail existe na coleção "users"
