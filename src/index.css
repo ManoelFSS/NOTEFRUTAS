@@ -1,0 +1,60 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", serif;
+}
+
+:root {
+
+
+  --color-primary: #007e2a;
+  --color-secondary: #302F2F;
+
+  --color-bg-primary-element: #00a336;
+  --color-bg-secondary-element: #00a336;
+
+  --color-title-primary: #00a336;
+  
+  --color-text-primary: #252525;
+  --color-text-secondary: #fff;
+  --color-text-hover: #000;
+
+  --color-icon-primary: #ffffff;
+  --color-icon-secondary: #fff;
+  --color-icon-hover: #FF9D00;
+
+  --color-bg-primary: #fff;
+  --color-bg-secondary: #e4e4e4;
+
+  --color-bg-btn-primary: #00a336;
+  --color-bg-btn-secondary: #fff;
+  --color-bg-btn-hover: #045e22;
+
+  --color-bord-btn-primary:#00a336;
+  --color-bord-btn-hover:#00ff55;
+  --color-bord-btn-secondary:#fff;
+
+  --color-bg-input: #e5e2e2;
+  --color-bg-input-hover: #d9d9d9;
+
+  --col--01: #388A7E;
+  --col--02: #2D4A46;
+  --col--03: #0F2723;
+  
+
+}
+
+body {
+  min-height: 100svh;
+}
+
+body::-webkit-scrollbar {
+  width: 5px;
+  background-color: var( --color-bg-primary );
+
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: var( --color-bg-primary-element );
+}

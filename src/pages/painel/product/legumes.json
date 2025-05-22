@@ -1,0 +1,85 @@
+{
+    "legumes": {
+        "raizes": [
+        "cenoura",
+        "beterraba",
+        "nabo",
+        "rodela",
+        "mandioca",
+        "batata-doce",
+        "inhame",
+        "cará",
+        "pastinaca",
+        "salsão (raiz)",
+        "rabo-de-tatu"
+        ],
+        "tuberculos": [
+        "batata",
+        "taro",
+        "jicama"
+        ],
+        "folhas": [
+        "alface",
+        "espinafre",
+        "acelga",
+        "rúcula",
+        "couve",
+        "repolho",
+        "couve-de-bruxelas",
+        "couve-flor",
+        "brócolis",
+        "agrião",
+        "mostarda",
+        "chicória",
+        "endívia",
+        "almeirão",
+        "taioba"
+        ],
+        "frutos": [
+        "tomate",
+        "berinjela",
+        "pimentão",
+        "abobrinha",
+        "pepino",
+        "chuchu",
+        "quiabo",
+        "jiló",
+        "maxixe",
+        "abóbora",
+        "moranga",
+        "cabaça"
+        ],
+        "sementes_e_vagens": [
+        "feijão",
+        "ervilha",
+        "lentilha",
+        "grão-de-bico",
+        "soja",
+        "fava",
+        "vagem",
+        "guandu",
+        "amendoim"
+        ],
+        "caules": [
+        "aspargo",
+        "salsão",
+        "alcachofra",
+        "palmito",
+        "ruibarbo"
+        ],
+        "bulbos": [
+        "cebola",
+        "alho",
+        "alho-poró",
+        "chalota",
+        "cebolinha"
+        ],
+        "fungos_comestiveis": [
+        "cogumelo shiitake",
+        "cogumelo shimeji",
+        "cogumelo champignon",
+        "cogumelo portobello",
+        "cogumelo ostra"
+        ]
+    }
+}
