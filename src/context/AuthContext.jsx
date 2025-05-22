@@ -281,7 +281,13 @@ useEffect(() => {
             }
 
             // 2️⃣ Descriptografar a senha salva no banco
-            const decryptedPassword = await decryptPassword(userData.password); // Sua função
+            const decryptedPassword = await decryptPassword(userData.password);
+
+            if (decryptedPassword === data.password) {
+                throw new Error(" Erro ao atualizar, a senha muito semelhante. Por favor, escolha uma senha diferente.");
+                
+            }
+
 
             // 3️⃣ Autenticar o usuário com o Supabase Auth
             const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
