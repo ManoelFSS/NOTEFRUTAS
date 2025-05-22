@@ -238,7 +238,6 @@ useEffect(() => {
         }
     };
 
-  
     // Função para buscar o usuário e alterar a senha
     const updateUserPassword = async (data) => {
         setLoading(true);
@@ -284,6 +283,8 @@ useEffect(() => {
 
             if (updateError) {
                 throw new Error("❌ Erro ao atualizar a senha no Auth.");
+            }else {
+                console.log("Senha atualizada com sucesso!");
             }
 
             // 5️⃣ Criptografar a nova senha e atualizar no banco de dados
