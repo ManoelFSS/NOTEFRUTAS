@@ -21,18 +21,18 @@ export const AuthProvider = ({ children }) => {
     const [selectForm, setSelectForm] = useState("login");
 
 
-    const handlePasswordReset = async (email) => {
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'https://seusite.com/reset-password', // opcional: onde o usuário será redirecionado após clicar no link
-        });
+    // const handlePasswordReset = async (email) => {
+    //     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    //         redirectTo: 'https://notefrutas.netlify.app/', // opcional: onde o usuário será redirecionado após clicar no link
+    //     });
 
-        if (error) {
-            console.error('Erro ao enviar e-mail de recuperação:', error.message);
-            return;
-        }
+    //     if (error) {
+    //         console.error('Erro ao enviar e-mail de recuperação:', error.message);
+    //         return;
+    //     }
 
-        console.log('E-mail de recuperação enviado!');
-    };
+    //     console.log('E-mail de recuperação enviado!');
+    // };
 
 
 useEffect(() => {
@@ -268,7 +268,7 @@ useEffect(() => {
                 .eq('email', data.email)
                 .single();
 
-            handlePasswordReset(data.email );
+            // handlePasswordReset(data.email );
 
             if (userError || !userQuery) {
                 throw new Error("❌ Usuário não encontrado.");
@@ -299,13 +299,16 @@ useEffect(() => {
             });
 
             if (updateError) {
+                console.log(updateError)
                 throw new Error("❌ Erro ao atualizar a senha no Auth.");
             }else {
                 console.log("Senha atualizada com sucesso!");
             }
 
             // 5️⃣ Criptografar a nova senha e atualizar no banco de dados
-            const encryptedNewPassword = encryptPassword(data.password); // Sua função
+            const encryptedNewPassword =  encryptPassword(data.password); // Sua função
+            console.log("Nova senha criptografada:", encryptedNewPassword);
+
 
             const { error: updateDbError } = await supabase
                 .from('users')
