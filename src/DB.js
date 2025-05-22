@@ -20,6 +20,9 @@ export const estoque = [
     { name: 'Cebola', stock: 0, minStock: 1000 },
     { name: 'Abacaxi', stock: 4400, minStock: 7100 },
     { name: 'Laranja', stock: 200, minStock: 1000 },
+    { name: 'Cebola', stock: 0, minStock: 1000 },
+    { name: 'Abacaxi', stock: 4400, minStock: 7100 },
+    { name: 'Laranja', stock: 200, minStock: 1000 },
 ];
 
 export const entregas = [

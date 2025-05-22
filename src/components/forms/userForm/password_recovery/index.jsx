@@ -163,12 +163,12 @@ const Password_Recovery = ({setSelectForm}) => {
                 </>
             }
             <section className="btns">
-                {/* {!simulaApi && 
+                {!simulaApi && 
                     <BtnNavigate 
                         $text="Cadastre-se"
                         onClick={() => setSelectForm("register")} 
                     />
-                } */}
+                }
                 <BtnNavigate 
                     $text="Fazer Login" 
                     onClick={() => setSelectForm("login")}
