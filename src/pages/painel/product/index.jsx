@@ -1,4 +1,4 @@
-import { useState, useEffect, use} from "react";
+import { useState, useEffect} from "react";
 import { Container, ContainerTable } from "./styles"
 // components
 import BtnNavigate from "../../../components/btns/btnNavigate"

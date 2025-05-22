@@ -8,7 +8,7 @@ import Messege from "../../components/messege";
 // context
 import { useAuthContext } from "../../context/AuthContext";
 // icons
-import { FaWhatsapp, FaFacebook, FaInstagram  } from "react-icons/fa";
+import { FaWhatsapp, FaInstagram  } from "react-icons/fa";
 
 const Login = () => {
     const { messege, setMessege, selectForm, setSelectForm } = useAuthContext();
