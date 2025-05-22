@@ -252,23 +252,22 @@ useEffect(() => {
         }
     };
 
-    // Função para buscar o usuário e alterar a senha
+
+    // 🔐 Função para buscar o usuário e alterar a senha
     const updateUserPassword = async (data) => {
         setLoading(true);
-        
 
         try {
+            // ✅ 1. Validar os dados recebidos
             const validatedUserRecovery = recoverySchema.parse(data);
             if (!validatedUserRecovery) return validatedUserRecovery.errors;
 
-            // 1️⃣ Buscar o usuário pelo e-mail na tabela users
+            // 🔍 2. Buscar o usuário pelo e-mail na tabela 'users'
             const { data: userQuery, error: userError } = await supabase
                 .from('users')
                 .select('*')
                 .eq('email', data.email)
                 .single();
-
-            // handlePasswordReset(data.email );
 
             if (userError || !userQuery) {
                 throw new Error("❌ Usuário não encontrado.");
@@ -276,20 +275,22 @@ useEffect(() => {
 
             const userData = userQuery;
 
+            // 🚫 3. Verificar se a senha existe no banco
             if (!userData.password) {
                 throw new Error("❌ Senha não encontrada.");
             }
 
-            // 2️⃣ Descriptografar a senha salva no banco
+            // 🔓 4. Descriptografar a senha atual salva no banco
             const decryptedPassword = await decryptPassword(userData.password);
 
+            // ⚠️ 5. Impedir atualização para a mesma senha
             if (decryptedPassword === data.password) {
-                throw new Error(" Erro ao atualizar, a senha muito semelhante. Por favor, escolha uma senha diferente.");
-                
+                throw new Error(`A nova senha é muito semelhante à atual!\n 
+                    Por favor, escolha uma senha diferente.`
+                );
             }
 
-
-            // 3️⃣ Autenticar o usuário com o Supabase Auth
+            // ✅ 6. Autenticar o usuário com Supabase Auth usando a senha descriptografada
             const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
                 email: data.email,
                 password: decryptedPassword
@@ -299,40 +300,39 @@ useEffect(() => {
                 throw new Error("❌ Falha ao autenticar o usuário.");
             }
 
-            // 4️⃣ Atualizar a senha no Supabase Auth
+            // 🔁 7. Atualizar a senha no sistema de autenticação do Supabase
             const { error: updateError } = await supabase.auth.updateUser({
                 password: data.password
             });
 
             if (updateError) {
-                console.log(updateError)
-                throw new Error("❌ Erro ao atualizar a senha no Auth.");
-            }else {
-                console.log("Senha atualizada com sucesso!");
+                throw new Error(" Erro ao atualizar a senha no Auth.");
+            } else {
+                console.log("🔁 Senha atualizada com sucesso no Supabase Auth!");
             }
 
-            // 5️⃣ Criptografar a nova senha e atualizar no banco de dados
-            const encryptedNewPassword =  await encryptPassword(data.password); // Sua função
-            console.log("Nova senha criptografada:", encryptedNewPassword);
+            // 🔒 8. Criptografar a nova senha para armazenar no banco de dados
+            const encryptedNewPassword = await encryptPassword(data.password);
 
-
+            // 💾 9. Atualizar a senha criptografada na tabela 'users'
             const { error: updateDbError } = await supabase
                 .from('users')
                 .update({ password: encryptedNewPassword })
                 .eq('email', data.email);
 
             if (updateDbError) {
-                throw new Error("❌ Erro ao atualizar a senha no banco.");
+                throw new Error("❌ Erro ao atualizar a senha no banco de dados.");
             }
 
+            // ✅ 10. Mensagem de sucesso
             setTimeout(() => {
-                setMessege({ 
+                setMessege({
                     success: true,
-                    title: "Senha Redefinida com sucesso! ✅",
+                    title: "Senha Redefinida com Sucesso! ✅",
                     message: `
-                        🔒 Sua senha foi atualizada com sucesso!\n
-                        Agora você pode acessar sua conta com segurança e tranquilidade.\n
-                        Atenciosamente Equipe ➡️ Trin-Flow!
+                    🔒 Sua senha foi atualizada com sucesso!\n
+                    Agora você pode acessar sua conta com segurança e tranquilidade.\n
+                    Atenciosamente, Equipe ➡️ Trin-Flow!
                     `
                 });
             }, 2000);
@@ -340,16 +340,19 @@ useEffect(() => {
             return { success: true };
 
         } catch (error) {
+            // ⚠️ Tratamento de erro
             console.error("Erro ao atualizar a senha:", error);
             setTimeout(() => {
-                setMessege({ 
+                setMessege({
                     success: false,
-                    title: "❌ Erro ao atualizar a senha", 
+                    title: "❌ Erro ao atualizar a senha",
                     message: error.message || "Erro inesperado"
                 });
             }, 2000);
             return { success: false };
+
         } finally {
+            // ⏳ Finaliza o carregamento
             setTimeout(() => {
                 setLoading(false);
             }, 2000);
