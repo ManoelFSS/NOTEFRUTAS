@@ -6,6 +6,6 @@ export const encryptPassword = async (password) => {
     return CryptoJS.AES.encrypt(password, SECRET_KEY).toString();
 };
 
-export const decryptPassword = (encryptedPassword) => {
+export const decryptPassword = async  (encryptedPassword) => {
     return CryptoJS.AES.decrypt(encryptedPassword, SECRET_KEY).toString(CryptoJS.enc.Utf8);
 };

@@ -281,7 +281,7 @@ useEffect(() => {
             }
 
             // 2️⃣ Descriptografar a senha salva no banco
-            const decryptedPassword = decryptPassword(userData.password); // Sua função
+            const decryptedPassword = await decryptPassword(userData.password); // Sua função
 
             // 3️⃣ Autenticar o usuário com o Supabase Auth
             const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -306,7 +306,7 @@ useEffect(() => {
             }
 
             // 5️⃣ Criptografar a nova senha e atualizar no banco de dados
-            const encryptedNewPassword =  encryptPassword(data.password); // Sua função
+            const encryptedNewPassword =  await encryptPassword(data.password); // Sua função
             console.log("Nova senha criptografada:", encryptedNewPassword);
 
 
