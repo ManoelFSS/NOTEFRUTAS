@@ -21,6 +21,20 @@ export const AuthProvider = ({ children }) => {
     const [selectForm, setSelectForm] = useState("login");
 
 
+    const handlePasswordReset = async (email) => {
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'https://seusite.com/reset-password', // opcional: onde o usuário será redirecionado após clicar no link
+        });
+
+        if (error) {
+            console.error('Erro ao enviar e-mail de recuperação:', error.message);
+            return;
+        }
+
+        console.log('E-mail de recuperação enviado!');
+    };
+
+
 useEffect(() => {
     const getSession = async () => {
         try {
@@ -241,6 +255,7 @@ useEffect(() => {
     // Função para buscar o usuário e alterar a senha
     const updateUserPassword = async (data) => {
         setLoading(true);
+        
 
         try {
             const validatedUserRecovery = recoverySchema.parse(data);
@@ -252,6 +267,8 @@ useEffect(() => {
                 .select('*')
                 .eq('email', data.email)
                 .single();
+
+            handlePasswordReset(data.email );
 
             if (userError || !userQuery) {
                 throw new Error("❌ Usuário não encontrado.");
