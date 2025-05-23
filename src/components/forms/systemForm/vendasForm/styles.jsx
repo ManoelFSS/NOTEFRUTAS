@@ -174,7 +174,7 @@ export const Container = styled.div`
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                width: 10px;
+                width: 30px;
             }
         }
 
@@ -222,8 +222,8 @@ export const Container = styled.div`
                         border: none;
                         outline: none;
                         text-align: center;
-                        font-weight: 700;
-                        font-size: 0.7rem;
+                        font-weight: 600;
+                        font-size: 1rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
 
@@ -235,7 +235,7 @@ export const Container = styled.div`
                 }
 
                 li:nth-child(3) {
-                    width: 60px;
+                    width: 80px;
 
                     input {
                         width: 100%;
@@ -243,8 +243,8 @@ export const Container = styled.div`
                         border: none;
                         outline: none;
                         text-align: center;
-                        font-weight: 700;
-                        font-size: 0.7rem;
+                        font-weight: 600;
+                        font-size: 1rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
 
@@ -260,15 +260,15 @@ export const Container = styled.div`
                     align-items: center;
                     justify-content: center;
                     width: 75px;
-                    font-weight: 700;
-                    font-size: 0.7rem;
+                    font-weight: 600;
+                    font-size: 0.9rem;
                 }
 
                 li:nth-child(5) {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 20px;
+                    width: 30px;
                 }
 
                 .delete-icon {
