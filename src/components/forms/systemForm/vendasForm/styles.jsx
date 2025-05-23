@@ -272,7 +272,7 @@ export const Container = styled.div`
                 }
 
                 .delete-icon {
-                    font-size: 1rem;
+                    font-size: 1.3rem;
                     color: red;
                     cursor: pointer;
                 }
