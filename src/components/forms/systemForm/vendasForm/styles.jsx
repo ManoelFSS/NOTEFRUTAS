@@ -214,7 +214,7 @@ export const Container = styled.div`
                 }
 
                 li:nth-child(2) {
-                    width: 40px;
+                    width: 60px;
 
                     input {
                         width: 100%;
@@ -222,7 +222,7 @@ export const Container = styled.div`
                         border: none;
                         outline: none;
                         text-align: center;
-                        font-weight: 500;
+                        font-weight: 700;
                         font-size: 0.7rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
@@ -243,7 +243,7 @@ export const Container = styled.div`
                         border: none;
                         outline: none;
                         text-align: center;
-                        font-weight: 500;
+                        font-weight: 700;
                         font-size: 0.7rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
@@ -259,8 +259,9 @@ export const Container = styled.div`
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 70px;
-                    font-size: 0.8rem;
+                    width: 75px;
+                    font-weight: 700;
+                    font-size: 0.7rem;
                 }
 
                 li:nth-child(5) {

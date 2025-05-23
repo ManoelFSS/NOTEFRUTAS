@@ -48,8 +48,8 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
             {
                 produtoId: produto.id,
                 nome: produto.name,
-                quantidade: 0,
-                valorUnitario: 0,
+                quantidade: "",
+                valorUnitario: "",
             }
         ]);
         setModalProduct(false)
