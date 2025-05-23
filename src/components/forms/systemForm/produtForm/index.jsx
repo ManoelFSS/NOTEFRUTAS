@@ -10,8 +10,7 @@ import Select from "../../../select"
 
 // icons
 import { FaWindowClose } from "react-icons/fa";
-import { FaUserPlus } from "react-icons/fa";
-import { FaImage } from "react-icons/fa6";
+import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
 import BtnNavigate from "../../../btns/btnNavigate"

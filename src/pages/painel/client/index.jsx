@@ -9,8 +9,9 @@ import ClientForm from "../../../components/forms/systemForm/clientForm";
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import ClientCard from "../../../components/cards/clientCard";
+import VendasForm from "../../../components/forms/systemForm/vendasForm";
 // icons
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus, FaCartPlus, FaInfoCircle  } from "react-icons/fa";
 import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
 import { IoMdPerson } from "react-icons/io";
 import { PiUserListFill , PiHandTapFill  } from "react-icons/pi";
@@ -139,7 +140,7 @@ const Client = () => {
                     $text="Cadastrar Cliente" 
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
-                        setCloseModal(true)
+                        // setCloseModal(true)
                         setSelectForm("cadastrar cliente") 
                     }}
                 />
@@ -291,12 +292,32 @@ const Client = () => {
                                 </li>
                                 <li className="icons">
                                     <IoLogoWhatsapp
-                                    className="icon-whatsapp"
-                                    onClick={() =>
-                                        window.open(
-                                        `https://api.whatsapp.com/send?phone=55${item.phone.replace(/[^\d]/g, '')}`
-                                        )
-                                    }
+                                        className="icon-whatsapp"
+                                        onClick={() =>
+                                            window.open(
+                                            `https://api.whatsapp.com/send?phone=55${item.phone.replace(/[^\d]/g, '')}`
+                                            )
+                                        }
+                                    />
+                                    <FaCartPlus 
+                                        className="icon" 
+                                        style={{ color: "rgb(83, 83, 83)" }} 
+                                        onClick={() => {
+                                            setCloseModal(true)
+                                            setName(item.name)
+                                            setCpf(item.cpf)
+                                            setCity(item.city)
+                                            setEstado(item.state)
+                                            setPhone(item.phone)
+                                            setIdClient(item.id)
+                                            setBtnName("Realizar Venda");
+                                            setSelectForm("cadastrar venda")
+                                        }}
+                                    />
+                                    <FaInfoCircle
+                                        className="icon" 
+                                        style={{ color: "rgb(255, 162, 0)" }} 
+                                        onClick={() => hendledeliteCliente(item.id)}
                                     />
                                     <FaEdit 
                                         className="icon" 
@@ -333,8 +354,8 @@ const Client = () => {
                     )
                 }
                 </ContainerTable>
-
-            {closeModal && <ClientForm setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+                {false &&< ClientForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+            {closeModal && <VendasForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
             { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>

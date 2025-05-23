@@ -174,7 +174,7 @@ export const ContainerTable = styled.section`
                 }
 
                 li:nth-child(8){
-                    width: 160px;
+                    width: 180px;
                 }
 
                 li:nth-child(5), li:nth-child(9) {
@@ -280,9 +280,9 @@ export const ContainerTable = styled.section`
                 }
                 
                 .icons {
-                    width: 160px;
+                    width: 180px;
                     justify-content: center;
-                    gap: 14px;
+                    gap: 10px;
                     
                     .icon {
                         width: 25px;

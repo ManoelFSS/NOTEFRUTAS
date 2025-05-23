@@ -334,7 +334,7 @@ const Fornecedores = () => {
                 }
                 </ContainerTable>
 
-            {closeModal && <FornecedorForm  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+            {closeModal && <FornecedorForm $color={"#fff"}  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
             { messege && <Messege $buttonText="Cancelar"    button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
