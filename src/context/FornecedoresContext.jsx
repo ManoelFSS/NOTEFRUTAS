@@ -90,6 +90,11 @@ export const FornecedoresProvider = ({ children }) => {
 
             console.log("Fornecedor atualizado com sucesso!");
             setCloseModal(false);
+            setName('');
+            setPhone('');
+            setCpf('');
+            setCity('');
+            setEstadoFornecedor('Escolha o estado');
         } catch (error) {
             console.error("Erro ao atualizar o fornecedor:", error.message || error);
         } finally {

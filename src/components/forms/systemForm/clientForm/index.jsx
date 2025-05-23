@@ -105,7 +105,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                     </div>
                     <section className="logo">
                         <FaUserPlus className="icon" />
-                        <Title $text="Cadastrar Cliente"  $cor={"var(  --color-text-primary )"}  />
+                        <Title $text="CLIENTE"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
                         <LabelComponent $text="Nome" $htmlFor="name" />

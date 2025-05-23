@@ -54,6 +54,7 @@ const Client = () => {
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
     const [btnName, setBtnName] = useState("Cadastrar");
+    const [closeBtn, setCloseBtn] = useState(false);
 
     const [deleteControl, setDeleteControl] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -128,6 +129,7 @@ const Client = () => {
     const hendledeliteCliente = (id) => {
         setMessege({success: true, title: "Tem certeza que deseja deletar esse Cliente ?", message: "Atenção ao deletar o cliente ele sera removido permanentemente e informações relacionadas ao mesmo"});
         setIdClientItem(id);
+        setCloseBtn(true);
     }
 
     return (
@@ -333,7 +335,7 @@ const Client = () => {
                 </ContainerTable>
 
             {closeModal && <ClientForm setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
-            { messege && <Messege $buttonText="Cancelar" button={<BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )

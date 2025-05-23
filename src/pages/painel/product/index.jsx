@@ -55,7 +55,8 @@ const Product = () => {
     const [deleteControl, setDeleteControl] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [idProduct, setIdProductCard] = useState(null);
-  
+    const [closeBtn, setCloseBtn] = useState(false);
+    
     
     const dataHeader = [
         {icon: <IoBagHandleSharp className="icon" />},
@@ -111,6 +112,7 @@ const Product = () => {
     const hendledeliteProduct = (id) => {
         setMessege({success: true, title: "Tem certeza que deseja deletar esse produto ?", message: "Atenção ao deletar o produto ele sera removido permanentemente e informações relacionadas ao mesmo"});
         setIdProductCard(id);
+        setCloseBtn(true);
     }
 
 
@@ -285,7 +287,7 @@ const Product = () => {
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege $buttonText="Cancelar" button={<BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container>
     )
 }

@@ -84,7 +84,7 @@ const data = [
                     </div>
                     <section className="logo">
                         <FaUserPlus className="icon" />
-                        <Title $text="Cadastrar Produto"  $cor={"var(  --color-text-primary )"}  />
+                        <Title $text="PRODUTO"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <div className="image">
                         <img  src={imagens.length === 0 ? url : imagens} alt="aa" />

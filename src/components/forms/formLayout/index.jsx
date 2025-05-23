@@ -55,7 +55,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             cpf: event.target.cpf?.value || undefined ,
             phone: event.target.phone?.value || "",
             city: event.target.city?.value || "",
-            state: estado  || "",
+            state: estadoFornecedor || "",
         };
 
 

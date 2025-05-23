@@ -44,7 +44,7 @@ const Fornecedores = () => {
         setPhone,
         setCpf,
         setCity,
-        setEstado,
+        setEstadoFornecedor,
         setIdFornecedor,
         deletarFornecedor,
     } = useFornecedores();
@@ -54,6 +54,7 @@ const Fornecedores = () => {
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
     const [btnName, setBtnName] = useState("Cadastrar");
+    const [closeBtn, setCloseBtn] = useState(false);
 
     const [deleteControl, setDeleteControl] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -119,6 +120,7 @@ const Fornecedores = () => {
             setDeleteControl(!deleteControl)
             setMessege(null);
             setConfirmDelete(false);
+            setCloseBtn(false);
         }
         deletaItem();
         console.log("confirmDelete", confirmDelete);
@@ -127,6 +129,7 @@ const Fornecedores = () => {
     const hendledeliteFornecedor = (id) => {
         setMessege({success: true, title: "Tem certeza que deseja deletar esse Fornecedor ?", message: "Atenção ao deletar o Fornecedor ele sera removido permanentemente e informações relacionadas ao mesmo"});
         setIdFornecedorItem(id);
+        setCloseBtn(true);
     }
 
     return (
@@ -222,11 +225,11 @@ const Fornecedores = () => {
                                                     setName(item.name)
                                                     setCpf(item.cpf)
                                                     setCity(item.city)
-                                                    setEstado(item.state)
+                                                    setEstadoFornecedor(item.state)
                                                     setPhone(item.phone)
                                                     setIdFornecedor(item.id)
-                                                    setBtnName("Editar Cliente");
-                                                    setSelectForm("editar cliente")
+                                                    setBtnName("Editar Fornecedor");
+                                                    setSelectForm("editar fornecedor")
                                                 }}
                                             />,
                                     },
@@ -303,7 +306,7 @@ const Fornecedores = () => {
                                             setName(item.name)
                                             setCpf(item.cpf)
                                             setCity(item.city)
-                                            setEstado(item.state)
+                                            setEstadoFornecedor(item.state)
                                             setPhone(item.phone)
                                             setIdFornecedor(item.id)
                                             setBtnName("Editar Fornecedor");
@@ -332,7 +335,7 @@ const Fornecedores = () => {
                 </ContainerTable>
 
             {closeModal && <FornecedorForm  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
-            { messege && <Messege $buttonText="Cancelar" button={<BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText="Cancelar"    button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )

@@ -101,7 +101,7 @@ const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
                     </div>
                     <section className="logo">
                         <FaUserPlus className="icon" />
-                        <Title $text="Cadastrar Fornecedor"  $cor={"var(  --color-text-primary )"}  />
+                        <Title $text="FORNECEDOR"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
                         <LabelComponent $text="Nome" $htmlFor="name" />
