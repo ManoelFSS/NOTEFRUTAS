@@ -22,6 +22,7 @@ import { useProduct } from "../../../../context/ProductContext"
 
 
 
+
 const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
     const {product} = useProduct();
@@ -31,6 +32,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
     const [visibleInputs, setVisibleInputs] = useState(false);
     const [valorDaEntrada, setValorDaEntrada] = useState("");
     const [dataDeRecebimento, setDataDeRecebimento] = useState('');
+    const [valorRestante, setValorRestante] = useState('');
 
     const {
         loading,
@@ -74,6 +76,15 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
             currency: "BRL",
         });
     };
+
+    // Ex: useEffect para atualizar o valor restante sempre que mudar entrada ou itens
+    useEffect(() => {
+        const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
+        const entrada = Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0;
+        const restante = totalVenda - entrada;
+
+        setValorRestante(restante);
+    }, [valorDaEntrada, itensVenda]);
 
     useEffect(() => {
         console.log(itensVenda)
@@ -233,15 +244,8 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
                             <div>
                                 <h4>Valor restantes</h4>
-                                <p>
-                                    {
-                                        (() => {
-                                            const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
-                                            const entradaEmReais = Number(valorDaEntrada) / 100 || 0;
-                                            const restante = totalVenda - entradaEmReais;
-                                            return restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                                        })()
-                                    }
+                                <p style={{ fontWeight: "bold", color: valorRestante === 0 ? "green" : "red" }}>
+                                    {valorRestante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                 </p>
                             </div>
 
