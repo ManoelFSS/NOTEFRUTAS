@@ -72,6 +72,8 @@ export const Container = styled.div`
                 height: 25px;
                 width: 145px;
                 padding: 0 5px;
+                font-weight: 700;
+                outline: none;
             }
 
             p {

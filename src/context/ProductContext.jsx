@@ -166,55 +166,6 @@ export const ProductProvider = ({ children }) => {
         }
     };
 
-
-     // Função para buscar clientes de um admin com paginação
-    // const buscarProductPorAdmin = async (adminId, limitepage, paginacao) => {
-    //     try {
-    //         // Validar parâmetros
-    //         if (!adminId || limitepage <= 0 || paginacao < 1) {
-    //             throw new Error("Parâmetros inválidos: adminId, limitepage ou paginacao");
-    //         }
-
-    //         // Contar total de clientes
-    //         const totalProducts = await contarDocumentos("produtos", adminId);
-    //         console.log(totalProducts);
-    //         setCaunterProduct(totalProducts);
-
-    //         // Parâmetros
-    //         const pageSize = limitepage; // 30
-    //         const page = paginacao;
-
-    //         // Calcular caunterClientes inicial
-    //         const caunterInicial = (page - 1) * pageSize + 1; // Ex.: página 1 -> (1-1)*30+1 = 1
-
-    //         // Referência à coleção
-    //         const clientesRef = collection(db, "produtos");
-
-    //         // Query para buscar documentos a partir de caunterInicial
-    //         const q = query(
-    //             clientesRef,
-    //             where("adminId", "==", adminId),
-    //             where("caunterProduct", ">=", caunterInicial),
-    //             orderBy("caunterProduct", "asc"),
-    //             limit(pageSize)
-    //         );
-
-    //         // Executar query
-    //         const querySnapshot = await getDocs(q);
-
-    //         // Mapear documentos
-    //         const products = [];
-    //         querySnapshot.forEach((doc) => {
-    //             products.push({ id: doc.id, ...doc.data() });
-    //         });
-
-    //         return products;
-    //     } catch (error) {
-    //         console.error("Erro ao buscar clientes:", error);
-    //         return [];
-    //     }
-    // };
-
     const  buscarImagens = async () => {
 
         try {

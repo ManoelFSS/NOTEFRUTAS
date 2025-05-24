@@ -6,33 +6,23 @@ import BtnSubmit from "../../../btns/btnSubmit"
 import BtnNavigate from "../../../btns/btnNavigate"
 import Loading from "../../../loading"
 import Search from "../../../search"
-import Select from "../../../select"
-import InputComponent from "../../../inputComponent"
-import LabelComponent from "../../../labelComponent"
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa6";
-
 // context
 import { useClientes } from "../../../../context/ClientesContext"
 import { useProduct } from "../../../../context/ProductContext"
+import { useAuthContext } from "../../../../context/AuthContext"
 
+const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
-
-
-
-
-const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
-
-    const {product} = useProduct();
+    const {userId} = useAuthContext();
+    const {product, setProduct, buscarProductPorAdmin} = useProduct();
     const [modalProduct, setModalProduct] = useState(false);
     const [valueSearch, setValueSearch] = useState('');
-    const [itensVenda, setItensVenda] = useState([]);
     const [visibleInputs, setVisibleInputs] = useState(false);
-    const [valorDaEntrada, setValorDaEntrada] = useState("");
-    const [dataDeRecebimento, setDataDeRecebimento] = useState('');
-    const [valorRestante, setValorRestante] = useState('');
+
 
     const {
         loading,
@@ -41,6 +31,14 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
         cpf, setCpf,
         city, setCity,
         estado, setEstado,
+        formaDEPagamento, setFormaDEPagamento,
+        itensVenda, setItensVenda,
+        dataDeRecebimento, setDataDeRecebimento,
+        status_pagamento, setStatus_pagamento,
+        valorDaEntrada, setValorDaEntrada,
+        valorTotalDaVenda, setValorTotalDaVenda,
+        valorRestante, setValorRestante,
+        valorRecebido, setValorRecebido,
     } = useClientes();
 
     function adicionarProduto(produto) {
@@ -71,6 +69,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
     // Função para formatar valor para moeda brasileira
     const formatarParaMoeda = (valorEmCentavos) => {
         const numero = Number(valorEmCentavos) / 100;
+
         return numero.toLocaleString("pt-BR", {
             style: "currency",
             currency: "BRL",
@@ -79,16 +78,36 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
     // Ex: useEffect para atualizar o valor restante sempre que mudar entrada ou itens
     useEffect(() => {
+         // Atualiza o valor recebido em reais
+        // setValorRecebido(Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0);
+        console.log(valorDaEntrada)
+        
         const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
-        const entrada = Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0;
-        const restante = totalVenda - entrada;
+        setValorTotalDaVenda(totalVenda);
 
+        const entrada = Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0; // Converte para centavos
+        const restante = totalVenda - entrada;
         setValorRestante(restante);
     }, [valorDaEntrada, itensVenda]);
 
     useEffect(() => {
         console.log(itensVenda)
     }, [itensVenda])
+
+    useEffect(() => {
+        const hendlerGetProduct = async () => {
+            const produData = await  buscarProductPorAdmin(userId, 1000, 1);
+            if(produData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+            setProduct(produData)
+        }
+        hendlerGetProduct();
+        
+        if (formaDEPagamento === "A prazo") {
+            setVisibleInputs(true);
+            setStatus_pagamento("Pendente");
+        }
+
+    }, []);
 
     return (
         <Container>
@@ -97,7 +116,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                     <div className="close">
                         <FaWindowClose className="close-icon" 
                             onClick={() => {
-                                setCloseModal(false)    
+                                setModalVendas(false)    
                                 setBtnName("Cadastrar")
                                 setName("")
                                 setPhone("")
@@ -209,17 +228,27 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                         <div className="radio-area">
                             <div>
                                 <input 
+                                    defaultChecked={formaDEPagamento === "A vista" ? true : false}
                                     type="radio" 
                                     name="payment" 
-                                    onClick={() => setVisibleInputs(false)}
+                                    onClick={() => {
+                                        setVisibleInputs(false)
+                                        setFormaDEPagamento("A vista")
+                                        setStatus_pagamento("Pago")
+                                    }}
                                 />
                                 <label htmlFor="true">A Vista</label>
                             </div>
                             <div>
                                 <input 
+                                    defaultChecked={formaDEPagamento === "A prazo" ? true : false}
                                     type="radio" 
                                     name="payment"
-                                    onClick={() => setVisibleInputs(true)}
+                                    onClick={() => {
+                                        setVisibleInputs(true)
+                                        setFormaDEPagamento("A prazo")
+                                        setStatus_pagamento("Pendente")
+                                    }}
                                 />
                                 <label htmlFor="false">A Prazo</label>
                             </div>
@@ -230,7 +259,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                         <>
                         <div className="inputs-area">
                             <div>
-                                <h4>Valor da entrada</h4>
+                                <h4>Valor recebido</h4>
                                 <input 
                                     type="text" 
                                     value={formatarParaMoeda(valorDaEntrada)}
@@ -238,6 +267,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                                     onChange={(e) => {
                                         const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
                                         setValorDaEntrada(entrada);
+                                        setValorRecebido(Number(entrada) / 100); // aqui garantimos que seja numérico
                                     }}
                                 />
                             </div>
@@ -251,7 +281,7 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
                         </div>
                         <div className="date">
-                            <label htmlFor="">Data de Recebimento</label>
+                            <label htmlFor="">Data do Recebimento</label>
                             <input 
                                 type="date" 
                                 value={dataDeRecebimento}

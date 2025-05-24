@@ -8,7 +8,7 @@ import { useFornecedores } from "../../../context/FornecedoresContext"
 const FormLayout = ({ children, $height, state, $color }) => {
 
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
-    const { cadastrarCliente, caunterClientes, idClient, estado, editarCliente  } = useClientes()
+    const { cadastrarCliente, caunterClientes, caunterVendas, idClient, estado, editarCliente, valorRestante, dataDeRecebimento, valorTotalDaVenda, formaDEPagamento, status_pagamento, valorRecebido, name, phone, cpf, city, cadastrarVenda  } = useClientes()
     const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
     const { signInUser, registerUser, updateUserPassword, selectForm, userId } = useAuthContext()
 
@@ -17,7 +17,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
 
         const getEmail = localStorage.getItem("email");
 
-        const user = {
+        const userAdm = {
             name: event.target.name?.value || "",
             phone: event.target.phone?.value || "",
             email: event.target.email?.value || "",
@@ -27,6 +27,11 @@ const FormLayout = ({ children, $height, state, $color }) => {
             createdAt: new Date(),
             lastPaymentDate: new Date(),
             status: "active"
+        };
+
+        const userAdmRecovery = {
+            email: getEmail || "",
+            password: event.target.senha?.value || "", 
         };
 
         const userClient = {
@@ -50,7 +55,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             state: estado  || "",
         };
 
-        const editarForneced = {
+        const editFornecedor = {
             name: event.target.name?.value || "",
             cpf: event.target.cpf?.value || undefined ,
             phone: event.target.phone?.value || "",
@@ -91,20 +96,32 @@ const FormLayout = ({ children, $height, state, $color }) => {
             category: category || "",
         };
 
-        const userRecovery = {
-            email: getEmail || "",
-            password: event.target.senha?.value || "", 
+        const venda = {
+            name: name || "",
+            phone: phone || "",
+            createdat: new Date(),
+            datereception: dataDeRecebimento || "",
+            typepagament: formaDEPagamento || "",
+            status: status_pagamento || "",
+            cauntervendas: caunterVendas + 1,
+            adminid: userId,
+            clientid: idClient,
+            valordaentrada: valorRecebido || 0,
+            valortotaldavenda: valorTotalDaVenda || 0,
+            valorrestante: formaDEPagamento === "A vista" ? 0 : valorRestante ,
         };
+
+        
         
         switch (selectForm) {
             case "login":
-                await signInUser(user.email, user.password);
+                await signInUser(userAdm.email, userAdm.password);
                 break;
             case "register":
-                await registerUser(user);
+                await registerUser(userAdm);
                 break;
             case "password":
-                await updateUserPassword(userRecovery);
+                await updateUserPassword(userAdmRecovery);
                 break;
             case "cadastrar cliente":
                 if(estado === "Escolha o estado") return alert("Escolha um estado");
@@ -118,7 +135,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
                 await cadastrarFornecedor(userFornecedor);
                 break;  
             case "editar fornecedor":
-                await editarFornecedor(editarForneced, idFornecedor);
+                await editarFornecedor(editFornecedor, idFornecedor);
                 break;
             case "cadastrar produto":
                 if(category === "Escolha uma categoria") return alert("Escolha uma categoria");
@@ -126,6 +143,11 @@ const FormLayout = ({ children, $height, state, $color }) => {
                 break; 
             case "editar produto":
                 await editarProduto(editProduct, idProduct);
+                break; 
+            case "cadastrar venda":
+                console.log(venda);
+                await cadastrarVenda(venda);
+                // await cadastrarProduct(Product);
                 break; 
             default:
                 break;

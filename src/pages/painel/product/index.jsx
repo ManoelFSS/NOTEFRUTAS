@@ -57,7 +57,6 @@ const Product = () => {
     const [idProduct, setIdProductCard] = useState(null);
     const [closeBtn, setCloseBtn] = useState(false);
     
-    
     const dataHeader = [
         {icon: <IoBagHandleSharp className="icon" />},
         { name: "Nome", icon: <AiOutlineAlignRight  className="icon" /> },

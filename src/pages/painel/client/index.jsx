@@ -26,6 +26,7 @@ import useSelect from "../../../hooks/useSelect"
 // context
 import { useAuthContext } from "../../../context/AuthContext"
 import { useClientes } from "../../../context/ClientesContext"
+import { useProduct } from "../../../context/ProductContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 
@@ -48,6 +49,7 @@ const Client = () => {
         setEstado,
         setIdClient,
         deletarCliente,
+        modalVendas, setModalVendas
     } = useClientes();
 
     const { setSelectForm, userId } = useAuthContext();
@@ -60,6 +62,8 @@ const Client = () => {
     const [deleteControl, setDeleteControl] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [idClientItem, setIdClientItem] = useState(null);
+    
+
     
     const dataHeader = [
         {icon: <IoMdPerson className="icon" />},
@@ -140,7 +144,7 @@ const Client = () => {
                     $text="Cadastrar Cliente" 
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
-                        // setCloseModal(true)
+                        setCloseModal(true)
                         setSelectForm("cadastrar cliente") 
                     }}
                 />
@@ -216,6 +220,23 @@ const Client = () => {
                                                 }
                                             />
                                         ),
+                                    },
+                                    {
+                                        icon: <FaCartPlus 
+                                                className="icon" 
+                                                style={{ color: "rgb(83, 83, 83)" }} 
+                                                onClick={() => {
+                                                    setModalVendas(true)
+                                                    setName(item.name)
+                                                    setCpf(item.cpf)
+                                                    setCity(item.city)
+                                                    setEstado(item.state)
+                                                    setPhone(item.phone)
+                                                    setIdClient(item.id)
+                                                    setBtnName("Realizar Venda");
+                                                    setSelectForm("cadastrar venda")
+                                                }}
+                                            />
                                     },
                                     {
                                         icon: <FaEdit 
@@ -303,7 +324,7 @@ const Client = () => {
                                         className="icon" 
                                         style={{ color: "rgb(83, 83, 83)" }} 
                                         onClick={() => {
-                                            setCloseModal(true)
+                                            setModalVendas(true)
                                             setName(item.name)
                                             setCpf(item.cpf)
                                             setCity(item.city)
@@ -354,8 +375,8 @@ const Client = () => {
                     )
                 }
                 </ContainerTable>
-                {false &&< ClientForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
-            {closeModal && <VendasForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+                { closeModal &&< ClientForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+            { modalVendas  && <VendasForm $color="#fff"  setModalVendas={setModalVendas} btnName={btnName} setBtnName={setBtnName}  />}
             { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
