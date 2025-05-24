@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Container } from "./styles"
 import  FormLayout from "../../formLayout"
 import Title from "../../../title"
@@ -7,6 +7,8 @@ import BtnNavigate from "../../../btns/btnNavigate"
 import Loading from "../../../loading"
 import Search from "../../../search"
 import Select from "../../../select"
+import InputComponent from "../../../inputComponent"
+import LabelComponent from "../../../labelComponent"
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -26,6 +28,9 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
     const [modalProduct, setModalProduct] = useState(false);
     const [valueSearch, setValueSearch] = useState('');
     const [itensVenda, setItensVenda] = useState([]);
+    const [visibleInputs, setVisibleInputs] = useState(false);
+    const [valorDaEntrada, setValorDaEntrada] = useState("");
+    const [dataDeRecebimento, setDataDeRecebimento] = useState('');
 
     const {
         loading,
@@ -50,27 +55,29 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                 nome: produto.name,
                 quantidade: "",
                 valorUnitario: "",
+                valorTotal: ""
             }
         ]);
         setModalProduct(false)
+        
     }
 
     function removerProduto(produtoId) {
         setItensVenda(prev => prev.filter(item => item.produtoId !== produtoId));
     }
 
-    function formatarMoeda(valor) {
-        const valorNumerico = valor.replace(/\D/g, '');
-        const valorFormatado = (Number(valorNumerico) / 100).toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL'
+    // Função para formatar valor para moeda brasileira
+    const formatarParaMoeda = (valorEmCentavos) => {
+        const numero = Number(valorEmCentavos) / 100;
+        return numero.toLocaleString("pt-BR", {
+            style: "currency",
+            currency: "BRL",
         });
-        return valorFormatado;
-    }
+    };
 
-    function desformatarMoeda(valorFormatado) {
-        return Number(valorFormatado.replace(/\D/g, '')) / 100;
-    }
+    useEffect(() => {
+        console.log(itensVenda)
+    }, [itensVenda])
 
     return (
         <Container>
@@ -96,14 +103,11 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                     <section className="box">
                         <h4>Cliente</h4>
                         <p>{name}</p>
-                        <p>{phone}</p>
-                    </section>
-                    <section className="box">
                     </section>
                     <section className="box-products">
                         <ul className="header-list">
                             <li>Produto</li>
-                            <li>Quant</li>
+                            <li>Qnt</li>
                             <li>Val Unt</li>
                             <li>Val Total</li>
                             <li>#</li>
@@ -121,7 +125,10 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                                                 const valorDigitado = e.target.value;
                                                 setItensVenda(prev => {
                                                     const copia = [...prev];
-                                                    copia[index].quantidade = valorDigitado === "" ? "" : Number(valorDigitado);
+                                                    const novaQuantidade = valorDigitado === "" ? "" : Number(valorDigitado);
+                                                    const itemAtual = copia[index];
+                                                    itemAtual.quantidade = novaQuantidade;
+                                                    itemAtual.valorTotal = novaQuantidade * (itemAtual.valorUnitario || 0);
                                                     return copia;
                                                 });
                                             }}
@@ -131,34 +138,30 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                                     <li>
                                         <input
                                             type="text"
-                                            value={item.valorFormatado || ""}
+                                            value={item.valorUnitario?.toLocaleString("pt-BR", {
+                                                minimumFractionDigits: 2,
+                                                maximumFractionDigits: 2,
+                                            }) || ""}
                                             onChange={e => {
                                                 const entrada = e.target.value;
-                                                // Remove tudo que não é número
                                                 const numeros = entrada.replace(/\D/g, "");
-                                                if (numeros === "") {
-                                                    setItensVenda(prev => {
-                                                        const copia = [...prev];
-                                                        copia[index].valorUnitario = 0;
-                                                        copia[index].valorFormatado = "";
-                                                        return copia;
-                                                    });
-                                                    return;
-                                                }
-                                                const valorNumerico = Number(numeros) / 100;
-                                                // Formata com separadores, mas sem "R$"
-                                                const formatado = valorNumerico.toLocaleString("pt-BR", {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
-                                                });
+
                                                 setItensVenda(prev => {
                                                     const copia = [...prev];
-                                                    copia[index].valorUnitario = valorNumerico;
-                                                    copia[index].valorFormatado = formatado;
+                                                    const itemAtual = copia[index];
+                                                    
+                                                    if (numeros === "") {
+                                                        itemAtual.valorUnitario = 0;
+                                                        itemAtual.valorTotal = (itemAtual.quantidade || 0) * 0;
+                                                    } else {
+                                                        const valorNumerico = Number(numeros) / 100;
+                                                        itemAtual.valorUnitario = valorNumerico;
+                                                        itemAtual.valorTotal = (itemAtual.quantidade || 0) * valorNumerico;
+                                                    }      
                                                     return copia;
                                                 });
                                             }}
-                                        />      
+                                        />
                                     </li>
 
                                     <li className="total-item">
@@ -178,12 +181,82 @@ const  VendasForm = ({setCloseModal, btnName, setBtnName, $color}) => {
                         </section>
                     </section>
                     <div className="total-money">
-                        <p>Total</p> <span>R$ 1200,00</span>
+                        <p>Total</p> 
+                        <span>
+                            {itensVenda
+                                .reduce((acc, item) => acc + (item.valorTotal || 0), 0)
+                                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                            }
+                        </span>
                     </div>
                     <BtnNavigate 
                         $text="Adicionar Produto"  
                         onClick={() => setModalProduct(true)}
                     />
+                    <div className="payment-area">
+                        <h5>Forma de Pagamento</h5>
+                        <div className="radio-area">
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="payment" 
+                                    onClick={() => setVisibleInputs(false)}
+                                />
+                                <label htmlFor="true">A Vista</label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="payment"
+                                    onClick={() => setVisibleInputs(true)}
+                                />
+                                <label htmlFor="false">A Prazo</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    {visibleInputs && 
+                        <>
+                        <div className="inputs-area">
+                            <div>
+                                <h4>Valor da entrada</h4>
+                                <input 
+                                    type="text" 
+                                    value={formatarParaMoeda(valorDaEntrada)}
+                                    placeholder="Entrada" 
+                                    onChange={(e) => {
+                                        const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não for número
+                                        setValorDaEntrada(entrada);
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <h4>Valor restantes</h4>
+                                <p>
+                                    {
+                                        (() => {
+                                            const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
+                                            const entradaEmReais = Number(valorDaEntrada) / 100 || 0;
+                                            const restante = totalVenda - entradaEmReais;
+                                            return restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                                        })()
+                                    }
+                                </p>
+                            </div>
+
+                        </div>
+                        <div className="date">
+                            <label htmlFor="">Data de Recebimento</label>
+                            <input 
+                                type="date" 
+                                value={dataDeRecebimento}
+                                onChange={(e) => setDataDeRecebimento(e.target.value)}
+                            />
+                        </div>
+                        </>
+                    }
+                    
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
                 </FormLayout>

@@ -22,11 +22,80 @@ export const Container = styled.div`
     .form-area {
         display: flex;
         justify-content: center;
-        align-items: center;
         position: relative;
         margin: auto;
         animation-name: animatop;
         animation-duration: 0.4s;
+
+        .payment-area {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 100%;
+            padding-top: 5px;
+
+            .radio-area {
+                display: flex;
+                gap: 36px;
+            }
+
+            div {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            input {
+                width: 16px;
+                height: 16px;
+            }
+
+            label {
+                font-size: 0.8rem;
+                font-weight: 500;
+                cursor: pointer;
+            }
+        }
+
+        .inputs-area {
+            display: flex;
+            gap: 60px;
+            padding-top: 5px;
+
+            h4 {
+                font-size: 0.8rem;
+                font-weight: 500;
+                padding-bottom: 5px;
+            }
+
+            input {
+                height: 25px;
+                width: 145px;
+                padding: 0 5px;
+            }
+
+            p {
+                text-align: center;
+            }
+        }
+
+        .date {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding-top: 10px;
+
+            label {
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+            input {
+                height: 25px;
+                width: 145px;
+                padding: 0 5px;
+            }
+        }
 
         .modal-product {
             display: flex;
@@ -131,7 +200,7 @@ export const Container = styled.div`
 
 
     .box-products {
-        height: 270px;
+        height: 170px;
         width: 100%;
     
         .header-list {
@@ -143,13 +212,16 @@ export const Container = styled.div`
             box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.34);
 
             li {
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 font-weight: 600;
                 font-size: 0.8rem;
                 color:  #fff;
             }
 
             li:nth-child(1) {
-                width: 90px;
+                width: 80px;
             }
 
             li:nth-child(2) {
@@ -157,64 +229,60 @@ export const Container = styled.div`
             }
 
             li:nth-child(3) {
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 width: 65px;
             }
 
             li:nth-child(4) {
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 width: 80px;
             }
 
             li:nth-child(5) {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 30px;
+                width: 20px;
             }
         }
 
         .body {
-            padding: 10px 0;
-            height: 250px;
+            height: 140px;
             overflow-y: auto;
 
             &::-webkit-scrollbar {
-                width: 3px;
+                width: 4px;
             }
             
             &::-webkit-scrollbar-track {
-                background:rgba(241, 241, 241, 0);
+                background:rgba(255, 255, 255, 0);
             }
             
             &::-webkit-scrollbar-thumb {
-                background: #FF9D00;
+                background:rgb(43, 42, 42);
             }
 
             .body-list {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                gap: 10px;
-                padding: 3px 0 10px;
+                gap: 5px;
+                padding: 10px 0 10px;
                 list-style: none;
                 width: 100%;
-                background-color:rgb(255, 255, 255);     
-                border-bottom: 2px solid rgba(0, 0, 0, 0.46);
+                border-bottom: 2px solid rgb(255, 166, 0);
+
+                li {
+                    display: flex;
+                    height: 20px;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                    font-size: 0.7rem;
+                }
 
                 li:nth-child(1) {
-                    width: 90px;
-                    font-weight: 900;
-                    font-size: 0.9rem;
+                    width: 85px;
                     color:rgb(0, 58, 8);
                 }
 
                 li:nth-child(2) {
-                    width: 60px;
+                    width: 45px;
 
                     input {
                         width: 100%;
@@ -223,7 +291,7 @@ export const Container = styled.div`
                         outline: none;
                         text-align: center;
                         font-weight: 600;
-                        font-size: 1rem;
+                        font-size: 0.8rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
 
@@ -235,7 +303,7 @@ export const Container = styled.div`
                 }
 
                 li:nth-child(3) {
-                    width: 80px;
+                    width: 60px;
 
                     input {
                         width: 100%;
@@ -244,7 +312,7 @@ export const Container = styled.div`
                         outline: none;
                         text-align: center;
                         font-weight: 600;
-                        font-size: 1rem;
+                        font-size: 0.8rem;
                         border: solid 1px rgba(0, 0, 0, 0.55);
                     }
 
@@ -259,7 +327,7 @@ export const Container = styled.div`
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 75px;
+                    width: 80px;
                     font-weight: 600;
                     font-size: 0.9rem;
                 }
@@ -268,7 +336,7 @@ export const Container = styled.div`
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 30px;
+                    width: 20px;
                 }
 
                 .delete-icon {
@@ -290,8 +358,8 @@ export const Container = styled.div`
         width: 100%;
         justify-content: flex-end;
         align-items: center;
-        gap: 10px;
-        padding: 5px 0;
+        gap: 20px;
+        padding: 5px 10px ;
 
         p {
             font-weight: 00;
