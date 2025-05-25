@@ -131,8 +131,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         <Title $text="VENDA"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
-                        <h4>Cliente</h4>
-                        <p>{name}</p>
+                        <h5>Cliente</h5>
+                        <p style={{textTransform: "capitalize", fontSize: "0.8rem", paddingBottom: "5px"}}>{name}</p>
                     </section>
                     <section className="box-products">
                         <ul className="header-list">
@@ -211,26 +211,29 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         </section>
                     </section>
                     <div className="total-money">
-                        <p>Total</p> 
-                        <span>
-                            {itensVenda
-                                .reduce((acc, item) => acc + (item.valorTotal || 0), 0)
-                                .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                            }
-                        </span>
+                        <BtnNavigate 
+                            $text="Adicionar Produto"  
+                            onClick={() => setModalProduct(true)}
+                        />
+                        <div className="total">
+                            <p>Total</p> 
+                            <span>
+                                {itensVenda
+                                    .reduce((acc, item) => acc + (item.valorTotal || 0), 0)
+                                    .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                }
+                            </span>
+                        </div>
                     </div>
-                    <BtnNavigate 
-                        $text="Adicionar Produto"  
-                        onClick={() => setModalProduct(true)}
-                    />
+                    
                     <div className="payment-area">
-                        <h5>Forma de Pagamento</h5>
+                        <h6>Forma de Pagamento</h6>
                         <div className="radio-area">
                             <div>
                                 <input 
                                     defaultChecked={formaDEPagamento === "A vista" ? true : false}
                                     type="radio" 
-                                    name="payment" 
+                                    name="forma-payment" 
                                     onClick={() => {
                                         setVisibleInputs(false)
                                         setFormaDEPagamento("A vista")
@@ -241,9 +244,10 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             </div>
                             <div>
                                 <input 
+                                    style={{marginLeft: "11px"}}
                                     defaultChecked={formaDEPagamento === "A prazo" ? true : false}
                                     type="radio" 
-                                    name="payment"
+                                    name="forma-payment"
                                     onClick={() => {
                                         setVisibleInputs(true)
                                         setFormaDEPagamento("A prazo")
@@ -255,11 +259,51 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         </div>
 
                     </div>
+                    <div className="payment-area">
+                        <h6>Tipo de Pagamento</h6>
+                        <div className="radio-area">
+                            
+                            <div>
+                                <input 
+                                    defaultChecked={formaDEPagamento === "A vista" ? true : false}
+                                    type="radio" 
+                                    name="tipo-payment" 
+                                    onClick={() => {
+                                        
+                                    }}
+                                />
+                                <label htmlFor="true">Dinheiro</label>
+                            </div>
+                            <div>
+                                <input 
+                                    defaultChecked={formaDEPagamento === "A prazo" ? true : false}
+                                    type="radio" 
+                                    name="tipo-payment"
+                                    onClick={() => {
+                                        
+                                    }}
+                                />
+                                <label htmlFor="false">Pix</label>
+                            </div>
+                            <div>
+                                <input 
+                                    defaultChecked={formaDEPagamento === "A prazo" ? true : false}
+                                    type="radio" 
+                                    name="tipo-payment"
+                                    onClick={() => {
+                                        
+                                    }}
+                                />
+                                <label htmlFor="false">Cartão</label>
+                            </div>
+                        </div>
+
+                    </div>
                     {visibleInputs && 
                         <>
                         <div className="inputs-area">
                             <div>
-                                <h4>Valor recebido</h4>
+                                <h6>Valor recebido</h6>
                                 <input 
                                     type="text" 
                                     value={formatarParaMoeda(valorDaEntrada)}
@@ -273,7 +317,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             </div>
 
                             <div>
-                                <h4>Valor restantes</h4>
+                                <h6>Valor restantes</h6>
                                 <p style={{ fontWeight: "bold", color: valorRestante === 0 ? "green" : "red" }}>
                                     {valorRestante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                 </p>

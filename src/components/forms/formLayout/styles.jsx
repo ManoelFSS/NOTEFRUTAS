@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    min-width: 320px;
+    min-width: 350px;
     padding: 20px 20px 30px 20px;
     background-color: rgba(255, 255, 255, 0.69);
     box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.6);
@@ -10,7 +10,11 @@ export const Container = styled.div`
     margin: auto;
 
     @media (max-width: 340px) {
-        min-width: 260px;
+        min-width: 250px;
+    }
+    @media (max-width: 330px) {
+        min-width: 250px;
+        transform: scale(0.9);
     }
 
     .image {
@@ -29,7 +33,7 @@ export const Container = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
+        padding: 0px;
 
         .icon {
             width: 30px;

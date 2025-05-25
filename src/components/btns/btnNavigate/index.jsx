@@ -1,6 +1,6 @@
 import { Button } from "./styles"
 
-const BtnNavigate = ({$text, onClick, icon,  $width, $height, $background, $color, $marginTop}) => {
+const BtnNavigate = ({$text, onClick, icon,  $width, $height, $background, $color, $marginTop, $fontSize}) => {
     return (
         <Button 
             type="button"

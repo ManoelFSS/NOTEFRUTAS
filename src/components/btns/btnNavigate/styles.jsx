@@ -13,7 +13,7 @@ export const Button = styled.button`
     color: var( --color-text-primary );
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3), inset 0px 0px 8px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 700;
 
     .icon {

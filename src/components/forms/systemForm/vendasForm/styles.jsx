@@ -13,6 +13,11 @@ export const Container = styled.div`
     z-index: 9999;
     animation-name: faid;
     animation-duration: 0.4s;
+    overflow-y: auto;
+
+    @media (max-width: 450px) {
+        padding: 20px 0px;
+    }
 
     @keyframes faid {
         from {opacity: 0}
@@ -32,7 +37,12 @@ export const Container = styled.div`
             flex-direction: column;
             gap: 5px;
             width: 100%;
-            padding-top: 5px;
+            padding-top: 10px;
+
+            h5 {
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
 
             .radio-area {
                 display: flex;
@@ -51,7 +61,7 @@ export const Container = styled.div`
             }
 
             label {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
                 font-weight: 500;
                 cursor: pointer;
             }
@@ -62,10 +72,10 @@ export const Container = styled.div`
             gap: 60px;
             padding-top: 5px;
 
-            h4 {
-                font-size: 0.8rem;
+            h6 {
+                font-size: 0.7rem;
                 font-weight: 500;
-                padding-bottom: 5px;
+                padding: 4px 0;
             }
 
             input {
@@ -78,6 +88,8 @@ export const Container = styled.div`
 
             p {
                 text-align: center;
+                font-size: 0.8rem;
+                font-weight: 500;
             }
         }
 
@@ -198,8 +210,6 @@ export const Container = styled.div`
             }
         }
     }
-
-
 
     .box-products {
         height: 170px;
@@ -358,19 +368,28 @@ export const Container = styled.div`
     .total-money {
         display: flex;
         width: 100%;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
-        gap: 20px;
-        padding: 5px 10px ;
+        gap: 5px;
+        padding: 5px 0px;
+
+        .total {
+            display: flex;
+            width: 130px;
+            height: 36px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
         p {
-            font-weight: 00;
+            font-weight: 500;
         }
 
         span {
             color:rgb(1, 135, 12);
             padding: 3px 4px;
-            font-size: 1rem;
+            font-size: 0.9rem;
             font-weight: 600;
         }
     }
