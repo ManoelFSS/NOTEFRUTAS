@@ -8,7 +8,24 @@ import { useFornecedores } from "../../../context/FornecedoresContext"
 const FormLayout = ({ children, $height, state, $color }) => {
 
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
-    const { cadastrarCliente, caunterClientes, caunterVendas, idClient, estado, editarCliente, valorRestante, dataDeRecebimento, valorTotalDaVenda, formaDEPagamento, status_pagamento, valorRecebido, name, phone, cpf, city, cadastrarVenda  } = useClientes()
+
+    const { 
+            cadastrarCliente, 
+            caunterClientes, 
+            caunterVendas, 
+            idClient, 
+            estado, 
+            editarCliente, 
+            valorRestante, 
+            dataDeRecebimento, 
+            valorTotalDaVenda, 
+            formaDEPagamento, 
+            status_pagamento, 
+            valorRecebido, 
+            name, phone, cpf, city, 
+            cadastrarVenda  
+        } = useClientes()
+
     const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
     const { signInUser, registerUser, updateUserPassword, selectForm, userId } = useAuthContext()
 
@@ -96,23 +113,37 @@ const FormLayout = ({ children, $height, state, $color }) => {
             category: category || "",
         };
 
+        // const venda = {
+        //     name: name || "",
+        //     phone: phone || "",
+        //     created_at: new Date(),
+        //     datereception: dataDeRecebimento || "",
+        //     typepagament: formaDEPagamento || "",
+        //     status: status_pagamento || "",
+        //     cauntervendas: caunterVendas + 1,
+        //     adminid: userId,
+        //     cliente_id: idClient,
+        //     valordaentrada: valorRecebido || 0,
+        //     valortotaldavenda: valorTotalDaVenda || 0,
+        //     valorrestante: formaDEPagamento === "A vista" ? 0 : valorRestante ,
+        // };
+
         const venda = {
+            cliente_id:idClient,
             name: name || "",
             phone: phone || "",
-            createdat: new Date(),
-            datereception: dataDeRecebimento || "",
-            typepagament: formaDEPagamento || "",
-            status: status_pagamento || "",
-            cauntervendas: caunterVendas + 1,
             adminid: userId,
-            clientid: idClient,
-            valordaentrada: valorRecebido || 0,
-            valortotaldavenda: valorTotalDaVenda || 0,
-            valorrestante: formaDEPagamento === "A vista" ? 0 : valorRestante ,
+            contador_vendas: caunterVendas + 1,
+            status: status_pagamento || "",
+            created_at: new Date(),
+            forma_pagamento:formaDEPagamento || "",
+            tipo_pagamento: "",
+            valor_entrada: valorRecebido || 0,
+            valor_total: valorTotalDaVenda || 0,
+            valor_restante:  formaDEPagamento === "A vista" ? 0 : valorRestante ,
+            qtd_parcelas: 0,
         };
 
-        
-        
         switch (selectForm) {
             case "login":
                 await signInUser(userAdm.email, userAdm.password);

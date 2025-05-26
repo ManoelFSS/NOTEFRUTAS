@@ -2,7 +2,7 @@ import { Container_messege } from "./styles"
 // context 
 import Btn from "../btns/btnSubmit"
 
-const Messege = ({$title, $text, $setMessege, button, $buttonText }) => {
+const Messege = ({$title, $text, $setMessege, button, $buttonText}) => {
     
     return (
         <Container_messege>

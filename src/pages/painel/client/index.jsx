@@ -377,7 +377,7 @@ const Client = () => {
                 </ContainerTable>
                 { closeModal &&< ClientForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
             { modalVendas  && <VendasForm $color="#fff"  setModalVendas={setModalVendas} btnName={btnName} setBtnName={setBtnName}  />}
-            { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText="Fechar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )

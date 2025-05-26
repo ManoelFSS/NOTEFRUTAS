@@ -1,6 +1,6 @@
 import { Button } from "./styles"
 
-const BtnSubmit = ({$text,$typeText, $marginTop, onClick, $disabled, $opacity, $timer }) => {
+const BtnSubmit = ({$text, $typeText, $marginTop, onClick, $disabled, $opacity, $timer }) => {
     return (
         <Button 
             type={$typeText}

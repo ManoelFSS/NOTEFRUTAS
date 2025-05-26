@@ -27,7 +27,7 @@ export const ClientesProvider = ({ children }) => {
     const [status_pagamento, setStatus_pagamento] = useState('Pendente');
     const [valorTotalDaVenda, setValorTotalDaVenda] = useState('');
     const [valorRestante, setValorRestante] = useState('');
-    const [valorRecebido, setValorRecebido] = useState('');
+    const [valorRecebido, setValorRecebido] = useState(0);
     const [valorDaEntrada, setValorDaEntrada] = useState('');
 
 

@@ -47,7 +47,6 @@ export const Container_search = styled.div`
 
         &:hover {
             color: #FF9D00;
-            transform: scale(1);
         }
     }
     

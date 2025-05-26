@@ -114,14 +114,19 @@ export const Container = styled.div`
         .modal-product {
             display: flex;
             flex-direction: column;
+            align-items: center;
             position: absolute;
             width: 95%;
-            height: 95%;
+            height: 97%;
+            top: 10px;
             background-color:rgb(255, 255, 255);
+            border-radius: 10px;
+            
 
             .search-area {
+                width: 100%;
                 padding:20px 15px;
-                background-color: rgb(255, 255, 255);
+                background-color:rgb(255, 255, 255);
                 border-radius: 10px 10px 0 0;
                 margin-bottom: 10px;
             }
@@ -129,9 +134,10 @@ export const Container = styled.div`
             .select-item-area {
                 display: flex;
                 flex-direction: column;
-                height: 390px;
-                width: 95%;
-                background-color: rgb(235, 235, 235);
+                height: 450px;
+                width: 90%;
+                background-color: rgb(255, 255, 255);
+                border: solid 1px rgb(195, 195, 195);
                 padding: 12px 9px;
                 overflow-y: auto;
 
@@ -158,11 +164,11 @@ export const Container = styled.div`
                     border-radius: 6px;
                     cursor: pointer;
                     transform: scale(0.99);
-                    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.22);
+                    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.47);
                     border: solid 2px transparent;
                     transition: border 0.3s ease;
                     transform: scale(0.95);
-                    margin-bottom: 2px;
+                    margin-bottom: 10px;
 
                     img {
                         width: 40px;
@@ -266,7 +272,7 @@ export const Container = styled.div`
             }
             
             &::-webkit-scrollbar-thumb {
-                background:rgb(43, 42, 42);
+                background: #007e2a;
             }
 
             .body-list {

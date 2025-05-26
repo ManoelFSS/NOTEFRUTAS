@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { Container } from "./styles"
 import  FormLayout from "../../formLayout"
 import Title from "../../../title"
@@ -6,6 +6,7 @@ import BtnSubmit from "../../../btns/btnSubmit"
 import BtnNavigate from "../../../btns/btnNavigate"
 import Loading from "../../../loading"
 import Search from "../../../search"
+import Messege from "../../../messege"
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
@@ -22,7 +23,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     const [modalProduct, setModalProduct] = useState(false);
     const [valueSearch, setValueSearch] = useState('');
     const [visibleInputs, setVisibleInputs] = useState(false);
-
+    const [selectedTipyPayment, setSelectedTipyPayment] = useState('');
+    const [messege, setMessege] = useState(null);
 
     const {
         loading,
@@ -40,6 +42,35 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         valorRestante, setValorRestante,
         valorRecebido, setValorRecebido,
     } = useClientes();
+
+
+    const handleClick = (value) => {
+        if(valorRecebido <= 0 && formaDEPagamento === "A prazo") {
+            setMessege({
+                success: false,
+                title: "❌ Ops! ",
+                message:
+                    `O valor recebido deve ser preenchido para escolher um tipo de Pagamento,  ou venda sem entrada.   
+                `,
+            });
+            return
+        }
+        
+        if (selectedTipyPayment === value) {
+            setSelectedTipyPayment(""); // desmarca se já estiver selecionado
+        } else {
+            setSelectedTipyPayment(value);
+        }
+    };
+
+    const handleFormaDePagamentoClick = (value) => {
+        setFormaDEPagamento(value);
+    };
+
+    useEffect(() => {
+        console.log(selectedTipyPayment);
+    }, [selectedTipyPayment]);
+
 
     function adicionarProduto(produto) {
         const jaExiste = itensVenda.some(item => item.produtoId === produto.id);
@@ -77,18 +108,30 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     };
 
     // Ex: useEffect para atualizar o valor restante sempre que mudar entrada ou itens
-    useEffect(() => {
-         // Atualiza o valor recebido em reais
-        // setValorRecebido(Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0);
-        console.log(valorDaEntrada)
-        
+    useEffect(() => { 
         const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
         setValorTotalDaVenda(totalVenda);
+
+        if (valorRecebido <= 0 && formaDEPagamento === "A prazo") {
+            setSelectedTipyPayment("")
+            console.log("valor recebido", valorRecebido);
+        }
 
         const entrada = Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0; // Converte para centavos
         const restante = totalVenda - entrada;
         setValorRestante(restante);
-    }, [valorDaEntrada, itensVenda]);
+
+        if(restante <= 0) {
+            // setFormaDEPagamento("A vista")
+            setValorRecebido(0)
+            setValorDaEntrada('')
+            setFormaDEPagamento("A vista")
+            setDataDeRecebimento('')
+            setVisibleInputs(false)
+            setStatus_pagamento("Pago");
+            setValorRestante(0)
+        }
+    }, [valorDaEntrada, itensVenda]);////////////
 
     useEffect(() => {
         console.log(itensVenda)
@@ -234,11 +277,17 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     defaultChecked={formaDEPagamento === "A vista" ? true : false}
                                     type="radio" 
                                     name="forma-payment" 
+                                    value={"A vista"}
+                                    checked={ formaDEPagamento === 'A vista'} 
                                     onClick={() => {
+                                        setValorDaEntrada('')
                                         setVisibleInputs(false)
                                         setFormaDEPagamento("A vista")
                                         setStatus_pagamento("Pago")
+                                        handleFormaDePagamentoClick("A vista")
+                                        setDataDeRecebimento('')
                                     }}
+                                    readOnly 
                                 />
                                 <label htmlFor="true">A Vista</label>
                             </div>
@@ -248,57 +297,23 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     defaultChecked={formaDEPagamento === "A prazo" ? true : false}
                                     type="radio" 
                                     name="forma-payment"
+                                    value={"A prazo"}
+                                    checked={ formaDEPagamento === 'A prazo'} 
                                     onClick={() => {
                                         setVisibleInputs(true)
                                         setFormaDEPagamento("A prazo")
                                         setStatus_pagamento("Pendente")
+                                        setSelectedTipyPayment('')
+                                        handleFormaDePagamentoClick("A prazo")
                                     }}
+                                    readOnly 
                                 />
                                 <label htmlFor="false">A Prazo</label>
                             </div>
                         </div>
 
                     </div>
-                    <div className="payment-area">
-                        <h6>Tipo de Pagamento</h6>
-                        <div className="radio-area">
-                            
-                            <div>
-                                <input 
-                                    defaultChecked={formaDEPagamento === "A vista" ? true : false}
-                                    type="radio" 
-                                    name="tipo-payment" 
-                                    onClick={() => {
-                                        
-                                    }}
-                                />
-                                <label htmlFor="true">Dinheiro</label>
-                            </div>
-                            <div>
-                                <input 
-                                    defaultChecked={formaDEPagamento === "A prazo" ? true : false}
-                                    type="radio" 
-                                    name="tipo-payment"
-                                    onClick={() => {
-                                        
-                                    }}
-                                />
-                                <label htmlFor="false">Pix</label>
-                            </div>
-                            <div>
-                                <input 
-                                    defaultChecked={formaDEPagamento === "A prazo" ? true : false}
-                                    type="radio" 
-                                    name="tipo-payment"
-                                    onClick={() => {
-                                        
-                                    }}
-                                />
-                                <label htmlFor="false">Cartão</label>
-                            </div>
-                        </div>
-
-                    </div>
+                    
                     {visibleInputs && 
                         <>
                         <div className="inputs-area">
@@ -334,6 +349,53 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         </div>
                         </>
                     }
+
+                    <div className="payment-area" style={{borderBottom:" solid 1px #ccc", paddingBottom:"6px" }}>
+                        <h6>Tipo de Pagamento</h6>
+                        <div className="radio-area">
+                            
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="tipo-pagamento"
+                                    value={"Dinheiro"}
+                                    checked={selectedTipyPayment === 'Dinheiro'} 
+                                    onClick={() => {
+                                        handleClick("Dinheiro")
+                                    }}
+                                    readOnly 
+                                />
+                                <label htmlFor="true">Dinheiro</label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="tipo-pagamento"
+                                    value={"Pix"}
+                                    checked={selectedTipyPayment === 'Pix'}
+                                    onClick={() => {
+                                        handleClick("Pix")
+                                    }}
+                                    readOnly 
+                                />
+                                <label htmlFor="false">Pix</label>
+                            </div>
+                            <div>
+                                <input 
+                                    type="radio" 
+                                    name="tipo-pagamento"
+                                    value={"Cartão"}
+                                    checked={selectedTipyPayment === 'Cartão'}
+                                    onClick={() => {
+                                        handleClick("Cartão")
+                                    }}
+                                    readOnly 
+                                />
+                                <label htmlFor="false">Cartão</label>
+                            </div>
+                        </div>
+
+                    </div>
                     
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
@@ -365,6 +427,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     </div>
                 </section> }
             </div>
+            { messege && <Messege $buttonText="OK" $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container>
     )
 }
