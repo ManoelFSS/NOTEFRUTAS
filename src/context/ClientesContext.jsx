@@ -30,6 +30,8 @@ export const ClientesProvider = ({ children }) => {
     const [valorRecebido, setValorRecebido] = useState(0);
     const [valorDaEntrada, setValorDaEntrada] = useState('');
     const [tipoPagamento, setTipoPagamento] = useState('');
+    const [qtParcelas , setQtParcelas] = useState(1);
+    const [tipoCobranca, setTipoCobranca] = useState('');
 
 
 
@@ -322,7 +324,9 @@ export const ClientesProvider = ({ children }) => {
                 caunterVendas, setCaunterVendas,
                 cadastrarVenda,
                 modalVendas, setModalVendas,
-                tipoPagamento, setTipoPagamento
+                tipoPagamento, setTipoPagamento,
+                qtParcelas , setQtParcelas,
+                tipoCobranca, setTipoCobranca
             }}>
         {children}
         </ClientesContext.Provider>

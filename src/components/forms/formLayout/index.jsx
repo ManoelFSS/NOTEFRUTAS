@@ -24,7 +24,8 @@ const FormLayout = ({ children, $height, state, $color }) => {
             valorRecebido, 
             name, phone, cpf, city, 
             cadastrarVenda,
-            tipoPagamento
+            tipoPagamento,
+            qtParcelas
         } = useClientes()
 
     const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
@@ -142,7 +143,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             valor_entrada: valorRecebido || 0,
             valor_total: valorTotalDaVenda || 0,
             valor_restante:  formaDEPagamento === "A vista" ? 0 : valorRestante ,
-            qtd_parcelas: 0,
+            qtd_parcelas: qtParcelas || 0,
         };
 
         switch (selectForm) {

@@ -39,9 +39,8 @@ export const Container = styled.div`
             width: 100%;
             padding-top: 10px;
 
-            h5 {
-                font-size: 0.8rem;
-                font-weight: 500;
+            h6 {
+                
             }
 
             .radio-area {
@@ -49,15 +48,19 @@ export const Container = styled.div`
                 gap: 36px;
             }
 
-            div {
-                display: flex;
-                align-items: center;
+            .tipo-cobranca {
                 gap: 10px;
             }
 
+            div {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+
             input {
-                width: 16px;
-                height: 16px;
+                width: 10px;
+                height: 10px;
             }
 
             label {
@@ -95,19 +98,31 @@ export const Container = styled.div`
 
         .date {
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            gap: 45px;
             padding-top: 10px;
 
-            label {
-                font-size: 0.8rem;
-                font-weight: 500;
+            .date-area,  .Pacelament-area {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                label {
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
+
+                input {
+                    height: 25px;
+                    width: 145px;
+                    padding: 0 5px;
+                }
             }
 
-            input {
-                height: 25px;
-                width: 145px;
-                padding: 0 5px;
+            .Pacelament-area {
+                align-items: center;
+                input {
+                    width: 40px;
+                }
             }
         }
 
@@ -218,8 +233,14 @@ export const Container = styled.div`
     }
 
     .box-products {
-        height: 170px;
+        height: 110px;/////////////////////////////////////////////////////////////////
         width: 100%;
+        // border: solid 1px rgb(180, 10, 10);
+
+        @media (max-width: 500px) {
+            height: 199px;
+            // border: solid 1px rgb(180, 10, 10);
+        }
     
         .header-list {
             display: flex;
@@ -260,8 +281,14 @@ export const Container = styled.div`
         }
 
         .body {
-            height: 140px;
+            height: 85px;
             overflow-y: auto;
+            // border: solid 1px rgb(0, 195, 23); /////////////////////////////////////
+
+            @media (max-width: 500px) {
+                height: 170px;
+                // border: solid 1px rgb(10, 180, 33);
+            }
 
             &::-webkit-scrollbar {
                 width: 4px;

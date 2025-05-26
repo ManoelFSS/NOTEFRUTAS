@@ -41,7 +41,9 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         valorTotalDaVenda, setValorTotalDaVenda,
         valorRestante, setValorRestante,
         valorRecebido, setValorRecebido,
-        tipoPagamento, setTipoPagamento
+        tipoPagamento, setTipoPagamento,
+        qtParcelas , setQtParcelas,
+        tipoCobranca, setTipoCobranca
     } = useClientes();
 
 
@@ -66,6 +68,10 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
     const handleFormaDePagamentoClick = (value) => {
         setFormaDEPagamento(value);
+    };
+
+    const handleTipoDeCobrancaClick = (value) => {
+        setTipoCobranca(value);
     };
 
     useEffect(() => {
@@ -138,6 +144,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setVisibleInputs(false)  
             setFormaDEPagamento("A vista")
             setStatus_pagamento("Pago");
+            setQtParcelas(0);
         }  
     }, [valorDaEntrada]);
 
@@ -159,6 +166,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setVisibleInputs(true);
             setStatus_pagamento("Pendente");
             setFormaDEPagamento("A prazo");
+            setQtParcelas(1);
         }
 
     }, []);
@@ -297,6 +305,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         setStatus_pagamento("Pago")
                                         handleFormaDePagamentoClick("A vista")
                                         setDataDeRecebimento('')
+                                        setQtParcelas(0)
                                     }}
                                     readOnly 
                                 />
@@ -316,6 +325,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         setStatus_pagamento("Pendente")
                                         setSelectedTipyPayment('')
                                         handleFormaDePagamentoClick("A prazo")
+                                        setQtParcelas(1)
                                     }}
                                     readOnly 
                                 />
@@ -351,17 +361,102 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
                         </div>
                         <div className="date">
-                            <label htmlFor="">Data do Recebimento</label>
-                            <input 
-                                type="date" 
-                                value={dataDeRecebimento}
-                                onChange={(e) => setDataDeRecebimento(e.target.value)}
-                            />
+                            <div className="date-area">
+                                <label htmlFor="">Data do Recebimento</label>
+                                <input 
+                                    type="date" 
+                                    value={dataDeRecebimento}
+                                    onChange={(e) => setDataDeRecebimento(e.target.value)}
+                                    placeholder="dd/mm/aaaa"
+                                    required
+                                />
+                            </div>
+                            <div className="Pacelament-area">
+                                <label htmlFor="">Total de Parcelas</label>
+                                <input 
+                                    style={{textAlign: "center", fontWeight: "bold"}}
+                                    type="text" 
+                                    value={qtParcelas <= 0 ? '' : qtParcelas}
+                                    onChange={(e) => {
+                                        const entrada = e.target.value;
+                                        const numeros = entrada.replace(/\D/g, "");
+                                        setQtParcelas(Number(numeros));
+                                    }}
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="payment-area" style={{paddingBottom:"4px" }}>
+                            <h6>Tipo de Cobrança</h6>
+                            <div className="radio-area tipo-cobranca">
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-cobranca"
+                                        value={"Diário"}
+                                        checked={tipoCobranca === 'Diário'} 
+                                        onClick={() => {
+                                            handleTipoDeCobrancaClick("Diário")
+                                            setTipoCobranca("Diário")
+                                            setQtParcelas(1);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label htmlFor="true">Diário</label>
+                                </div>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-cobranca"
+                                        value={"Semanal"}
+                                        checked={tipoCobranca === 'Semanal'}
+                                        onClick={() => {
+                                            handleTipoDeCobrancaClick("Semanal")
+                                            setTipoCobranca("Semanal")
+                                            setQtParcelas(7);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label htmlFor="false">Semanal</label>
+                                </div>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-cobranca"
+                                        value={"Quinzenal"}
+                                        checked={tipoCobranca === 'Quinzenal'}
+                                        onClick={() => {
+                                            handleTipoDeCobrancaClick("Quinzenal")
+                                            setTipoCobranca("Quinzenal")
+                                            setQtParcelas(15);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label htmlFor="false">Quinzenal</label>
+                                </div>
+                                <div>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-cobranca"
+                                        value={"Mensal"}
+                                        checked={tipoCobranca === 'Mensal'}
+                                        onClick={() => {
+                                            handleTipoDeCobrancaClick("Mensal")
+                                            setTipoCobranca("Mensal")
+                                            setQtParcelas(30);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label htmlFor="false">Mensal</label> 
+                                </div>
+
+                            </div>
                         </div>
                         </>
                     }
 
-                    <div className="payment-area" style={{borderBottom:" solid 1px #ccc", paddingBottom:"6px" }}>
+                    <div className="payment-area" style={{paddingBottom:"4px" }}>
                         <h6>Tipo de Pagamento</h6>
                         <div className="radio-area">
                             
