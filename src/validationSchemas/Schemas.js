@@ -90,3 +90,16 @@ export const recoverySchema = z.object({
     password: passwordSchema,
 });
 
+export const vendaSchema = z.object({
+    contador_vendas: z.number().int().nonnegative(),
+    status: z.string(),
+    created_at: z.date(), // ou z.string().transform(val => new Date(val)) se vier como string
+    forma_pagamento: z.string(),
+    tipo_pagamento: z.string().optional(),
+    tipo_cobranca: z.string().optional(),
+    valor_entrada: z.number().nonnegative(),
+    valor_total: z.number().nonnegative(),
+    valor_restante: z.number().nonnegative(),
+    qtd_parcelas: z.number().int().nonnegative(),
+});
+

@@ -23,6 +23,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     const [modalProduct, setModalProduct] = useState(false);
     const [valueSearch, setValueSearch] = useState('');
     const [visibleInputs, setVisibleInputs] = useState(false);
+    const [visibleTipoCobranca, setVisibleTipoCobranca] = useState(false);
     const [selectedTipyPayment, setSelectedTipyPayment] = useState('');
     const [messege, setMessege] = useState(null);
 
@@ -56,6 +57,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     `O valor recebido deve ser preenchido para escolher um tipo de Pagamento,  ou venda sem entrada.   
                 `,
             });
+            setTipoPagamento("");
             return
         }
         
@@ -70,13 +72,15 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         setFormaDEPagamento(value);
     };
 
-    const handleTipoDeCobrancaClick = (value) => {
-        setTipoCobranca(value);
-    };
 
     useEffect(() => {
-        console.log(selectedTipyPayment);
-    }, [selectedTipyPayment]);
+        if (qtParcelas > 1) {
+            setVisibleTipoCobranca(true)
+        }else {
+            setVisibleTipoCobranca(false)
+        }
+
+    }, [qtParcelas]);
 
 
     function adicionarProduto(produto) {
@@ -145,6 +149,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setFormaDEPagamento("A vista")
             setStatus_pagamento("Pago");
             setQtParcelas(0);
+            setTipoCobranca('');
         }  
     }, [valorDaEntrada]);
 
@@ -224,35 +229,48 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                     return copia;
                                                 });
                                             }}
+                                            required
                                         />
                                     </li>
 
                                     <li>
                                         <input
                                             type="text"
-                                            value={item.valorUnitario?.toLocaleString("pt-BR", {
-                                                minimumFractionDigits: 2,
-                                                maximumFractionDigits: 2,
-                                            }) || ""}
-                                            onChange={e => {
+                                            value={
+                                                item.valorUnitario !== null && item.valorUnitario !== undefined && item.valorUnitario !== ""
+                                                ? Number(item.valorUnitario).toLocaleString("pt-BR", {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                    })
+                                                : ""
+                                            }
+                                            onChange={(e) => {
                                                 const entrada = e.target.value;
-                                                const numeros = entrada.replace(/\D/g, "");
-
-                                                setItensVenda(prev => {
-                                                    const copia = [...prev];
-                                                    const itemAtual = copia[index];
-                                                    
-                                                    if (numeros === "") {
+                                                // Permite campo vazio
+                                                if (entrada === "") {
+                                                    setItensVenda((prev) => {
+                                                        const copia = [...prev];
+                                                        const itemAtual = copia[index];
                                                         itemAtual.valorUnitario = 0;
                                                         itemAtual.valorTotal = (itemAtual.quantidade || 0) * 0;
-                                                    } else {
-                                                        const valorNumerico = Number(numeros) / 100;
-                                                        itemAtual.valorUnitario = valorNumerico;
-                                                        itemAtual.valorTotal = (itemAtual.quantidade || 0) * valorNumerico;
-                                                    }      
+                                                        return copia;
+                                                    });
+                                                    return;
+                                                }
+
+                                                // Remove tudo que não for número
+                                                const numeros = entrada.replace(/\D/g, "");
+                                                const valorNumerico = Number(numeros) / 100;
+
+                                                setItensVenda((prev) => {
+                                                    const copia = [...prev];
+                                                    const itemAtual = copia[index];
+                                                    itemAtual.valorUnitario = valorNumerico;
+                                                    itemAtual.valorTotal = (itemAtual.quantidade || 0) * valorNumerico;
                                                     return copia;
                                                 });
                                             }}
+                                            required
                                         />
                                     </li>
 
@@ -306,6 +324,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         handleFormaDePagamentoClick("A vista")
                                         setDataDeRecebimento('')
                                         setQtParcelas(0)
+                                        setTipoCobranca('')
                                     }}
                                     readOnly 
                                 />
@@ -387,7 +406,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             </div>
                         </div>
 
-                        <div className="payment-area" style={{paddingBottom:"4px" }}>
+                        {visibleTipoCobranca && <div className="payment-area" style={{paddingBottom:"4px" }}>
                             <h6>Tipo de Cobrança</h6>
                             <div className="radio-area tipo-cobranca">
                                 <div>
@@ -397,9 +416,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         value={"Diário"}
                                         checked={tipoCobranca === 'Diário'} 
                                         onClick={() => {
-                                            handleTipoDeCobrancaClick("Diário")
                                             setTipoCobranca("Diário")
-                                            setQtParcelas(1);
                                         }}
                                         readOnly 
                                     />
@@ -412,9 +429,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         value={"Semanal"}
                                         checked={tipoCobranca === 'Semanal'}
                                         onClick={() => {
-                                            handleTipoDeCobrancaClick("Semanal")
                                             setTipoCobranca("Semanal")
-                                            setQtParcelas(7);
                                         }}
                                         readOnly 
                                     />
@@ -427,9 +442,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         value={"Quinzenal"}
                                         checked={tipoCobranca === 'Quinzenal'}
                                         onClick={() => {
-                                            handleTipoDeCobrancaClick("Quinzenal")
                                             setTipoCobranca("Quinzenal")
-                                            setQtParcelas(15);
                                         }}
                                         readOnly 
                                     />
@@ -442,9 +455,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         value={"Mensal"}
                                         checked={tipoCobranca === 'Mensal'}
                                         onClick={() => {
-                                            handleTipoDeCobrancaClick("Mensal")
                                             setTipoCobranca("Mensal")
-                                            setQtParcelas(30);
                                         }}
                                         readOnly 
                                     />
@@ -452,7 +463,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                 </div>
 
                             </div>
-                        </div>
+                        </div>}
                         </>
                     }
 
@@ -467,8 +478,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     value={"Dinheiro"}
                                     checked={selectedTipyPayment === 'Dinheiro'} 
                                     onClick={() => {
-                                        handleClick("Dinheiro")
                                         setTipoPagamento("Dinheiro")
+                                        handleClick("Dinheiro")
                                     }}
                                     readOnly 
                                 />
@@ -481,8 +492,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     value={"Pix"}
                                     checked={selectedTipyPayment === 'Pix'}
                                     onClick={() => {
-                                        handleClick("Pix")
                                         setTipoPagamento("Pix")
+                                        handleClick("Pix")
                                     }}
                                     readOnly 
                                 />
@@ -495,15 +506,14 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     value={"Cartão"}
                                     checked={selectedTipyPayment === 'Cartão'}
                                     onClick={() => {
-                                        handleClick("Cartão")
                                         setTipoPagamento("Cartão")
+                                        handleClick("Cartão")
                                     }}
                                     readOnly 
                                 />
                                 <label htmlFor="false">Cartão</label>
                             </div>
                         </div>
-
                     </div>
                     
                     <BtnSubmit $marginTop="20px" $text={btnName}/>

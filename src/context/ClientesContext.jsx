@@ -1,6 +1,6 @@
 // context/ClientesContext.js
 import { createContext, useContext, useState } from "react";
-import { registerClientSchema } from "../validationSchemas/Schemas"
+import { registerClientSchema, vendaSchema } from "../validationSchemas/Schemas"
 import { supabase } from '../services/supabase';
 
 const ClientesContext = createContext();
@@ -46,8 +46,8 @@ export const ClientesProvider = ({ children }) => {
             const validatedClient = registerClientSchema.parse(clienteData);
 
             if (!validatedClient) {
-            // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
-            return validatedClient.errors;
+                // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
+                return validatedClient.errors;
             }
 
             // Se cpf for undefined, define como "Não informado"
@@ -158,16 +158,45 @@ export const ClientesProvider = ({ children }) => {
     };
 
      // Função para cadastrar vendas
-    const cadastrarVenda = async (clienteData) => {
+    const cadastrarVenda = async (vendaData) => {
         setLoading(true);
-        console.log(clienteData);
 
         try {
+            // Valida o objeto com Zod
+            const validatedVenda = vendaSchema.parse(vendaData);
+            if (!validatedVenda) {
+                // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
+                return validatedVenda.errors;
+            }
 
-            // Insere o a venda na tabela "vendas"
+            if (itensVenda.length === 0) {
+                setTimeout(() => {
+                    setMessege({
+                        success: false,
+                        title: "❌ Erro ao Cadastrar",
+                        message: "Nenhum produto foi Adicionado na Venda",
+                    });
+                }, 2000);
+                return 
+            }
+
+            if(validatedVenda.valor_entrada > 0 || validatedVenda.forma_pagamento ==="A vista"){
+                if(validatedVenda.tipo_pagamento === ""){
+                    setTimeout(() => {
+                        setMessege({
+                            success: false,
+                            title: "❌ Erro ao Cadastrar",
+                            message: "O tipo de pagamento deve ser escolhido",
+                        });
+                    }, 2000);
+                    return
+                }
+            }
+
+            // // Insere o a venda na tabela "vendas"
             const { data, error } = await supabase
             .from("vendas")
-            .insert([clienteData]);
+            .insert([vendaData]);
 
             if (error) throw error;
 
