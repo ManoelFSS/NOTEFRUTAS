@@ -11,14 +11,19 @@ export const Container = styled.div`
     bottom: 0;
     transition: right 0.3s  ease;
     right: ${props => props.$showModalAlert ? "0" : "-250px" };
-    background-color:rgba(0, 0, 0, 0.45);
+    background-color:rgba(0, 0, 0, 0.67);
     box-shadow: -1px 0px 5px rgb(0, 0, 0);
     z-index: 5;
     padding: 20px 10px;
 
     .box-alert {
+        Display: flex;
+        flex-direction: column;
+        align-items: center;
         overflow: auto;
-        padding: 5px 5px 10px 10px ;
+        width: 100%;
+        height: 100%;
+        padding: 5px 5px 10px 10px;
 
         &::-webkit-scrollbar {
             width: 4px;
@@ -47,26 +52,62 @@ export const Container = styled.div`
     .alert {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        width: 100%;
-        gap: 10px;
-        padding: 10px;
+        width: 98%;
+        gap: 5px;
+        padding: 10px 0 0;
         background-color:rgb(255, 255, 255);
         border-radius: 5px;
         box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
         margin-bottom: 10px;
+
+        h4 {
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 0px 10px;
+        }
         
         p {
             font-size: 0.7rem;
             font-weight: 500;
+            text-align: center;
+            padding: 0px 10px;
         }
-        
-        span {
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: var( --color-text-primary );
+
+        .date-area{
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            align-items: center;
             width: 100%;
-            text-align: right;
+            border-top: solid 4px #FF9D00;
+            background-color:rgb(232, 232, 232);
+            padding-bottom: 10px;
+            border-radius: 0px 0px 5px 5px;
+
+            h5 {
+                font-size: 0.8rem;
+                font-weight: 500;
+                padding: 10px 0px 0px;
+            }
+
+
+            .date {
+                display: flex;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+
+                p {
+                    font-size: 0.8rem;
+                    font-weight: 700;
+                    color:rgb(253, 143, 0);
+                }
+
+                span {
+                    font-size: 0.7rem;
+                    font-weight: 600;
+                }
+            }
         }
     }
 

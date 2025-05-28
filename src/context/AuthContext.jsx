@@ -108,7 +108,7 @@ useEffect(() => {
             console.log('Usuário autenticado com sucesso:', user);
 
             // Busca os dados do usuário da tabela "users"
-            // await getuser(user.id);
+            await getuser(user.id);
 
             console.log("Login realizado com sucesso!");
             setAuthenticated(true);
@@ -395,6 +395,7 @@ useEffect(() => {
         setAuthenticated(true);
         setUserId(userId);
         setUser(data);
+        console.log("Dados do usuário:", data);
 
         return { success: true };
     };

@@ -98,7 +98,7 @@ export const Container = styled.div`
 
         .date {
             display: flex;
-            gap: 45px;
+            gap: 46px;
             padding-top: 10px;
 
             .date-area,  .Pacelament-area {
@@ -120,9 +120,24 @@ export const Container = styled.div`
 
             .Pacelament-area {
                 align-items: center;
-                input {
-                    width: 40px;
+
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 5px;
+
+                    input {
+                        width: 40px;
+                    }
+
+                    p {
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                        color: rgb(255, 0, 0);
+                    }
                 }
+                
             }
         }
 

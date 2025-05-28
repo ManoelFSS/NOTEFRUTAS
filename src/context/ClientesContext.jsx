@@ -2,10 +2,15 @@
 import { createContext, useContext, useState } from "react";
 import { registerClientSchema, vendaSchema } from "../validationSchemas/Schemas"
 import { supabase } from '../services/supabase';
+import {useLogs} from './LogContext';
+import { useAuthContext } from "./AuthContext";
 
 const ClientesContext = createContext();
 
 export const ClientesProvider = ({ children }) => {
+
+    const {user, userId} = useAuthContext();
+    const {cadastrarLog} = useLogs();
     
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
@@ -22,7 +27,6 @@ export const ClientesProvider = ({ children }) => {
     const [estado, setEstado] = useState('Escolha o estado');
     const [idClient, setIdClient] = useState('');// controle do campo idClient
     const [formaDEPagamento, setFormaDEPagamento] = useState("A prazo");// controle do campo idClient
-    const [itensVenda, setItensVenda] = useState([]); // produtos vendidos e seus respectivos quantidades
     const [dataDeRecebimento, setDataDeRecebimento] = useState('');
     const [status_pagamento, setStatus_pagamento] = useState('Pendente');
     const [valorTotalDaVenda, setValorTotalDaVenda] = useState('');
@@ -32,6 +36,10 @@ export const ClientesProvider = ({ children }) => {
     const [tipoPagamento, setTipoPagamento] = useState('');
     const [qtParcelas , setQtParcelas] = useState(1);
     const [tipoCobranca, setTipoCobranca] = useState('');
+
+    const [itensVenda, setItensVenda] = useState([]); // produtos vendidos e seus respectivos quantidades
+    const [parcelasItensVenda, setParcelasItensVenda] = useState([]); 
+
 
 
 
@@ -153,54 +161,141 @@ export const ClientesProvider = ({ children }) => {
         if (error) {
             throw error;
         }
-
         return count;
     };
+
+    const inserirParcelasVenda = async (parcelas) => {
+        try {
+            const { data, error } = await supabase
+            .from("parcelas_venda")
+            .insert(parcelas);
+
+            if (error) {
+            console.error("Erro ao inserir parcelas:", error.message);
+            throw error;
+            }
+
+            console.log("Parcelas registradas com sucesso:", data);
+            return data;
+        } catch (err) {
+            console.error("Erro inesperado ao registrar parcelas:", err.message);
+            throw err;
+        }
+    };
+
+    const atualizarEstoqueProdutos = async (itensComVendaId) => {
+        try {
+            for (const item of itensComVendaId) {
+            const { produto_id, quantidade } = item;
+
+            // Buscar o produto atual no banco
+            const { data: produto, error: erroBusca } = await supabase
+                .from("produtos")
+                .select("stock")
+                .eq("id", produto_id)
+                .single();
+
+            if (erroBusca) {
+                console.error(`Erro ao buscar produto ${produto_id}:`, erroBusca.message);
+                continue;
+            }
+
+            if (!produto || produto.stock <= 0) {
+                console.warn(`Produto ${produto_id} sem estoque. Nenhuma alteração feita.`);
+                continue;
+            }
+
+            const novoEstoque = Math.max(produto.stock - quantidade, 0);
+
+            const statusAtualizado = novoEstoque === 0 ? "Indisponivel" : "Disponivel";
+
+            // Atualizar o estoque e status
+            const { error: erroUpdate } = await supabase
+                .from("produtos")
+                .update({ 
+                stock: novoEstoque,
+                status: statusAtualizado
+                })
+                .eq("id", produto_id);
+
+            if (erroUpdate) {
+                console.error(`Erro ao atualizar produto ${produto_id}:`, erroUpdate.message);
+            } else {
+                console.log(`Produto ${produto_id} atualizado: estoque=${novoEstoque}, status=${statusAtualizado}`);
+            }
+            }
+        } catch (err) {
+            console.error("Erro geral ao atualizar estoques:", err.message);
+            throw err;
+        }
+    };
+
 
      // Função para cadastrar vendas
     const cadastrarVenda = async (vendaData) => {
         setLoading(true);
+        console.log("Parcelas", parcelasItensVenda);
+        console.log("Produtos", itensVenda);
+        console.log("Venda", vendaData);
 
         try {
-            // Valida o objeto com Zod
             const validatedVenda = vendaSchema.parse(vendaData);
-            if (!validatedVenda) {
-                // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
-                return validatedVenda.errors;
-            }
 
             if (itensVenda.length === 0) {
-                setTimeout(() => {
+                setMessege({
+                    success: false,
+                    title: "❌ Erro ao Cadastrar",
+                    message: "Nenhum produto foi adicionado na venda.",
+                });
+                return;
+            }
+
+            if (validatedVenda.valor_entrada > 0 || validatedVenda.forma_pagamento === "A vista") {
+                if (!validatedVenda.tipo_pagamento) {
                     setMessege({
                         success: false,
                         title: "❌ Erro ao Cadastrar",
-                        message: "Nenhum produto foi Adicionado na Venda",
+                        message: `Você informou um valor de entrada de R$ ${validatedVenda.valor_entrada}, mas ainda não selecionou a forma de pagamento. Por favor, escolha o tipo de pagamento para continuar.`
                     });
-                }, 2000);
-                return 
-            }
-
-            if(validatedVenda.valor_entrada > 0 || validatedVenda.forma_pagamento ==="A vista"){
-                if(validatedVenda.tipo_pagamento === ""){
-                    setTimeout(() => {
-                        setMessege({
-                            success: false,
-                            title: "❌ Erro ao Cadastrar",
-                            message: "O tipo de pagamento deve ser escolhido",
-                        });
-                    }, 2000);
-                    return
+                    return;
                 }
             }
 
-            // // Insere o a venda na tabela "vendas"
-            const { data, error } = await supabase
-            .from("vendas")
-            .insert([vendaData]);
+            // 1. Inserir a venda e obter o ID
+            const { data: vendaInserida, error: vendaErro } = await supabase
+                .from("vendas")
+                .insert([vendaData])
+                .select(); // <- Importante: usar select() para retornar os dados inseridos, incluindo o id
 
-            if (error) throw error;
+            if (vendaErro) throw vendaErro;
 
-            console.log("venda  cadastrado com ID:", data);
+            const vendaId = vendaInserida?.[0]?.id;
+            console.log("Venda cadastrada com ID:", vendaId);
+
+            // 2. Inserir os itens da venda usando o venda_id
+            const itensComVendaId = itensVenda.map((item) => ({
+                ...item,
+                venda_id: vendaId
+            }));
+
+            const { error: itensErro } = await supabase
+                .from("itens_venda")
+                .insert(itensComVendaId);
+            if (itensErro) throw itensErro;
+
+            // 3. Atualizar o estoque dos produtos
+            await atualizarEstoqueProdutos(itensComVendaId);
+
+            // 4. Inserir as parcelas da venda usando o venda_id
+            if(parcelasItensVenda.length > 0) {
+                const parcelasItems = parcelasItensVenda.map((item) => ({
+                    ...item,
+                    venda_id: vendaId
+                }))
+                await inserirParcelasVenda(parcelasItems);
+            }
+
+            // 3. Resetar os campos e fechar modal
             setModalVendas(false);
             setItensVenda([]);
             setFormaDEPagamento("A prazo");
@@ -210,24 +305,38 @@ export const ClientesProvider = ({ children }) => {
             setDataDeRecebimento('');
             setStatus_pagamento('Pendente');
             setValorTotalDaVenda('');
-            
+
+            setMessege({
+                success: true,
+                title: "✅ Venda cadastrada com sucesso",
+                message: "A venda e os itens foram salvos com sucesso.",
+            });
+
+            const log = {
+                adminid: userId,    
+                colaborador_id: user.id, 
+                name: user.name,   
+                titulo: '✅ Venda',   
+                mensagem: 'Venda realizada com sucesso!', 
+                status: 'Não lida',   
+                referencia_id: vendaId, 
+                created_at: new Date().toISOString()
+            };
+
+            await cadastrarLog(log);
+
         } catch (error) {
             console.error("Erro ao cadastrar Venda:", error);
-            setTimeout(() => {
             setMessege({
                 success: false,
                 title: "❌ Erro ao Cadastrar",
-                message:
-                error?.errors?.[0]?.message || error.message || "Erro desconhecido",
+                message: error?.errors?.[0]?.message || error.message || "Erro desconhecido",
             });
-            }, 2000);
-            throw error;
         } finally {
-            setTimeout(() => {
             setLoading(false);
-            }, 2000);
         }
     };
+
 
      // Função principal para buscar vendas de um admin com paginação
     const buscarVendaPorAdmin = async (adminId, limitepage, paginacao) => {
@@ -355,7 +464,8 @@ export const ClientesProvider = ({ children }) => {
                 modalVendas, setModalVendas,
                 tipoPagamento, setTipoPagamento,
                 qtParcelas , setQtParcelas,
-                tipoCobranca, setTipoCobranca
+                tipoCobranca, setTipoCobranca,
+                parcelasItensVenda, setParcelasItensVenda
             }}>
         {children}
         </ClientesContext.Provider>

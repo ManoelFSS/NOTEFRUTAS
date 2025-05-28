@@ -50,6 +50,12 @@ export const Container_header = styled.div`
         gap: 30px;
 
         .notification {
+
+            .icon-alert {
+                color: var(--color-text-primary);
+                height: 30px;
+                width: 30px;
+            }
             
             .icon-notification {
                 color: var(--color-text-primary);

@@ -1,4 +1,4 @@
-import { useState, useEffect, use } from "react"
+import { useState, useEffect} from "react"
 import { Container } from "./styles"
 import  FormLayout from "../../formLayout"
 import Title from "../../../title"
@@ -33,6 +33,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         phone, setPhone,
         cpf, setCpf,
         city, setCity,
+        idClient, setIdClient,
         estado, setEstado,
         formaDEPagamento, setFormaDEPagamento,
         itensVenda, setItensVenda,
@@ -44,7 +45,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         valorRecebido, setValorRecebido,
         tipoPagamento, setTipoPagamento,
         qtParcelas , setQtParcelas,
-        tipoCobranca, setTipoCobranca
+        tipoCobranca, setTipoCobranca,
+        parcelasItensVenda, setParcelasItensVenda
     } = useClientes();
 
 
@@ -54,7 +56,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                 success: false,
                 title: "❌ Ops! ",
                 message:
-                    `O valor recebido deve ser preenchido para escolher um tipo de Pagamento,  ou venda sem entrada.   
+                    `O valor da entrada deve ser preenchido para poder  escolher, um tipo de Pagamento,  ou deixe R$ 0,00, para vender sem entrada. 
                 `,
             });
             setTipoPagamento("");
@@ -93,11 +95,14 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         setItensVenda(prev => [
             ...prev,
             {
-                produtoId: produto.id,
-                nome: produto.name,
+                produto_id: produto.id,
+                venda_id: null,
+                adminid: userId,
+                name: produto.name,
                 quantidade: "",
-                valorUnitario: "",
-                valorTotal: ""
+                valor_unitario: "",
+                valor_total: "",
+                created_at: new Date(),
             }
         ]);
         setModalProduct(false)
@@ -105,7 +110,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     }
 
     function removerProduto(produtoId) {
-        setItensVenda(prev => prev.filter(item => item.produtoId !== produtoId));
+        setItensVenda(prev => prev.filter(item => item.produto_id !== produtoId));
     }
 
     // Função para formatar valor para moeda brasileira
@@ -120,7 +125,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
     // Ex: useEffect para atualizar o valor restante sempre que mudar entrada ou itens
     useEffect(() => { 
-        const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valorTotal || 0), 0);
+        const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valor_total || 0), 0);
         setValorTotalDaVenda(totalVenda);
 
         if (valorRecebido <= 0 && formaDEPagamento === "A prazo") {
@@ -173,8 +178,73 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setFormaDEPagamento("A prazo");
             setQtParcelas(1);
         }
-
     }, []);
+
+    useEffect(() => {
+        function gerarParcelas(dataInicial, id, tipoCobranca, quantidadeParcelas, valorTotal) {
+            if (!dataInicial || !id || !quantidadeParcelas || !valorTotal) {
+                console.error("Erro ao gerar parcelas: Dados insuficientes.");
+                return [];
+            }
+
+            const tipos = {
+                "Diário": 1,
+                "Semanal": 7,
+                "Quinzenal": 15,
+                "Mensal": 30,
+            };
+
+            const parcelasGeradas = [];
+            const dataBase = new Date(dataInicial);
+
+            for (let i = 0; i < quantidadeParcelas; i++) {
+                let dataParcela = new Date(dataBase);
+
+                // Se mais de uma parcela, calcular intervalo entre parcelas
+                if (quantidadeParcelas > 1) {
+                    const diasDeDiferenca = tipos[tipoCobranca];
+                    if (!diasDeDiferenca) {
+                        console.error("Tipo de cobrança inválido.");
+                        return [];
+                    }
+                    dataParcela.setDate(dataBase.getDate() + i * diasDeDiferenca);
+                }
+
+                parcelasGeradas.push({
+                    venda_id: null,
+                    adminid: userId,
+                    cliente_id: idClient,
+                    valor_parcela: Number((valorTotal / quantidadeParcelas).toFixed(2)),
+                    data_vencimento: dataParcela.toISOString().split("T")[0],
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    status: "Pendente",
+                });
+            }
+
+            return parcelasGeradas;
+        }
+
+        const resultado = gerarParcelas(dataDeRecebimento, 1, tipoCobranca, qtParcelas, valorRestante);
+        setParcelasItensVenda(resultado);
+
+    }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
+
+
+    useEffect(() => {
+        console.log(parcelasItensVenda);
+    }, [parcelasItensVenda]);
+
+    useEffect(() => {
+        if (qtParcelas <= 1) {
+            setTipoCobranca('');
+        }
+    }, [qtParcelas]);
+
+    useEffect(() => {
+        setValorDaEntrada('');
+        setValorRecebido(0);
+    }, [formaDEPagamento]);
 
     return (
         <Container>
@@ -212,7 +282,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         <section className="body">
                             {itensVenda.map((item, index) => (
                                 <ul key={index} className="body-list">
-                                    <li>{item.nome}</li>
+                                    <li>{item.name}</li>
                                     <li>
                                         <input 
                                             type="number"
@@ -225,7 +295,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                     const novaQuantidade = valorDigitado === "" ? "" : Number(valorDigitado);
                                                     const itemAtual = copia[index];
                                                     itemAtual.quantidade = novaQuantidade;
-                                                    itemAtual.valorTotal = novaQuantidade * (itemAtual.valorUnitario || 0);
+                                                    itemAtual.valor_total = novaQuantidade * (itemAtual.valor_unitario || 0);
                                                     return copia;
                                                 });
                                             }}
@@ -237,8 +307,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         <input
                                             type="text"
                                             value={
-                                                item.valorUnitario !== null && item.valorUnitario !== undefined && item.valorUnitario !== ""
-                                                ? Number(item.valorUnitario).toLocaleString("pt-BR", {
+                                                item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
+                                                ? Number(item.valor_unitario).toLocaleString("pt-BR", {
                                                     minimumFractionDigits: 2,
                                                     maximumFractionDigits: 2,
                                                     })
@@ -251,8 +321,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                     setItensVenda((prev) => {
                                                         const copia = [...prev];
                                                         const itemAtual = copia[index];
-                                                        itemAtual.valorUnitario = 0;
-                                                        itemAtual.valorTotal = (itemAtual.quantidade || 0) * 0;
+                                                        itemAtual.valor_unitario = 0;
+                                                        itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
                                                         return copia;
                                                     });
                                                     return;
@@ -265,8 +335,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 setItensVenda((prev) => {
                                                     const copia = [...prev];
                                                     const itemAtual = copia[index];
-                                                    itemAtual.valorUnitario = valorNumerico;
-                                                    itemAtual.valorTotal = (itemAtual.quantidade || 0) * valorNumerico;
+                                                    itemAtual.valor_unitario = valorNumerico;
+                                                    itemAtual.valor_total = (itemAtual.quantidade || 0) * valorNumerico;
                                                     return copia;
                                                 });
                                             }}
@@ -275,7 +345,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     </li>
 
                                     <li className="total-item">
-                                        {(item.quantidade * item.valorUnitario).toLocaleString("pt-BR", {
+                                        {(item.quantidade * item.valor_unitario).toLocaleString("pt-BR", {
                                             minimumFractionDigits: 2,
                                             maximumFractionDigits: 2,
                                         })}
@@ -283,7 +353,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     <li>
                                         <MdDeleteForever 
                                             className="delete-icon" 
-                                            onClick={() => removerProduto(item.produtoId)}
+                                            onClick={() => removerProduto(item.produto_id)}
                                         />
                                     </li>
                                 </ul>
@@ -299,7 +369,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             <p>Total</p> 
                             <span>
                                 {itensVenda
-                                    .reduce((acc, item) => acc + (item.valorTotal || 0), 0)
+                                    .reduce((acc, item) => acc + (item.valor_total || 0), 0)
                                     .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                                 }
                             </span>
@@ -317,7 +387,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     value={"A vista"}
                                     checked={ formaDEPagamento === 'A vista'} 
                                     onClick={() => {
-                                        setValorDaEntrada('')
+                                        setValorDaEntrada("")
                                         setVisibleInputs(false)
                                         setFormaDEPagamento("A vista")
                                         setStatus_pagamento("Pago")
@@ -351,14 +421,13 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                 <label htmlFor="false">A Prazo</label>
                             </div>
                         </div>
-
                     </div>
                     
                     {visibleInputs && 
                         <>
                         <div className="inputs-area">
                             <div>
-                                <h6>Valor recebido</h6>
+                                <h6>Valor da entrada</h6>
                                 <input 
                                     type="text" 
                                     value={formatarParaMoeda(valorDaEntrada)}
@@ -381,170 +450,117 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         </div>
                         <div className="date">
                             <div className="date-area">
-                                <label htmlFor="">Data do Recebimento</label>
+                                <label htmlFor="">Data da Recebimento</label>
                                 <input 
                                     type="date" 
                                     value={dataDeRecebimento}
                                     onChange={(e) => setDataDeRecebimento(e.target.value)}
+                                    min={new Date().toISOString().split("T")[0]} // limita para hoje em diante
                                     placeholder="dd/mm/aaaa"
                                     required
                                 />
                             </div>
                             <div className="Pacelament-area">
                                 <label htmlFor="">Total de Parcelas</label>
-                                <input 
-                                    style={{textAlign: "center", fontWeight: "bold"}}
-                                    type="text" 
-                                    value={qtParcelas <= 0 ? '' : qtParcelas}
-                                    onChange={(e) => {
-                                        const entrada = e.target.value;
-                                        const numeros = entrada.replace(/\D/g, "");
-                                        setQtParcelas(Number(numeros));
-                                    }}
-                                    required
-                                />
+                                <div>
+                                    <input 
+                                        style={{textAlign: "center", fontWeight: "bold"}}
+                                        type="text" 
+                                        value={qtParcelas <= 0 ? '' : qtParcelas}
+                                        onChange={(e) => {
+                                            const entrada = e.target.value;
+                                            const numeros = entrada.replace(/\D/g, "");
+                                            setQtParcelas(Number(numeros));
+                                        }}
+                                        required
+                                    />
+                                    <p className="parcelas-text">{(valorRestante / qtParcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                </div>
+
                             </div>
                         </div>
 
-                        {visibleTipoCobranca && <div className="payment-area" style={{paddingBottom:"4px" }}>
-                            <h6>Tipo de Cobrança</h6>
-                            <div className="radio-area tipo-cobranca">
-                                <div>
-                                    <input 
-                                        type="radio" 
-                                        name="tipo-cobranca"
-                                        value={"Diário"}
-                                        checked={tipoCobranca === 'Diário'} 
-                                        onClick={() => {
-                                            setTipoCobranca("Diário")
-                                        }}
-                                        readOnly 
-                                    />
-                                    <label htmlFor="true">Diário</label>
+                        {visibleTipoCobranca && (
+                            <div className="payment-area" style={{ paddingBottom: "4px" }}>
+                                <h6>Tipo de Cobrança</h6>
+                                <div className="radio-area tipo-cobranca">
+                                {["Diário", "Semanal", "Quinzenal", "Mensal"].map((tipo) => (
+                                    <div key={tipo}>
+                                        <input
+                                            type="radio"
+                                            name="tipo-cobranca"
+                                            value={tipo}
+                                            checked={qtParcelas > 1 && tipoCobranca === tipo}
+                                            required={qtParcelas > 1}
+                                            onChange={(e) => {
+                                            if (qtParcelas > 1) {
+                                                e.preventDefault(); // Evita mudanças acidentais via teclado
+                                                setTipoCobranca(tipo);
+                                            }
+                                            }}
+                                        />
+                                        <label>{tipo}</label>
+                                    </div>
+                                ))}
                                 </div>
-                                <div>
-                                    <input 
-                                        type="radio" 
-                                        name="tipo-cobranca"
-                                        value={"Semanal"}
-                                        checked={tipoCobranca === 'Semanal'}
-                                        onClick={() => {
-                                            setTipoCobranca("Semanal")
-                                        }}
-                                        readOnly 
-                                    />
-                                    <label htmlFor="false">Semanal</label>
-                                </div>
-                                <div>
-                                    <input 
-                                        type="radio" 
-                                        name="tipo-cobranca"
-                                        value={"Quinzenal"}
-                                        checked={tipoCobranca === 'Quinzenal'}
-                                        onClick={() => {
-                                            setTipoCobranca("Quinzenal")
-                                        }}
-                                        readOnly 
-                                    />
-                                    <label htmlFor="false">Quinzenal</label>
-                                </div>
-                                <div>
-                                    <input 
-                                        type="radio" 
-                                        name="tipo-cobranca"
-                                        value={"Mensal"}
-                                        checked={tipoCobranca === 'Mensal'}
-                                        onClick={() => {
-                                            setTipoCobranca("Mensal")
-                                        }}
-                                        readOnly 
-                                    />
-                                    <label htmlFor="false">Mensal</label> 
-                                </div>
-
                             </div>
-                        </div>}
+                        )}
                         </>
                     }
 
-                    <div className="payment-area" style={{paddingBottom:"4px" }}>
+                    <div className="payment-area" style={{ paddingBottom: "4px" }}>
                         <h6>Tipo de Pagamento</h6>
-                        <div className="radio-area">
-                            
-                            <div>
+                        <div className="radio-area tipo-pagamento">
+                            {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
+                            <div key={tipo}>
                                 <input 
                                     type="radio" 
                                     name="tipo-pagamento"
-                                    value={"Dinheiro"}
-                                    checked={selectedTipyPayment === 'Dinheiro'} 
+                                    value={tipo}
+                                    checked={selectedTipyPayment === tipo}
                                     onClick={() => {
-                                        setTipoPagamento("Dinheiro")
-                                        handleClick("Dinheiro")
+                                        setTipoPagamento(tipo);
+                                        handleClick(tipo);
                                     }}
                                     readOnly 
                                 />
-                                <label htmlFor="true">Dinheiro</label>
+                                <label key={tipo}>{tipo}</label>
                             </div>
-                            <div>
-                                <input 
-                                    type="radio" 
-                                    name="tipo-pagamento"
-                                    value={"Pix"}
-                                    checked={selectedTipyPayment === 'Pix'}
-                                    onClick={() => {
-                                        setTipoPagamento("Pix")
-                                        handleClick("Pix")
-                                    }}
-                                    readOnly 
-                                />
-                                <label htmlFor="false">Pix</label>
-                            </div>
-                            <div>
-                                <input 
-                                    type="radio" 
-                                    name="tipo-pagamento"
-                                    value={"Cartão"}
-                                    checked={selectedTipyPayment === 'Cartão'}
-                                    onClick={() => {
-                                        setTipoPagamento("Cartão")
-                                        handleClick("Cartão")
-                                    }}
-                                    readOnly 
-                                />
-                                <label htmlFor="false">Cartão</label>
-                            </div>
+                            ))}
                         </div>
                     </div>
-                    
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
                 </FormLayout>
-                {  modalProduct && <section className="modal-product">
-                    <div className="search-area">
-                        <Search 
-                            valueSearch={valueSearch} 
-                            setValueSearch={setValueSearch}
-                            $height="40px"
-                            $width="100%"
-                        />
-                    </div>
-                    <section className="select-item-area">
-                        {product.filter((item) => item.name.toLowerCase().includes(valueSearch.toLowerCase())).map((item, index) => (
-                            <div 
-                                className="item" key={index} 
-                                onClick={() => {adicionarProduto(item)}}
-                            >
-                                <img src={item.url_image} alt="" />
-                                <p>{item.name}</p>
-                            </div>
-                        ))}
-                    </section>
-                    <div className="btn-area">
-                        <BtnNavigate $text="Cancelar"  
-                            onClick={() => setModalProduct(false)}
-                        />
-                    </div>
-                </section> }
+
+                {modalProduct && 
+                    <section className="modal-product">
+                        <div className="search-area">
+                            <Search 
+                                valueSearch={valueSearch} 
+                                setValueSearch={setValueSearch}
+                                $height="40px"
+                                $width="100%"
+                            />
+                        </div>
+                        <section className="select-item-area">
+                            {product.filter((item) => item.name.toLowerCase().includes(valueSearch.toLowerCase())).map((item, index) => (
+                                <div 
+                                    className="item" key={index} 
+                                    onClick={() => {adicionarProduto(item)}}
+                                >
+                                    <img src={item.url_image} alt="" />
+                                    <p>{item.name}</p>
+                                </div>
+                            ))}
+                        </section>
+                        <div className="btn-area">
+                            <BtnNavigate $text="Cancelar"  
+                                onClick={() => setModalProduct(false)}
+                            />
+                        </div>
+                    </section> 
+                }
             </div>
             { messege && <Messege $buttonText="OK" $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container>

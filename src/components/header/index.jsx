@@ -9,15 +9,18 @@ import { VscBellDot } from "react-icons/vsc";
 
 // context
 import { useAuthContext } from "../../context/AuthContext"
+import {useLogs} from '../../context/LogContext'
 
-const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert, $alert}) => {
+const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert, $}) => {
 
+    const { logs } = useLogs()
+    console.log(logs)
     const { logoutUser } = useAuthContext()
 
     return (
         <Container_header 
             $toogleMenu={$toogleMenu} 
-            $alert={$alert.length}
+            $alert={logs.length}
         > 
             <IoMenu className="menu" onClick={() => $setToogleMenu(!$toogleMenu)} />
             <div className="title">
@@ -33,7 +36,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
             <div className="box_right">
                 <div className="notification">
                     <VscBellDot 
-                        className="icon-notification" 
+                        className={logs.length > 0 ? "icon-notification" : "icon-alert"}
                         onClick={() => $setShowModalAlert(!$showModalAlert )}
                     />
                 </div>
