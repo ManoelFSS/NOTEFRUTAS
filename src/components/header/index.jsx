@@ -17,6 +17,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
     const { logs } = useLogs()
     const [cauntAlertAtive, setCauntAlertAtive] = useState(localStorage.getItem('cauntAlertAtive') || 0)
 
+    const [autorization, setAutorization] = useState(localStorage.getItem('autorization'))
 
     const { logoutUser } = useAuthContext()
 
@@ -27,7 +28,19 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
         }
         localStorage.setItem('cauntAlertAtive', cauntAlertAtive - 1)
         setCauntAlertAtive(cauntAlertAtive - 1)
+
+        playNotificationSound();
+        setAutorization(false)
+
     }, [logs]);
+
+    const playNotificationSound = () => {
+        const audio = new Audio('/alert.mp3'); // Altere o nome do arquivo conforme necessário
+        audio.play().catch((error) => {
+            console.error('Erro ao reproduzir o som:', error);
+        });
+    };
+
 
     return (
         <Container_header 
@@ -54,6 +67,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
                             $setShowModalAlert(!$showModalAlert )
                             setCauntAlertAtive( logs.length + 1)     
                             localStorage.setItem('cauntAlertAtive', logs.length + 1 )
+                            autorization && playNotificationSound();
                         }}
                     />
                 </div>
