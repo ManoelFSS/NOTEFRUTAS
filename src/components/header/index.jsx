@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react"
 import  { Container_header } from "./styles"
 // components
 import Logo from "../../assets/logo.png"
@@ -11,11 +12,22 @@ import { VscBellDot } from "react-icons/vsc";
 import { useAuthContext } from "../../context/AuthContext"
 import {useLogs} from '../../context/LogContext'
 
-const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert, $}) => {
+const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert,}) => {
 
     const { logs } = useLogs()
-    console.log(logs)
+    const [cauntAlertAtive, setCauntAlertAtive] = useState(localStorage.getItem('cauntAlertAtive') || 0)
+
+
     const { logoutUser } = useAuthContext()
+
+    useEffect(() => {  
+        if(logs.length === 0){
+            localStorage.setItem('cauntAlertAtive', 0)
+            return
+        }
+        localStorage.setItem('cauntAlertAtive', cauntAlertAtive - 1)
+        setCauntAlertAtive(cauntAlertAtive - 1)
+    }, [logs]);
 
     return (
         <Container_header 
@@ -23,6 +35,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
             $alert={logs.length}
         > 
             <IoMenu className="menu" onClick={() => $setToogleMenu(!$toogleMenu)} />
+            
             <div className="title">
                 <img src={Logo} alt="logo" />
                 <Title 
@@ -36,8 +49,12 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
             <div className="box_right">
                 <div className="notification">
                     <VscBellDot 
-                        className={logs.length > 0 ? "icon-notification" : "icon-alert"}
-                        onClick={() => $setShowModalAlert(!$showModalAlert )}
+                        className={ logs.length > cauntAlertAtive ? "icon-notification" : "icon-alert"}
+                        onClick={() => { 
+                            $setShowModalAlert(!$showModalAlert )
+                            setCauntAlertAtive( logs.length + 1)     
+                            localStorage.setItem('cauntAlertAtive', logs.length + 1 )
+                        }}
                     />
                 </div>
                 <div className="exit">

@@ -70,6 +70,12 @@ export const ClientesProvider = ({ children }) => {
 
             if (error) throw error;
 
+            setMessege({
+                success: true,
+                title: "✅ Cliente cadastrado com sucesso",
+                message: `O cliente,  ${validatedClient.name}, foi salvos com sucesso.`
+            });
+
             console.log("Cliente cadastrado com ID:", data);
             setCloseModal(false);
             setName('');
@@ -81,17 +87,17 @@ export const ClientesProvider = ({ children }) => {
         } catch (error) {
             console.error("Erro ao cadastrar cliente:", error);
             setTimeout(() => {
-            setMessege({
-                success: false,
-                title: "❌ Erro ao Cadastrar",
-                message:
-                error?.errors?.[0]?.message || error.message || "Erro desconhecido",
-            });
+                setMessege({
+                    success: false,
+                    title: "❌ Erro ao Cadastrar",
+                    message:
+                    error?.errors?.[0]?.message || error.message || "Erro desconhecido",
+                });
             }, 2000);
             throw error;
         } finally {
             setTimeout(() => {
-            setLoading(false);
+                setLoading(false);
             }, 2000);
         }
     };
@@ -143,11 +149,7 @@ export const ClientesProvider = ({ children }) => {
             .from("clientes")
             .select("*", { count: "exact", head: true })
             .eq("adminid", adminId);
-
-        if (error) {
-            throw error;
-        }
-
+        if (error) {throw error;}
         return count;
     };
 
@@ -158,9 +160,7 @@ export const ClientesProvider = ({ children }) => {
             .select("*", { count: "exact", head: true })
             .eq("adminid", adminId);
 
-        if (error) {
-            throw error;
-        }
+        if (error) { throw error;}
         return count;
     };
 

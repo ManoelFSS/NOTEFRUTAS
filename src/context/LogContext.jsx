@@ -114,44 +114,55 @@ export const LogsProvider = ({ children }) => {
 
     // Configurar assinatura Realtime
     useEffect(() => {
-        const setupRealtime = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) {
-            console.error('Usuário não está logado');
+    const setupRealtime = async () => {
+        const {
+            data: { user },
+            error: userError
+        } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+            console.error('Usuário não está logado ou houve erro:', userError);
             return;
-            }
+        }
 
-            const userId = user.id;
-            console.log('Usuário logado:', userId);
+        const userId = user.id;
+        console.log('Usuário logado:', userId);
 
-            // Carrega os logs iniciais (se necessário)
-            await buscarLogsPorPorAdmin(userId, 100, 1);
+        // Carrega logs iniciais
+        await buscarLogsPorPorAdmin(userId, 100, 1);
 
-            // Assinatura do canal com filtro
-            const subscription = supabase
-                .channel('logs_sistema_schema_changes') // Nome do canal específico
-                .on(
-                    'postgres_changes',
-                    {
-                        event: 'INSERT', // Escuta apenas INSERT
-                        schema: 'public',
-                        table: 'logs_sistema', // Tabela específica
-                        filter: `adminid=eq.${userId}`, // Filtro para o usuário logado
-                    },
-                    (payload) => {
-                        console.log('Novo log em logs_sistema_duplicate:', payload);
-                        setLogs((prev) => [payload.new, ...prev]);
-                    }
-                )
-                .subscribe();
+        // Cria canal Realtime
+        const channel = supabase.channel(`logs_sistema_insert_${userId}`);
 
-            return () => {
-            supabase.removeChannel(subscription);
-            };
+        channel
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'logs_sistema',
+                    filter: `adminid=eq.${userId}`,
+                },
+                (payload) => {
+                    console.log('Novo log recebido:', payload);
+                    setLogs((prev) => [payload.new, ...prev]);
+                }
+            )
+            .subscribe((status) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log('Inscrito no canal de logs com sucesso.');
+                }
+            });
+
+        // Cleanup: remover canal ao desmontar
+        return () => {
+            supabase.removeChannel(channel);
         };
+    };
 
-        setupRealtime();
-    }, []);
+    setupRealtime();
+}, []);
+
 
 
 

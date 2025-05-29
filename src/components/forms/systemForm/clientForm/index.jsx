@@ -7,12 +7,12 @@ import LabelComponent from "../../../labelComponent"
 import BtnSubmit from "../../../btns/btnSubmit"
 import Loading from "../../../loading"
 import Select from "../../../select"
+
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa";
 // context
 import { useClientes } from "../../../../context/ClientesContext"
-
 
 
 const data = [
@@ -45,10 +45,6 @@ const data = [
     { category: "Tocantins" }
 ];
 
-
-
-
-
 const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
 
     const {
@@ -58,6 +54,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
         cpf, setCpf,
         city, setCity,
         estado, setEstado,
+        messege, setMessege,
     } = useClientes();
 
     const [select, setSelect] = useState(estado);

@@ -6,7 +6,8 @@ import ChartPizza from "../../../components/charts/chartPizza";
 import CardDashboard from "../../../components/cards/cardDashboard";
 import StockProductChart from "../../../components/charts/stockProductChart";
 import VendasChart from "../../../components/charts/vendasChart";
-// icons
+import Checkout from "../../../components/checkount";
+// icons 
 import { FaChartSimple, FaArrowUpRightDots, FaHandshake   } from "react-icons/fa6";
 import { FaHandHoldingUsd, FaCartArrowDown  } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
@@ -155,6 +156,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     <StockProductChart />
                 </section>
             </section>
+            <Checkout />
             
         </Container_dashboard>
     )

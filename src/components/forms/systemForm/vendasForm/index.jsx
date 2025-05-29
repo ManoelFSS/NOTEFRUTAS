@@ -260,6 +260,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                 setCpf("")
                                 setCity("")
                                 setEstado("Escolha o Estado")
+                                setItensVenda([])
+                                setFormaDEPagamento("A prazo")
                             }}
                         />
                     </div>
@@ -455,7 +457,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     type="date" 
                                     value={dataDeRecebimento}
                                     onChange={(e) => setDataDeRecebimento(e.target.value)}
-                                    min={new Date().toISOString().split("T")[0]} // limita para hoje em diante
+                                    // min={new Date().toISOString().split("T")[0]} // limita para hoje em diante
                                     placeholder="dd/mm/aaaa"
                                     required
                                 />
@@ -474,7 +476,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         }}
                                         required
                                     />
-                                    <p className="parcelas-text">{(valorRestante / qtParcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                    <p style={{color:valorRestante === 0 ? "green" : "red"}} className="parcelas-text">{(valorRestante / qtParcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                                 </div>
 
                             </div>
