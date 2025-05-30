@@ -35,9 +35,9 @@ import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
 //image
 import Perfil from "../../../assets/perfil.png"
-import { Outlet } from 'react-router-dom';
+// import { Outlet } from 'react-router-dom';
 
-const Product = () => {
+const Sales = () => {
 
     const { 
         buscarVendasPorAdmin,
@@ -330,8 +330,9 @@ const Product = () => {
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
             { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            {/* <Outlet /> */}
         </Container>
     )
 }
 
-export default Product
+export default Sales
