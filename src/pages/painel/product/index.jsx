@@ -38,6 +38,7 @@ const Product = () => {
         setCloseModal, 
         caunterProduct, 
         buscarProductPorAdmin, 
+        buscarProdutoSeach,
         product, 
         setProduct,
         setName,
@@ -68,8 +69,6 @@ const Product = () => {
         
     ]
 
-
-
     const data = [
         { category: "Frutas" },
         { category: "Legumes" },
@@ -83,7 +82,7 @@ const Product = () => {
     const { select, setSelect } = useSelect();
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPorPage = 1000;
+    const itemsPorPage = 100;
     const totalPages = Math.ceil(caunterProduct / itemsPorPage);
 
     useEffect(() => {
@@ -94,6 +93,30 @@ const Product = () => {
         }
         hendlerGetProduct();        
     }, [closeModal, paginacao,  deleteControl]);
+
+
+    useEffect(() => {
+        const searchLength = valueSearch.split("").length;
+
+        if(searchLength <= 0) {
+            const hendlerGetProduto = async () => {
+                const produtos = await   buscarProductPorAdmin(userId, itemsPorPage, paginacao);
+                if(produtos.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+                setProduct(produtos)
+            }
+            hendlerGetProduto();
+        }
+    }, [valueSearch]);
+
+    const hendlerGetProdutoSearch = async () => {
+        const produtoSeach = await  buscarProdutoSeach(valueSearch, userId);
+        if(produtoSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+        setProduct(produtoSeach)
+        console.log(produtoSeach)
+    }
+
+
+
 
     useEffect(() => {
         if(!idProduct) return
@@ -147,6 +170,7 @@ const Product = () => {
                     setValueSearch={setValueSearch}
                     $height={"35px"}
                     $width={"210px"}
+                    onClick={hendlerGetProdutoSearch}
                 />
                 {totalPages > 1 && <Pagination 
                     $totalPages={totalPages} 

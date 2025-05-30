@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   gap: 1rem;
   position: relative;
+  
 `;
 
 export const DropdownWrapper = styled.div`
@@ -12,14 +13,17 @@ export const DropdownWrapper = styled.div`
 `;
 
 export const DropdownHeader = styled.div`
-  padding: 0.3rem ;
+  height: 35px;
+  padding: 0.3rem 0 0.3rem 1rem;
   border: 1px solid #ccc;
   border-radius: 5px;
   background: #fff;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  justify-content: ;
   align-items: center;
+  box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.4);
+  background-color: #E4E4E4;
 `;
 
 export const DropdownList = styled.div`
@@ -49,6 +53,7 @@ export const DropdownList = styled.div`
 `;
 
 export const DropdownItem = styled.div`
+  text-align: center;
   padding: 0.5rem;
   cursor: pointer;
   &:hover {
@@ -59,6 +64,13 @@ export const DropdownItem = styled.div`
 export const IconWrapper = styled.span`
   display: flex;
   align-items: center;
+  padding: 0.2rem;
+  background-color: #ffffff;
+  border-radius: 4px;
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease;
   transform: ${({ open }) => (open ? 'rotate(180deg)' : 'rotate(0deg)')};
 `;

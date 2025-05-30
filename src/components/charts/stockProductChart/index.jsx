@@ -6,29 +6,6 @@ import Pagination from "../../pagination"
 import useSelect from "../../../hooks/useSelect"
 import MonthYearSelector from "../../MonthYearSelector"
 
-// const StockProductChart= () => {
-
-
-//     return (
-//         <Container >
-//             <div className="chart-header">
-//                 <Select data={data} select={select} setSelect={setSelect}/>
-//                 <h3>Controle de Estoque</h3>
-//                 <ul>
-//                     <IndicadorColor color=" #FF9D00" width="15px" height="10px" text="Baixo" />
-//                     <IndicadorColor color=" #c70606" width="15px" height="10px" text="Esgotado" />
-//                 </ul>
-//             </div>
-//             <div className="chart-main">
-//                 <BarChart_y data={estoque} />
-//             </div>
-//         </Container>
-//     )
-
-// }
-
-// export default StockProductChart
-
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import {

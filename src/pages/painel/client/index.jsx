@@ -85,7 +85,7 @@ const Client = () => {
     const { select, setSelect } = useSelect();
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPorPage = 10;
+    const itemsPorPage = 1;
     const totalPages = Math.ceil(caunterClientes / itemsPorPage);
 
     useEffect(() => {

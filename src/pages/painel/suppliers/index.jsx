@@ -80,7 +80,7 @@ const Fornecedores = () => {
     const { select, setSelect } = useSelect();
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPorPage = 10;
+    const itemsPorPage = 100;
     const totalPages = Math.ceil(caunterFornecedores / itemsPorPage);
 
     useEffect(() => {

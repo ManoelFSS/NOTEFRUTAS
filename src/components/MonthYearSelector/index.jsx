@@ -72,8 +72,8 @@ const MonthYearSelector = ({ userRegisterYear, onChange }) => {
         )}
       </DropdownWrapper>
 
-      <DropdownWrapper>
-        <DropdownHeader onClick={toggleYear}>
+      <DropdownWrapper style={{ width: '100px' }}>
+        <DropdownHeader onClick={toggleYear} >
           {selectedYear}
           <IconWrapper open={isYearOpen}>
             <FiChevronDown />

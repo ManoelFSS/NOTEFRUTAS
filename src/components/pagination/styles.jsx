@@ -5,7 +5,7 @@ export const Container = styled.div`
     justify-content: center;
     align-items: center;
     gap: 10px;
-    width: 290px;
+    // width: 290px;
     user-select: none;
 
     .icon-left {

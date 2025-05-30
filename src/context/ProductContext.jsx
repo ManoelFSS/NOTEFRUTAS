@@ -25,23 +25,16 @@ export const ProductProvider = ({ children }) => {
     const [images, setImages] = useState([]);// controle do campo images
 
 // counter para paginacao
-    const contarDocumentos = async (colecaoNome, adminId, ativo) => {
-        try {
-            const filtros = [where("adminId", "==", adminId)];
+    const contarProdutos = async (adminId) => {
+        const { count, error } = await supabase
+            .from("produtos")
+            .select("*", { count: "exact", head: true })
+            .eq("adminid", adminId);
 
-            if (ativo !== undefined && ativo !== null) {
-                filtros.push(where("ativo", "==", ativo));
-            }
-
-            const colRef = query(collection(db, colecaoNome), ...filtros);
-            const snapshot = await getCountFromServer(colRef);
-
-            return snapshot.data().count;
-        } catch (error) {
-            console.error("Erro ao contar documentos:", error);
-            throw error;
-        }
+        if (error) { throw error;}
+        return count;
     };
+
 
     // Função cadastrarProduct
     const cadastrarProduct = async (productData) => {
@@ -136,32 +129,59 @@ export const ProductProvider = ({ children }) => {
 
      // Função para buscar clientes de um admin com paginação
     const buscarProductPorAdmin = async (adminId, limitepage, paginacao) => {
-            console.log(adminId, limitepage, paginacao);
+
         try {
-            if (!adminId || limitepage <= 0 || paginacao < 1) {
-            throw new Error("Parâmetros inválidos");
-            }
+                if (!adminId || limitepage <= 0 || paginacao < 1) {
+                throw new Error("Parâmetros inválidos");
+                }
 
-            const page = paginacao;
-            const pageSize = limitepage;
-            const from = (page - 1) * pageSize;
-            const to = from + pageSize - 1;
+                // Contar total de clientes
+                const totalProductos = await contarProdutos(adminId);
+                setCaunterProduct(totalProductos);
 
-            const { data, error, count } = await supabase
+                const page = paginacao;
+                const pageSize = limitepage;
+                const from = (page - 1) * pageSize;
+                const to = from + pageSize - 1;
+
+                const { data, error, count } = await supabase
+                .from("produtos")
+                .select("*", { count: "exact" }) // retorna os dados + total
+                .eq("adminid", adminId)
+                .order("caunterproduct", { ascending: true })
+                .range(from, to);
+
+                if (error) throw error;
+
+                // Se estiver usando React e quiser usar o total
+                setCaunterProduct(count);
+
+                return data;
+        } catch (error) {
+            console.error("Erro ao buscar produtos:", error.message);
+            return [];
+        }
+    };
+
+    const buscarProdutoSeach = async (searchText, adminId) => {
+        if (!searchText || !adminId) return [];
+
+        try {
+            // Normaliza o texto
+            const texto = `%${searchText.toLowerCase()}%`;
+
+            // Busca múltiplas colunas com `or`
+            const { data, error } = await supabase
             .from("produtos")
-            .select("*", { count: "exact" }) // retorna os dados + total
+            .select("*")
             .eq("adminid", adminId)
-            .order("caunterproduct", { ascending: true })
-            .range(from, to);
+            .or(`name.ilike.${texto}`);
 
             if (error) throw error;
 
-            // Se estiver usando React e quiser usar o total
-            setCaunterProduct(count);
-
             return data;
         } catch (error) {
-            console.error("Erro ao buscar produtos:", error.message);
+            console.error("Erro ao buscar clientes:", error.message || error);
             return [];
         }
     };
@@ -193,6 +213,7 @@ export const ProductProvider = ({ children }) => {
         <ProductContext.Provider value={{ 
                 cadastrarProduct, 
                 buscarProductPorAdmin,
+                buscarProdutoSeach,
                 loading, setLoading,
                 messege, setMessege,
                 closeModal, setCloseModal,

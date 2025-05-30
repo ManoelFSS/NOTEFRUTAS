@@ -9,6 +9,7 @@ import ProductForm from "../../../components/forms/systemForm/produtForm";
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import ProductCard from "../../../components/cards/productCard";
+import MonthYearSelector from "../../../components/MonthYearSelector";
 // icons
 import { FaUserPlus } from "react-icons/fa";
 import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
@@ -27,12 +28,6 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { TbCancel } from "react-icons/tb";
 import { BiSolidDetail } from "react-icons/bi";
 import { HiOutlineInformationCircle } from 'react-icons/hi';
-
-
-
-
-
-
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
@@ -68,7 +63,14 @@ const Product = () => {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [idProduct, setIdProductCard] = useState(null);
     const [closeBtn, setCloseBtn] = useState(false);
-    
+    const [mes, setMes] = useState( new Date().getMonth() + 1);
+    const [ano, setAno] = useState(new Date().getFullYear());
+
+    const handleDateChange = ({ month, year }) => {
+        setAno(year);
+        setMes(month + 1);
+    };
+
     const dataHeader = [
         {icon: <IoBagHandleSharp className="icon" />},
         { name: "Cliente", icon: <AiOutlineAlignRight  className="icon" /> },
@@ -82,32 +84,51 @@ const Product = () => {
         
     ]
 
-
-
     const data = [
-        { category: "Frutas" },
-        { category: "Legumes" },
-        { category: "Verduras" },
-        { category: "Raízes" },
-        { category: "Grãos e Cereais" },
-        { category: "Ervas e Temperos" },
+        { category: "Pago" },
+        { category: "Pendente" },
+        { category: "Atrasada" },
     ];
 
     const img = Perfil;
     const { select, setSelect } = useSelect();
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPorPage = 1000;
+    const itemsPorPage = 100;
     const totalPages = Math.ceil(caunterVendas / itemsPorPage);
 
     useEffect(() => {
+        setVendas([])
+        setDataNotFound(false);
         const hendlerGetProduct = async () => {
-            const vendaData = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao);
+            const vendaData = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
             if(vendaData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
             setVendas(vendaData)
         }
         hendlerGetProduct();        
-    }, [closeModal, paginacao,  deleteControl]);
+
+    }, [closeModal, paginacao, deleteControl, mes, ano]);
+
+    useEffect(() => {
+        const searchLength = valueSearch.split("").length;
+
+        if(searchLength <= 0) {
+            const hendlerGetVendas = async () => {
+                const vendas = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+                if(vendas.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+                setVendas(vendas)
+            }
+            hendlerGetVendas();
+        }
+    }, [valueSearch]);
+
+    const hendlerGetclienteSearch = async () => {
+        setVendas([])
+        const vendaSeach = await   buscarVendasSeach(valueSearch, userId);
+        if(vendaSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
+        setVendas(vendaSeach)
+        console.log(vendaSeach)
+    }
 
     useEffect(() => {
         if(!idProduct) return
@@ -127,7 +148,6 @@ const Product = () => {
         setIdProductCard(id);
         setCloseBtn(true);
     }
-
 
     return (
         <Container>
@@ -161,7 +181,10 @@ const Product = () => {
                     setValueSearch={setValueSearch}
                     $height={"35px"}
                     $width={"210px"}
+                    onClick={hendlerGetclienteSearch}
                 />
+                <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
+
                 {totalPages > 1 && <Pagination 
                     $totalPages={totalPages} 
                     $paginacao={paginacao} 
@@ -172,14 +195,14 @@ const Product = () => {
                 {
                     cardList ? (
                     <>
-                        {vendas?.length > 0 ? (
+                        {vendas?.length > 0  ? (
                         <div className="body-card">
                             {vendas
                             .filter(item => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.category === select && contemTermo;
+                                if (select !== "Todos") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map(item => (
@@ -247,7 +270,7 @@ const Product = () => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.category === select && contemTermo;
+                                if (select !== "Todos") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map((item, index) => (

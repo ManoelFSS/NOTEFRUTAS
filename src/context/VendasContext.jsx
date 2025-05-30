@@ -1,11 +1,14 @@
 import { createContext, useContext, useState } from "react";
-import { registerClientSchema } from "../validationSchemas/Schemas"
 import { supabase } from '../services/supabase';
+// context
+import { useAuthContext } from "./AuthContext";
 
 
 const VendasContext = createContext();
 
 export const VendasProvider = ({ children }) => {
+
+    const {user, userId} = useAuthContext();
     
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
@@ -78,30 +81,46 @@ export const VendasProvider = ({ children }) => {
     };
 
     // Função principal para buscar clientes de um admin com paginação
-    const buscarVendasPorAdmin = async (adminId, limitepage, paginacao) => {
+    const buscarVendasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
         try {
             // Validar parâmetros
-            if (!adminId || limitepage <= 0 || paginacao < 1) {
-                throw new Error("Parâmetros inválidos: adminId, limitepage ou paginacao");
+            if (!adminId || limitepage <= 0 || paginacao < 1 || !ano || !mes) {
+                throw new Error("Parâmetros inválidos: adminId, limitepage, paginacao, ano ou mes");
             }
 
-            // Contar total de clientes
-            const totalVendas = await contarVendas(adminId);
-            setCaunterVendas(totalVendas); // <-- setar em seu estado
+            // Construir intervalo de datas (do primeiro ao último dia do mês)
+            const inicioMes = new Date(ano, mes - 1, 1).toISOString(); // dia 1
+            const fimMes = new Date(ano, mes, 0, 23, 59, 59, 999).toISOString(); // último dia do mês
+
+            // Contar total de vendas do mês
+            const { count, error: countError } = await supabase
+                .from("vendas")
+                .select("id", { count: "exact", head: true })
+                .eq("adminid", adminId)
+                .gte("created_at", inicioMes)
+                .lte("created_at", fimMes);
+
+            if (countError) throw countError;
+
+            setCaunterVendas(count); // Atualiza o contador
 
             // Calcular range para paginação
-            const page = paginacao;
-            const limit = limitepage;
-            const from = (page - 1) * limit;
-            const to = from + limit - 1;
+            const from = (paginacao - 1) * limitepage;
+            const to = from + limitepage - 1;
 
-            // Buscar clientes do admin com paginação e ordenação
+            // Buscar vendas com dados das parcelas e itens
             const { data, error } = await supabase
-            .from("vendas")
-            .select("*")
-            .eq("adminid", adminId)
-            .order("contador_vendas", { ascending: true })
-            .range(from, to);
+                .from("vendas")
+                .select(`
+                    *,
+                    parcelas_venda(*),
+                    itens_venda(*)
+                `)
+                .eq("adminid", adminId)
+                .gte("created_at", inicioMes)
+                .lte("created_at", fimMes)
+                .order("contador_vendas", { ascending: true })
+                .range(from, to);
 
             if (error) throw error;
 
@@ -116,6 +135,7 @@ export const VendasProvider = ({ children }) => {
     const buscarVendasSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];
 
+        console.log("vendasSeach");
         try {
             // Normaliza o texto
             const texto = `%${searchText.toLowerCase()}%`;
@@ -124,13 +144,13 @@ export const VendasProvider = ({ children }) => {
             .from("vendas")
             .select("*")
             .eq("adminid", adminId)
-            .or(`name.ilike.${texto},cpf.ilike.${texto},phone.ilike.${texto},city.ilike.${texto}`);
+            .or(`name.ilike.${texto},phone.ilike.${texto}`);
 
             if (error) throw error;
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar Fornecedores:", error.message || error);
+            console.error("Erro ao buscar venda:", error.message || error);
             return [];
         }
     };
