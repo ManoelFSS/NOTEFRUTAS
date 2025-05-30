@@ -24,7 +24,7 @@ export const Container = styled.div`
             transition: padding 0.3s ease;
             margin-top: 45px;
             width: 100%;
-            background-color: var( --color-bg-secondary);
+            background-color:rgb(243, 243, 243);
             overflow: auto;
             padding: ${props => props.$toogleMenu ? "0px 0px 0px 190px" : "0px 0px 0px 50px" };
 

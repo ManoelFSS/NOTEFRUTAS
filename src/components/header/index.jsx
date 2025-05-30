@@ -11,28 +11,34 @@ import { VscBellDot } from "react-icons/vsc";
 // context
 import { useAuthContext } from "../../context/AuthContext"
 import {useLogs} from '../../context/LogContext'
+import { set } from "mongoose"
 
 const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert,}) => {
 
     const { logs } = useLogs()
     const [cauntAlertAtive, setCauntAlertAtive] = useState(localStorage.getItem('cauntAlertAtive') || 0)
-
-    const [autorization, setAutorization] = useState(localStorage.getItem('autorization'))
+    const [autorization, setAutorization] = useState(localStorage.getItem('autorization') || 0)
 
     const { logoutUser } = useAuthContext()
+
+    useEffect(() => {
+        setAutorization(1)
+        localStorage.setItem('autorization', 1)
+    }, []);
 
     useEffect(() => {  
         if(logs.length === 0){
             localStorage.setItem('cauntAlertAtive', 0)
             return
         }
-        localStorage.setItem('cauntAlertAtive', cauntAlertAtive - 1)
-        setCauntAlertAtive(cauntAlertAtive - 1)
-
+        autorization === 0 && localStorage.setItem('cauntAlertAtive', cauntAlertAtive - 1)
+        autorization === 0 && setCauntAlertAtive(cauntAlertAtive - 1)
         playNotificationSound();
-        setAutorization(false)
-
+        setAutorization(0)
+        localStorage.setItem('autorization', 0)
     }, [logs]);
+
+   
 
     const playNotificationSound = () => {
         const audio = new Audio('/alert.mp3'); // Altere o nome do arquivo conforme necessário
@@ -67,7 +73,6 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
                             $setShowModalAlert(!$showModalAlert )
                             setCauntAlertAtive( logs.length + 1)     
                             localStorage.setItem('cauntAlertAtive', logs.length + 1 )
-                            autorization && playNotificationSound();
                         }}
                     />
                 </div>
@@ -84,3 +89,4 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
 }
 
 export default Header
+

@@ -4,7 +4,7 @@ import Dashboard from "./pages/painel/dashboard"
 import Client from "./pages/painel/client"
 import Suppliers from "./pages/painel/suppliers"
 import Product from "./pages/painel/product"
-// import Sales from "./pages/painel/sales"
+import Sales from "./pages/painel/sales"
 // import Finances from "./pages/painel/finances"
 // import Reportes from "./pages/painel/reportes"
 // import Company from "./pages/painel/company"
@@ -18,6 +18,8 @@ const AppRouters = ({$toogleMenu, $setToogleMenu}) => {
             <Route  path="/clients" element={<Client $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/products" element={<Product $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/suppliers" element={<Suppliers $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
+            <Route  path="/sales" element={<Sales $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />} >
+            </Route>
         </Routes>
     )
 }

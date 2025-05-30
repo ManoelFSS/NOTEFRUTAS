@@ -335,11 +335,11 @@ const Client = () => {
                                             setSelectForm("cadastrar venda")
                                         }}
                                     />
-                                    <FaInfoCircle
+                                    {/* <FaInfoCircle
                                         className="icon" 
                                         style={{ color: "rgb(255, 162, 0)" }} 
                                         onClick={() => hendledeliteCliente(item.id)}
-                                    />
+                                    /> */}
                                     <FaEdit 
                                         className="icon" 
                                         style={{ color: "rgb(14, 115, 143)" }} 

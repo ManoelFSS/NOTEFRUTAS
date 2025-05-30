@@ -7,6 +7,7 @@ import { ClientesProvider } from './context/ClientesContext.jsx';
 import { ProductProvider} from './context/ProductContext.jsx';
 import {FornecedoresProvider } from './context/FornecedoresContext.jsx';
 import {LogsProvider} from './context/LogContext.jsx';
+import {VendasProvider} from './context/VendasContext.jsx';
 import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
@@ -14,13 +15,15 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <AuthProvider>
         <LogsProvider>
-          <ClientesProvider>
-            <FornecedoresProvider>
-              <ProductProvider>
-                <App />
-              </ProductProvider>
-            </FornecedoresProvider>
-          </ClientesProvider>
+          <VendasProvider>
+            <ClientesProvider>
+              <FornecedoresProvider>
+                <ProductProvider>
+                  <App />
+                </ProductProvider>
+              </FornecedoresProvider>
+            </ClientesProvider>
+          </VendasProvider>
         </LogsProvider>
       </AuthProvider>
     </BrowserRouter>

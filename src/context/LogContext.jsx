@@ -163,10 +163,6 @@ export const LogsProvider = ({ children }) => {
     setupRealtime();
 }, []);
 
-
-
-
-
     return (
         <LogsContext.Provider
         value={{
@@ -182,8 +178,6 @@ export const LogsProvider = ({ children }) => {
         </LogsContext.Provider>
     );
 };
-
-// Hook para usar o contexto
 
 // Hook para usar o contexto
 export const useLogs = () => useContext(LogsContext);

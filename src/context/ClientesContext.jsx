@@ -40,9 +40,15 @@ export const ClientesProvider = ({ children }) => {
     const [itensVenda, setItensVenda] = useState([]); // produtos vendidos e seus respectivos quantidades
     const [parcelasItensVenda, setParcelasItensVenda] = useState([]); 
 
-
-
-
+     // Função para contar total de clientes de um admin
+    const contarClientes = async (adminId) => {
+        const { count, error } = await supabase
+            .from("clientes")
+            .select("*", { count: "exact", head: true })
+            .eq("adminid", adminId);
+        if (error) {throw error;}
+        return count;
+    };
 
     // Função para cadastrar cliente
     const cadastrarCliente = async (clienteData) => {
@@ -54,6 +60,7 @@ export const ClientesProvider = ({ children }) => {
             const validatedClient = registerClientSchema.parse(clienteData);
 
             if (!validatedClient) {
+                
                 // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
                 return validatedClient.errors;
             }
@@ -67,7 +74,6 @@ export const ClientesProvider = ({ children }) => {
             const { data, error } = await supabase
             .from("clientes")
             .insert([clienteData]);
-
             if (error) throw error;
 
             setMessege({
@@ -102,7 +108,6 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
-
     const editarCliente = async (novosDados, id) => {
         setLoading(true);
 
@@ -125,7 +130,6 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
-
     const deletarCliente = async (idDoCliente) => {
         try {
             const { error } = await supabase
@@ -139,29 +143,6 @@ export const ClientesProvider = ({ children }) => {
         } catch (error) {
             console.error("Erro ao deletar Cliente:", error.message || error);
         }
-    };
-
-
-
-   // Função para contar total de clientes de um admin
-    const contarClientes = async (adminId) => {
-        const { count, error } = await supabase
-            .from("clientes")
-            .select("*", { count: "exact", head: true })
-            .eq("adminid", adminId);
-        if (error) {throw error;}
-        return count;
-    };
-
-     // Função para contar total de Vendas de um admin
-    const contarVendas = async (adminId) => {
-        const { count, error } = await supabase
-            .from("clientes")
-            .select("*", { count: "exact", head: true })
-            .eq("adminid", adminId);
-
-        if (error) { throw error;}
-        return count;
     };
 
     const inserirParcelasVenda = async (parcelas) => {
@@ -230,13 +211,20 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
+     // Função para contar total de Vendas de um admin
+    const contarVendas = async (adminId) => {
+        const { count, error } = await supabase
+            .from("vendas")
+            .select("*", { count: "exact", head: true })
+            .eq("adminid", adminId);
+
+        if (error) { throw error;}
+        return count;
+    };
 
      // Função para cadastrar vendas
     const cadastrarVenda = async (vendaData) => {
         setLoading(true);
-        console.log("Parcelas", parcelasItensVenda);
-        console.log("Produtos", itensVenda);
-        console.log("Venda", vendaData);
 
         try {
             const validatedVenda = vendaSchema.parse(vendaData);

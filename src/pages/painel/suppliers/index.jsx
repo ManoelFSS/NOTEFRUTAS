@@ -278,47 +278,47 @@ const Fornecedores = () => {
                             })
                             .map((item, index) => (
                                 <ul className="body-list" key={index}>
-                                <li><img src={img} alt="avatar" /></li>
-                                <li>{item.name}</li>
-                                <li style={{ fontWeight: "bold", color: item.cpf === "Não informado" ? "red" : "black" }}>{item.cpf}</li>
-                                <li>{item.phone}</li>
-                                <li>{item.city}</li>
-                                <li>{item.state}</li>
-                                <li>
-                                    <span style={{ color: item.status === "Nada a Pagar" ? "green" : "red" }}>
-                                    {item.status}
-                                    </span>
-                                </li>
-                                <li className="icons">
-                                    <IoLogoWhatsapp
-                                    className="icon-whatsapp"
-                                    onClick={() =>
-                                        window.open(
-                                        `https://api.whatsapp.com/send?phone=55${item.phone.replace(/[^\d]/g, '')}`
-                                        )
-                                    }
-                                    />
-                                    <FaEdit 
-                                        className="icon" 
-                                        style={{ color: "rgb(14, 115, 143)" }} 
-                                        onClick={() => {
-                                            setCloseModal(true)
-                                            setName(item.name)
-                                            setCpf(item.cpf)
-                                            setCity(item.city)
-                                            setEstadoFornecedor(item.state)
-                                            setPhone(item.phone)
-                                            setIdFornecedor(item.id)
-                                            setBtnName("Editar Fornecedor");
-                                            setSelectForm("editar fornecedor")
-                                        }}
-                                    />
-                                    <MdDeleteForever 
-                                        className="icon" 
-                                        style={{ color: "rgb(224, 2, 2)" }} 
-                                        onClick={() => hendledeliteFornecedor(item.id)}
-                                    />
-                                </li>
+                                    <li><img src={img} alt="avatar" /></li>
+                                    <li>{item.name}</li>
+                                    <li style={{ fontWeight: "bold", color: item.cpf === "Não informado" ? "red" : "black" }}>{item.cpf}</li>
+                                    <li>{item.phone}</li>
+                                    <li>{item.city}</li>
+                                    <li>{item.state}</li>
+                                    <li>
+                                        <span style={{ backgroundColor: item.status === "Nada a Pagar" ? " #007E2A" : "rgb(255, 0, 0)" }}>
+                                            {item.status}
+                                        </span>
+                                    </li>
+                                    <li className="icons">
+                                        <IoLogoWhatsapp
+                                        className="icon-whatsapp"
+                                        onClick={() =>
+                                            window.open(
+                                            `https://api.whatsapp.com/send?phone=55${item.phone.replace(/[^\d]/g, '')}`
+                                            )
+                                        }
+                                        />
+                                        <FaEdit 
+                                            className="icon" 
+                                            style={{ color: "rgb(14, 115, 143)" }} 
+                                            onClick={() => {
+                                                setCloseModal(true)
+                                                setName(item.name)
+                                                setCpf(item.cpf)
+                                                setCity(item.city)
+                                                setEstadoFornecedor(item.state)
+                                                setPhone(item.phone)
+                                                setIdFornecedor(item.id)
+                                                setBtnName("Editar Fornecedor");
+                                                setSelectForm("editar fornecedor")
+                                            }}
+                                        />
+                                        <MdDeleteForever 
+                                            className="icon" 
+                                            style={{ color: "rgb(224, 2, 2)" }} 
+                                            onClick={() => hendledeliteFornecedor(item.id)}
+                                        />
+                                    </li>
                                 </ul>
                             ))}
                         </div>
@@ -326,7 +326,7 @@ const Fornecedores = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
+                            Nenhum fornecedor cadastrado!
                         </p>
                         )}
                     </section>
