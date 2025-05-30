@@ -11,7 +11,6 @@ import { VscBellDot } from "react-icons/vsc";
 // context
 import { useAuthContext } from "../../context/AuthContext"
 import {useLogs} from '../../context/LogContext'
-import { set } from "mongoose"
 
 const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAlert,}) => {
 
