@@ -221,7 +221,7 @@ export const ContainerTable = styled.section`
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(206, 206, 206, 0.95);
+                    background-color:rgba(255, 255, 255, 0.95);
                 }
 
                 li {

@@ -49,7 +49,6 @@ export const clientes = [
     { name: 'Total', value: 200},
     { name: 'Débitos pendentes', value: 70 },
     { name: 'Novos | Mês', value: 35 },
-    { name: 'Bloqueados', value: 15 },
 ];
 
 export const fornecedores = [
