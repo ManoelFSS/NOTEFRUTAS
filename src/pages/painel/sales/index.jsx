@@ -26,7 +26,6 @@ import { GiReceiveMoney } from "react-icons/gi";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { TbCancel } from "react-icons/tb";
-import { BiSolidDetail } from "react-icons/bi";
 import { HiOutlineInformationCircle } from 'react-icons/hi';
 // hooks
 import useSelect from "../../../hooks/useSelect"
@@ -35,7 +34,6 @@ import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
 //image
 import Perfil from "../../../assets/perfil.png"
-// import { Outlet } from 'react-router-dom';
 
 const Sales = () => {
 

@@ -18,8 +18,7 @@ const AppRouters = ({$toogleMenu, $setToogleMenu}) => {
             <Route  path="/clients" element={<Client $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/products" element={<Product $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/suppliers" element={<Suppliers $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
-            <Route  path="/sales" element={<Sales $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />} />
-            
+            <Route  path="/sales" element={<Sales $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
         </Routes>
     )
 }
