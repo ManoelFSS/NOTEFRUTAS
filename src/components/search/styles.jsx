@@ -7,10 +7,11 @@ export const Container_search = styled.div`
     width: 200px;
     height: 35px;
     padding-right: 3px;
-    box-shadow: inset 1px 2px 4px rgb(133, 133, 133);
+    box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 4px;
     cursor: pointer;
-    background-color: #E4E4E4;
+    background-color:rgb(255, 255, 255);
+    border: 1px solid #ccc;
 
     @media (max-width: 610px) {
         min-width: 120px;
@@ -25,9 +26,9 @@ export const Container_search = styled.div`
         cursor: pointer;
         padding: 0 10px;
         color: #000;
-        box-shadow: inset 2px 2px 4px rgb(133, 133, 133);
+        box-shadow: inset 1px 2px 4px rgba(0, 0, 0, 0.24);
         border-radius: 4px;
-        background-color: #E4E4E4;
+        background-color:rgb(255, 255, 255);
     }
 
     input::placeholder {
@@ -39,9 +40,9 @@ export const Container_search = styled.div`
         height: 20px;
         cursor: pointer;
         color: #000;
-        box-shadow: 1px 1px 4px rgb(133, 133, 133);
+        box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.24);
         border-radius: 5px;
-        background-color:rgb(255, 255, 255);
+        background-color:rgba(255, 255, 255, 0);
         padding: 4px 5px;
         transform: scale(0.9);
 

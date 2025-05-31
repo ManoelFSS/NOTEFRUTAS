@@ -37,8 +37,6 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
         localStorage.setItem('autorization', 0)
     }, [logs]);
 
-   
-
     const playNotificationSound = () => {
         const audio = new Audio('/alert.mp3'); // Altere o nome do arquivo conforme necessário
         audio.play().catch((error) => {

@@ -9,7 +9,7 @@ import {
     Bar,
 } from './styles';
 
-const BarChart_y = ({data , barHeight}) => {
+const BarChart_y = ({data}) => {
 
     return (
         <Container>

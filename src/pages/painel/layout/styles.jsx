@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
     display: flex;
     width: 100%;
-    
+
     .sidebar {
         transition: width 0.3s ease;
         width: ${props => props.$toogleMenu ? "190px" : "50px" };
@@ -18,13 +18,18 @@ export const Container = styled.div`
 
     .content {
         width: 100%;
+
+        @media (max-width: 450px) {
+            min-width: 390px;
+        }
+    
         
         .main {
             height: calc( 100vh - 45px );
             transition: padding 0.3s ease;
             margin-top: 45px;
             width: 100%;
-            background-color:rgb(243, 243, 243);
+            background-color:rgb(255, 255, 255);
             overflow: auto;
             padding: ${props => props.$toogleMenu ? "0px 0px 0px 190px" : "0px 0px 0px 50px" };
 

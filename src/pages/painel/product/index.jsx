@@ -264,11 +264,11 @@ const Product = () => {
                                 <ul className="body-list" key={index}>
                                 <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                 <li>{item.name}</li>
-                                <li style={{fontWeight: "bold", color: item.stock === 0 ? "red" : "black" }}>{item.stock} <span>items</span></li>
-                                <li style={{ fontWeight: "bold", color: item.description=== "Não informado" ? "red" : "black" }}>{item.description}</li>
+                                <li>{item.stock}</li>
+                                <li>{item.description}</li>
                                 <li>{item.category}</li>
                                 <li>
-                                    <span style={{ color: item.status === "Disponivel" ? "green" : "red" }}>
+                                    <span style={{ backgroundColor: item.status === "Disponivel" ? "rgb(78, 138, 98)" :  "rgb(211, 5, 5)" }}>
                                         {item.status}
                                     </span>
                                 </li>

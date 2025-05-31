@@ -156,7 +156,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     <StockProductChart />
                 </section>
             </section>
-            <Checkout />
+            {/* <Checkout /> */}
             
         </Container_dashboard>
     )

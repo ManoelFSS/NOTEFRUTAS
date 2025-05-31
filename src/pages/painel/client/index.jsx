@@ -302,12 +302,12 @@ const Client = () => {
                                 <ul className="body-list" key={index}>
                                 <li><img src={img} alt="avatar" /></li>
                                 <li>{item.name}</li>
-                                <li style={{ fontWeight: "bold", color: item.cpf === "Não informado" ? "red" : "black" }}>{item.cpf}</li>
+                                <li>{item.cpf}</li>
                                 <li>{item.phone}</li>
                                 <li>{item.city}</li>
                                 <li>{item.state}</li>
                                 <li>
-                                    <span style={{ color: item.status === "Em Dias" ? "green" : "red" }}>
+                                    <span style={{backgroundColor: item.status === "Em Dias" ?  "rgb(78, 138, 98)" : "rgb(211, 5, 5)" }}>
                                     {item.status}
                                     </span>
                                 </li>

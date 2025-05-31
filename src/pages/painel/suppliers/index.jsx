@@ -285,7 +285,7 @@ const Fornecedores = () => {
                                     <li>{item.city}</li>
                                     <li>{item.state}</li>
                                     <li>
-                                        <span style={{ backgroundColor: item.status === "Nada a Pagar" ? " #007E2A" : "rgb(255, 0, 0)" }}>
+                                        <span style={{ backgroundColor: item.status === "Nada a Pagar" ? "rgb(78, 138, 98)" : "rgb(211, 5, 5)" }}>
                                             {item.status}
                                         </span>
                                     </li>

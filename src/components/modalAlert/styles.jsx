@@ -5,7 +5,7 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     width: 250px;
-    height: calc(100svh - 45px);
+    height: calc(100vh - 45px);
     gap: 10px;
     position: fixed;
     bottom: 0;
@@ -13,8 +13,13 @@ export const Container = styled.div`
     right: ${props => props.$showModalAlert ? "0" : "-250px" };
     background-color:rgba(0, 0, 0, 0.67);
     box-shadow: -1px 0px 5px rgb(0, 0, 0);
-    z-index: 5;
+    z-index: 9999;
     padding: 20px 10px;
+
+    @media (max-width: 450px) {
+        width: 100%;
+        right: ${props => props.$showModalAlert ? "0" : "-100%" };
+    }
 
     .box-alert {
         Display: flex;

@@ -66,21 +66,19 @@ export const VendasProvider = ({ children }) => {
 
 
 
-   // Função para contar total de clientes de um admin
+    // Função para contar total de Vendas de um admin
     const contarVendas = async (adminId) => {
         const { count, error } = await supabase
             .from("vendas")
             .select("*", { count: "exact", head: true })
             .eq("adminid", adminId);
 
-        if (error) {
-            throw error;
-        }
-
+        if (error) { throw error;}
         return count;
     };
 
-    // Função principal para buscar clientes de um admin com paginação
+
+   // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
     const buscarVendasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
         try {
             // Validar parâmetros
@@ -88,25 +86,30 @@ export const VendasProvider = ({ children }) => {
                 throw new Error("Parâmetros inválidos: adminId, limitepage, paginacao, ano ou mes");
             }
 
+            const totalVendas = await contarVendas(adminId);
+            setCaunterVendas(totalVendas); // <-- setar em seu estado
+
             // Construir intervalo de datas (do primeiro ao último dia do mês)
             const inicioMes = new Date(ano, mes - 1, 1).toISOString(); // dia 1
             const fimMes = new Date(ano, mes, 0, 23, 59, 59, 999).toISOString(); // último dia do mês
 
-            // Contar total de vendas do mês
+            // Calcular range para paginação
+            const from = (paginacao - 1) * limitepage;
+            const to = from + limitepage - 1;
+
+            // Contar total de vendas do mês ou com status pendente/atrasada
             const { count, error: countError } = await supabase
                 .from("vendas")
                 .select("id", { count: "exact", head: true })
                 .eq("adminid", adminId)
-                .gte("created_at", inicioMes)
-                .lte("created_at", fimMes);
+                .or(
+                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),status.eq.pendente,status.eq.atrasada`
+                );
 
             if (countError) throw countError;
 
-            setCaunterVendas(count); // Atualiza o contador
-
-            // Calcular range para paginação
-            const from = (paginacao - 1) * limitepage;
-            const to = from + limitepage - 1;
+            // Atualiza o contador
+            setCaunterVendas(count);
 
             // Buscar vendas com dados das parcelas e itens
             const { data, error } = await supabase
@@ -117,9 +120,10 @@ export const VendasProvider = ({ children }) => {
                     itens_venda(*)
                 `)
                 .eq("adminid", adminId)
-                .gte("created_at", inicioMes)
-                .lte("created_at", fimMes)
-                .order("contador_vendas", { ascending: true })
+                .or(
+                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),status.eq.pendente,status.eq.atrasada`
+                )
+                .order("contador_vendas", { ascending: false})// ordena pelo contador - false de forma decrescente
                 .range(from, to);
 
             if (error) throw error;

@@ -105,14 +105,17 @@ export const Container_header = styled.div`
     
 
     .menu {
-        color: var(--color-text-primary);
+        color: #ffffff;
         width: 30px;
         height: 30px;
+        position: fixed;
+        left: 10px ;
         cursor: pointer;
+        z-index: 9999;
         
-        @media (max-width: 600px){
-            display: none;
-        }
+        // @media (max-width: 600px){
+        //     display: none;
+        // }
 
         @media (min-width: 1910px) {
             width: 4vh;

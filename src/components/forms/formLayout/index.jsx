@@ -4,15 +4,16 @@ import { useAuthContext } from "../../../context/AuthContext"
 import { useClientes } from "../../../context/ClientesContext"
 import { useProduct } from "../../../context/ProductContext"
 import { useFornecedores } from "../../../context/FornecedoresContext"
+import { useVendas } from "../../../context/VendasContext"
 
 const FormLayout = ({ children, $height, state, $color }) => {
 
+    const { caunterVendas } = useVendas()
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
 
     const { 
             cadastrarCliente, 
             caunterClientes, 
-            caunterVendas, 
             idClient, 
             estado, 
             editarCliente, 
@@ -116,21 +117,6 @@ const FormLayout = ({ children, $height, state, $color }) => {
             description: event.target.description?.value || "",
             category: category || "",
         };
-
-        // const venda = {
-        //     name: name || "",
-        //     phone: phone || "",
-        //     created_at: new Date(),
-        //     datereception: dataDeRecebimento || "",
-        //     typepagament: formaDEPagamento || "",
-        //     status: status_pagamento || "",
-        //     cauntervendas: caunterVendas + 1,
-        //     adminid: userId,
-        //     cliente_id: idClient,
-        //     valordaentrada: valorRecebido || 0,
-        //     valortotaldavenda: valorTotalDaVenda || 0,
-        //     valorrestante: formaDEPagamento === "A vista" ? 0 : valorRestante ,
-        // };
 
         const venda = {
             cliente_id:idClient,

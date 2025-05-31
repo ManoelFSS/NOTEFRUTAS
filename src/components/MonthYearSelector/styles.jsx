@@ -22,8 +22,12 @@ export const DropdownHeader = styled.div`
   display: flex;
   justify-content: ;
   align-items: center;
-  box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.4);
-  background-color: #E4E4E4;
+  box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.2);
+  background-color:rgb(255, 255, 255);
+
+  &:hover {
+    color: #FF9D00;
+  }
 `;
 
 export const DropdownList = styled.div`
@@ -70,7 +74,12 @@ export const IconWrapper = styled.span`
   cursor: pointer;
   position: absolute;
   right: 5px;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+  font-size: 1rem;
   transition: transform 0.3s ease;
   transform: ${({ open }) => (open ? 'rotate(180deg)' : 'rotate(0deg)')};
+  trasition: transform 0.3s ease;
+
+  &:hover {
+    color: #FF9D00;
+  }
 `;

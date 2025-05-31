@@ -228,9 +228,8 @@ export const ContainerTable = styled.section`
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 0 10px;
-                    font-weight: 600;
-                    font-size: 0.8rem;
+                    font-weight: 500;
+                    font-size: 0.9rem;
                     color: #000;
                     color: var( --color-text-primary );
                 }
@@ -255,15 +254,7 @@ export const ContainerTable = styled.section`
                 
                 li:nth-child(3) {
                     display: flex;
-                    gap: 10px;
                     width: 160px;
-                    font-weight: 900;
-                    font-size: 1rem;
-                    
-                    span {
-                        font-weight: 500;
-                        font-size: 0.8rem;
-                    }
                 }
                 
                 li:nth-child(4) {
@@ -273,7 +264,20 @@ export const ContainerTable = styled.section`
                 }
 
                 li:nth-child(6){
+                    display: flex;
+                    justify-content: center;
                     width: 150px;
+                    
+                    span {
+                        text-align: center;
+                        width: 130px;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        color: #FFF;
+                        padding: 6px 10px;
+                        border-radius: 4px;
+                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
+                    }
                 }
                 
                 li:nth-child(5), li:nth-child(9) {
@@ -285,7 +289,7 @@ export const ContainerTable = styled.section`
                 }
 
                 li:nth-child(7){
-                    width: 160px;
+                    width: 145px;
                 }
                 
                 .icons {
@@ -297,29 +301,15 @@ export const ContainerTable = styled.section`
                         font-size: 1.5rem;
                         cursor: pointer;
                         trasition: color 0.3s ease;
+                        padding: 2px;
+                        border-radius: 4px;
+                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
                         
                         &:hover {
                             transform: scale(1.1);
-                            padding: 2px;
-                            border-radius: 4px;
-                            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
                         }
                     }
                     
-                    .icon-whatsapp {
-                        font-size: 1.5rem;
-                        cursor: pointer;
-                        trasition: color 0.3s ease;
-                        color: var(  --color-bg-btn-primary );
-                        font-weight: 900;
-                        
-                        &:hover {
-                            transform: scale(1.1);
-                            padding: 2px;
-                            border-radius: 4px;
-                            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-                        }
-                    }
                 }
             }
         }

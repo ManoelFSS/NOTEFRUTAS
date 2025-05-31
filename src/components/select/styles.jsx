@@ -11,14 +11,24 @@ export const Container_select = styled.div`
         gap: 5px;
         width: 100%;
         height: 35px;
-        background:rgb(228, 228, 228);
+        background:rgb(255, 255, 255);
         padding: 0px 10px;
         border-radius: 4px;
-        box-shadow: inset 1px 1px 5px rgba(2, 2, 2, 0.49);
+        box-shadow: inset 1px 1px 5px rgba(2, 2, 2, 0.34);
+    }
+
+    .select_header:hover h3,
+    .select_header:hover .icone_select {
+        color: #FF9D00;
+    }
+
+    .icone_select {
+        font-size: 0.8rem;
     }
 
     .select_header h3 {
         font-size: 0.9rem;
+        font-weight: 400;
         color: #000;
     }
 
@@ -62,10 +72,6 @@ export const Container_select = styled.div`
                 background-color: #f2f2f2;
             }
         }
-    }
-
-    .icone_select {
-        color: #000;
     }
 
 `

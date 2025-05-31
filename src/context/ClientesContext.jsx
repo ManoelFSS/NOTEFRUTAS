@@ -211,17 +211,6 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
-     // Função para contar total de Vendas de um admin
-    const contarVendas = async (adminId) => {
-        const { count, error } = await supabase
-            .from("vendas")
-            .select("*", { count: "exact", head: true })
-            .eq("adminid", adminId);
-
-        if (error) { throw error;}
-        return count;
-    };
-
      // Função para cadastrar vendas
     const cadastrarVenda = async (vendaData) => {
         setLoading(true);
@@ -325,42 +314,7 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
-
-     // Função principal para buscar vendas de um admin com paginação
-    const buscarVendaPorAdmin = async (adminId, limitepage, paginacao) => {
-        try {
-            // Validar parâmetros
-            if (!adminId || limitepage <= 0 || paginacao < 1) {
-            throw new Error("Parâmetros inválidos: adminId, limitepage ou paginacao");
-            }
-
-            // Contar total de clientes
-            const totalClientes = await contarVendas(adminId);
-            setCaunterVendas(totalClientes); // <-- setar em seu estado
-
-            // Calcular range para paginação
-            const page = paginacao;
-            const limit = limitepage;
-            const from = (page - 1) * limit;
-            const to = from + limit - 1;
-
-            // Buscar clientes do admin com paginação e ordenação
-            const { data, error } = await supabase
-            .from("clientes")
-            .select("*")
-            .eq("adminid", adminId)
-            .order("caunterclient", { ascending: true })
-            .range(from, to);
-
-            if (error) throw error;
-
-            return data;
-        } catch (error) {
-            console.error("Erro ao buscar clientes:", error);
-            throw error;
-        }
-    };
-
+    
     // Função principal para buscar clientes de um admin com paginação
     const buscarClientesPorAdmin = async (adminId, limitepage, paginacao) => {
         try {

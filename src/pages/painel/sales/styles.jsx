@@ -208,7 +208,7 @@ export const ContainerTable = styled.section`
             align-items: center;
             justify-content: ;
             flex-direction: column;
-            gap: 10px;
+            gap: 16px;
             list-style: none;
             width: 100%;
             padding: 10px 0;
@@ -236,11 +236,11 @@ export const ContainerTable = styled.section`
                 width: 99%;
                 background-color:rgb(255, 255, 255);     
                 border-radius: 6px;    
-                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.22);
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.19);
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(255, 255, 255, 0.95);
+                    background-color:rgba(237, 237, 237, 0.95);
                 }
 
                 li {

@@ -272,7 +272,7 @@ const Sales = () => {
                                 return contemTermo;
                             })
                             .map((item, index) => (
-                                <ul className="body-list" key={index}>
+                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toISOString().split("T")[0] ? "rgba(255, 170, 0, 0.1)" : "" }}>
                                     <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                     <li>{item.name}</li>
                                     <li>{item.phone}</li>
@@ -282,7 +282,7 @@ const Sales = () => {
                                     <li>{item.valor_restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>
                                     <li>
                                         <span style={{ 
-                                            backgroundColor: item.status === "Pago" ? " #007E2A" : item.status === "Pendente" ? "rgb(25, 85, 195)" : "red",
+                                            backgroundColor: item.status === "Pago" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? "rgb(58, 85, 136)" : "rgb(211, 5, 5)",
                                         }}>
                                             {item.status}
                                         </span>

@@ -16,8 +16,7 @@ export const Container = styled.div`
         transition: background-color 0.3s ease;
 
         &:hover {
-            background-color: var( --color-bg-btn-hover );
-            color: var( --color-text-secondary );
+            color: #FF9D00;
         }
     }
 
@@ -37,7 +36,7 @@ export const Container = styled.div`
     }
 
     button:hover, .active {
-        background-color: var( --color-bg-btn-hover );
+        background-color: #FF9D00;
         color: var( --color-text-secondary );
     }
 
@@ -49,8 +48,7 @@ export const Container = styled.div`
         transition: background-color 0.3s ease;
 
         &:hover {
-            background-color: var( --color-bg-btn-hover );
-            color: var( --color-text-secondary );
+            color: #FF9D00;
         }
     }
 `

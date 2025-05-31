@@ -27,7 +27,7 @@ const StockProductChart = ({ $height, $ocult }) => {
         { fruta: 'Meçã', stock: 3000, sold: 3000, minStock: 100, moneyTotal: 20000, category: 'Frutas' },
         { fruta: 'Melão', stock: 2000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
         { fruta: 'Menga', stock: 4000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
-        { fruta: 'Moranga', stock: 5000, sold: 3000, minStock: 100, moneyTotal: 30000, category: 'Frutas' },
+        { fruta: 'Moranga', stock: 15000, sold: 3000, minStock: 100, moneyTotal: 30000, category: 'Frutas' },
         { fruta: 'Laranja', stock: 1500, sold: 3000, minStock: 100, moneyTotal: 24000, category: 'Frutas' },
         { fruta: 'Banana', stock: 3000, sold: 3000, minStock: 100, moneyTotal: 20000, category: 'Frutas' },
         { fruta: 'Abacaxi', stock: 2000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
@@ -60,7 +60,7 @@ const StockProductChart = ({ $height, $ocult }) => {
     const { select, setSelect  } = useSelect()
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPerPage = 25;
+    const itemsPerPage = 15;
     const startIndex = (paginacao - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
@@ -205,7 +205,7 @@ const StockProductChart = ({ $height, $ocult }) => {
                     select={select} 
                     setSelect={setSelect}
                     $setPaginacao={setPaginacao}
-                    $width={"150px"}
+                    $width={"140px"}
                 />
                 <Pagination 
                     $totalPages={totalPages} 
@@ -232,7 +232,7 @@ const StockProductChart = ({ $height, $ocult }) => {
                     ))}
                 </div>
             </div>
-            <div className="chart-main" style={{ height:  $height }}>
+            <div className="chart-main" style={{ height:  "285px"}}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

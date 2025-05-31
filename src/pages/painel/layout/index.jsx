@@ -19,7 +19,7 @@ const Layout = ({children, $setToogleMenu, $toogleMenu}) => {
     return (
         <Container $toogleMenu={$toogleMenu} >
             <section className="sidebar" >
-                <Menu />
+                <Menu $setToogleMenu={$setToogleMenu}  />
             </section>
             <section className="content">
                 <Header 

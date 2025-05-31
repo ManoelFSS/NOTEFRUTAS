@@ -221,15 +221,14 @@ export const ContainerTable = styled.section`
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(255, 255, 255, 0.95);
+                    background-color:rgba(237, 237, 237, 0.95);
                 }
 
                 li {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 0 10px;
-                    font-weight: 600;
+                    font-weight: 500;
                     font-size: 0.8rem;
                     color: #000;
                     color: var( --color-text-primary );
@@ -269,14 +268,23 @@ export const ContainerTable = styled.section`
                 
                 li:nth-child(5), li:nth-child(9) {
                     width: 120px;
-                    span {    
-                        font-weight: 900;
-                        font-size: 1rem;
-                    }
                 }
 
                 li:nth-child(7){
+                    display: flex;
+                    justify-content: center;
                     width: 160px;
+                    
+                    span {
+                        text-align: center;
+                        width: 130px;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        color: #FFF;
+                        padding: 6px 10px;
+                        border-radius: 4px;
+                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
+                    }
                 }
                 
                 .icons {

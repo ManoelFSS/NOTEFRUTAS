@@ -17,7 +17,7 @@ import Logo from "../logo";
 import { useAuthContext } from "../../context/AuthContext";
 import {Link, useLocation } from 'react-router-dom';
 
-const Menu = () => {
+const Menu = ({$setToogleMenu}) => {
     const {user} = useAuthContext();
     const navigate = useLocation();
 
@@ -31,58 +31,58 @@ const Menu = () => {
         <Nav>
             <div className="logo">
                 <Logo />
-                <h3>{user?.name?.split(" ")[0]}</h3>
+                <h3>{user?.name?.split(" ")[0] || "Usuário"}</h3>
             </div>
             <ul>
-                <Link className="link" to="/dashboard">
+                <Link className="link" to="/dashboard" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/" || activeLink === "/dashboard" ? "active" : ""}> 
                         <MdDashboardCustomize className="icon" /> 
                         Dashboard
                     </li>
                 </Link>
-                <Link className="link" to="/clients">
+                <Link className="link" to="/clients" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/clients" ? "active" : ""} >
                         <MdGroupAdd className="icon" />
                         Clientes
                     </li>
                 </Link>
-                <Link className="link" to="/products">
+                <Link className="link" to="/products" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/products" ? "active" : ""}>
                         <FaProductHunt className="icon" />
                         Produtos
                     </li>
                 </Link>
-                <Link className="link" to="/suppliers">
+                <Link className="link" to="/suppliers" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/suppliers" ? "active" : ""}>
                         <FaHandshake className="icon" />
                         Fornecedores
                     </li>
                 </Link>
-                <Link className="link" to="/sales">
+                <Link className="link" to="/sales" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/sales" ? "active" : ""}>
                         <FaLayerGroup className="icon" />
                         Vendas
                     </li>
                 </Link>
-                <Link className="link" to="/finances">
+                <Link className="link" to="/finances" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/finances" ? "active" : ""}>
                         <FaMoneyBillTransfer className="icon" />
                         Finanças
                     </li>
                 </Link>
-                <Link  className="link" to="/reports">
+                <Link  className="link" to="/reports" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/reports" ? "active" : ""}>
                         <FaSquarePollVertical className="icon" />
                         Relatórios
                     </li>
                 </Link>
-                <Link className="link" to="/settings">
+                <Link className="link" to="/settings" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/settings" ? "active" : ""}>
                         <FaBuildingCircleExclamation className="icon" />
                         Empresa
                     </li>
                 </Link>
-                <Link className="link" to="/users">
+                <Link className="link" to="/users" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/users" ? "active" : ""}>
                         <MdAdminPanelSettings className="icon" />
                         Administrador
