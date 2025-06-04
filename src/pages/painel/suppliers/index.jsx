@@ -166,11 +166,11 @@ const Fornecedores = () => {
                     $width={"210px"}
                     onClick={hendlerGetFornecedorSearch}
                 />
-                {caunterFornecedores > 10 && <Pagination 
+                <Pagination 
                     $totalPages={totalPages} 
                     $paginacao={paginacao} 
                     $setPaginacao={setPaginacao}
-                />}
+                />
             </section>
             <ContainerTable>
                 {

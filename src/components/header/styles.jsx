@@ -9,7 +9,7 @@ export const Container_header = styled.div`
     height: 45px;
     padding: 0 10px;
     position: fixed;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+    border-bottom: 4px solid  #007E2A;
     background-color: var( --color-bg-primary );
     right: 0;
     z-index: 99;

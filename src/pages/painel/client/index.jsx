@@ -85,7 +85,7 @@ const Client = () => {
     const { select, setSelect } = useSelect();
     const [paginacao, setPaginacao] = useState(1);
 
-    const itemsPorPage = 1;
+    const itemsPorPage = 100;
     const totalPages = Math.ceil(caunterClientes / itemsPorPage);
 
     useEffect(() => {
@@ -171,11 +171,11 @@ const Client = () => {
                     $width={"210px"}
                     onClick={hendlerGetclienteSearch}
                 />
-                {caunterClientes > 10 && <Pagination 
+                <Pagination 
                     $totalPages={totalPages} 
                     $paginacao={paginacao} 
                     $setPaginacao={setPaginacao}
-                />}
+                />
             </section>
             <ContainerTable>
                 {

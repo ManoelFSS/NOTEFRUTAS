@@ -38,8 +38,8 @@ export const DropdownList = styled.div`
   max-height: 150px;
   overflow-y: auto;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.44);
+  border-radius: 4px;
   z-index: 10;
 
   &::-webkit-scrollbar {

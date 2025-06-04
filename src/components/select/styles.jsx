@@ -40,7 +40,7 @@ export const Container_select = styled.div`
         top: 40px;
         left: 0px;
         background-color: #fff;
-        box-shadow: 0px 1px 6px rgb(121, 121, 121);
+        box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.3);
         z-index: 99;
         border-radius: 4px;
 
@@ -66,7 +66,6 @@ export const Container_select = styled.div`
             font-size: 0.9rem;
             font-weight: 600;
             trasition: all 0.3s;
-            border-top: solid 1px #7979797c;
 
             &:hover {
                 background-color: #f2f2f2;

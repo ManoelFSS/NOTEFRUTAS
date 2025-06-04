@@ -34,7 +34,7 @@ export const Container = styled.div`
             padding: ${props => props.$toogleMenu ? "0px 0px 0px 190px" : "0px 0px 0px 50px" };
 
             &::-webkit-scrollbar {
-                width: 5px;
+                width: 8px;
             }
             
             &::-webkit-scrollbar-track {

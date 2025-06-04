@@ -42,7 +42,7 @@ export const Container_search = styled.div`
         color: #000;
         box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.24);
         border-radius: 5px;
-        background-color:rgba(255, 255, 255, 0);
+        background-color:rgb(255, 255, 255);
         padding: 4px 5px;
         transform: scale(0.9);
 

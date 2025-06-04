@@ -170,7 +170,7 @@ export const ContainerTable = styled.section`
                 }
 
                 li:nth-child(7){
-                    width: 150px;
+                    width: 180px;
                 }
 
                 li:nth-child(8){
@@ -215,13 +215,13 @@ export const ContainerTable = styled.section`
                 gap: 10px;
                 list-style: none;
                 width: 99%;
-                background-color:rgb(255, 255, 255);     
+                background-color: #f2f2f2f2;     
                 border-radius: 6px;    
                 box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.22);
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(237, 237, 237, 0.95);
+                    background-color:rgba(175, 188, 179, 0.29);
                 }
 
                 li {
@@ -273,11 +273,11 @@ export const ContainerTable = styled.section`
                 li:nth-child(7){
                     display: flex;
                     justify-content: center;
-                    width: 160px;
+                    width: 180px;
                     
                     span {
                         text-align: center;
-                        width: 130px;
+                        width: 160px;
                         font-weight: 600;
                         font-size: 1rem;
                         color: #FFF;

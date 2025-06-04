@@ -211,6 +211,19 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
+    const atualizarStatusParaDebitos = async (cliente_id)  => {
+        const { data, error } = await supabase
+            .from('clientes') // substitua pelo nome correto da sua tabela
+            .update({ status: 'Débitos a Pagar' })
+            .eq('id', cliente_id); // ou 'cliente_id', dependendo do nome do campo
+
+        if (error) {
+            console.error('Erro ao atualizar status:', error);
+        } else {
+            console.log('Debito ao cliente atualizado com sucesso:', data);
+        }
+    }
+
      // Função para cadastrar vendas
     const cadastrarVenda = async (vendaData) => {
         setLoading(true);
@@ -270,6 +283,7 @@ export const ClientesProvider = ({ children }) => {
                     venda_id: vendaId
                 }))
                 await inserirParcelasVenda(parcelasItems);
+                await atualizarStatusParaDebitos(vendaData.cliente_id);
             }
 
             // 3. Resetar os campos e fechar modal
@@ -282,6 +296,7 @@ export const ClientesProvider = ({ children }) => {
             setDataDeRecebimento('');
             setStatus_pagamento('Pendente');
             setValorTotalDaVenda('');
+            setCloseModal(null);
 
             setMessege({
                 success: true,
@@ -301,6 +316,7 @@ export const ClientesProvider = ({ children }) => {
             };
 
             await cadastrarLog(log);
+            
 
         } catch (error) {
             console.error("Erro ao cadastrar Venda:", error);

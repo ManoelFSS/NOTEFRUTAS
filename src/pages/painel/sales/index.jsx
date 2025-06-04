@@ -10,6 +10,7 @@ import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import ProductCard from "../../../components/cards/productCard";
 import MonthYearSelector from "../../../components/MonthYearSelector";
+import VendasDetails from "../../../components/vendasDetails";
 // icons
 import { FaUserPlus } from "react-icons/fa";
 import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
@@ -34,8 +35,12 @@ import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
 //image
 import Perfil from "../../../assets/perfil.png"
+// rota aninhada
+import { useNavigate  } from "react-router-dom";
 
 const Sales = () => {
+
+    const navigate = useNavigate();
 
     const { 
         buscarVendasPorAdmin,
@@ -52,7 +57,7 @@ const Sales = () => {
         idVenda, setIdVenda,
     } = useVendas();
     
-    const { setSelectForm, userId } = useAuthContext();
+    const { setSelectForm, userId,  activeLink, setActiveLink } = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
@@ -63,6 +68,7 @@ const Sales = () => {
     const [closeBtn, setCloseBtn] = useState(false);
     const [mes, setMes] = useState( new Date().getMonth() + 1);
     const [ano, setAno] = useState(new Date().getFullYear());
+    const [vendaModalDetails, setVendaModalDetails] = useState(false);
 
     const handleDateChange = ({ month, year }) => {
         setAno(year);
@@ -96,6 +102,12 @@ const Sales = () => {
     const totalPages = Math.ceil(caunterVendas / itemsPorPage);
 
     useEffect(() => {
+        if(totalPages > 1 ) return setPaginacao(1);
+        console.log(paginacao)  
+        console.log(totalPages)
+    }, [mes, ano]);
+
+    useEffect(() => {
         setVendas([])
         setDataNotFound(false);
         const hendlerGetProduct = async () => {
@@ -103,9 +115,10 @@ const Sales = () => {
             if(vendaData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
             setVendas(vendaData)
         }
-        hendlerGetProduct();        
-
+        hendlerGetProduct();    
     }, [closeModal, paginacao, deleteControl, mes, ano]);
+
+
 
     useEffect(() => {
         const searchLength = valueSearch.split("").length;
@@ -115,10 +128,13 @@ const Sales = () => {
                 const vendas = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
                 if(vendas.length === 0) setTimeout(() => setDataNotFound(true), 2000);
                 setVendas(vendas)
+                
             }
             hendlerGetVendas();
         }
     }, [valueSearch]);
+
+    
 
     const hendlerGetclienteSearch = async () => {
         setVendas([])
@@ -263,7 +279,7 @@ const Sales = () => {
                         </div>
                         {vendas?.length > 0 ? (
                         <div className="body">
-                            {vendas
+                            {vendas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                             .filter(item => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
@@ -272,7 +288,7 @@ const Sales = () => {
                                 return contemTermo;
                             })
                             .map((item, index) => (
-                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toISOString().split("T")[0] ? "rgba(255, 170, 0, 0.1)" : "" }}>
+                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toISOString().split("T")[0] ? "rgba(175, 188, 179, 0.72)" : "" }}>
                                     <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                     <li>{item.name}</li>
                                     <li>{item.phone}</li>
@@ -300,14 +316,15 @@ const Sales = () => {
                                             className="icon" 
                                             style={{ color: "rgb(53, 53, 53)" }} 
                                             onClick={() => {
-                                                hendledeliteProduct(item.id);
+                                                setIdVenda(item.id);
+                                                setVendaModalDetails(true);
                                             }}
                                         />
                                         <TbCancel  
                                             className="icon" 
                                             style={{ color: "rgb(224, 2, 2)" }} 
                                             onClick={() => {
-                                                hendledeliteProduct(item.id);
+                                                // hendledeliteProduct(item.id);
                                             }}
                                         />
                                     </li>
@@ -328,7 +345,7 @@ const Sales = () => {
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
             { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
-            {/* <Outlet /> */}
+            { vendaModalDetails && <VendasDetails  setVendaModalDetails={setVendaModalDetails} />}
         </Container>
     )
 }

@@ -1,0 +1,267 @@
+import styled from "styled-components";
+
+export const Container_datails = styled.div`
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9999999;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background:rgba(241, 241, 241, 0);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #FF9D00;
+    }
+
+    @media (max-width: 68px) {
+        padding: 20px 5px;
+    }
+
+
+    .datails-container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 10px;
+        padding: 10px 10px;
+        background-color:rgb(255, 255, 255);
+        border-radius: 6px;
+        border: solid 1px #cccccc;
+        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+        margin: auto;
+
+        .close-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 20px;
+            position: relative;
+
+            h1 {
+                width: 100%;
+                text-align: center;
+                font-size: 1rem;
+                font-weight: 900;
+            }
+
+            .close{
+                position: absolute;
+                right: 0;
+                top: 0;
+                cursor: pointer;
+                font-size: 1.2rem;
+                transition: color 0.3s ease;
+
+                &:hover {
+                    color: #FF9D00;
+                }
+            }
+        }
+
+        h2 {
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #000;
+        }
+
+        .datails-client {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+
+            h4 {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #000;
+            }
+
+            p {
+                font-size: 0.7rem;
+                font-weight: 500;
+                color: #000;
+                padding: 3px;
+                background-color:rgb(238, 236, 236);
+                margin-bottom: 5px;
+            }
+
+            .datails-client-info {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                gap: 10px;
+
+                div {
+                    width: 100%;
+
+                    h4 {
+                        font-size: 0.8rem;
+                        font-weight: 700;
+                        color: #000;
+                    }
+
+                    p {
+                        font-size: 0.7rem;
+                        font-weight: 500;
+                        color: #000;
+                        padding: 3px;
+                        background-color:rgb(238, 236, 236);
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+        .datails-payment {
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+
+            h3 {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #000;
+            }
+        
+            .payment-header{
+                display: flex;
+                width: 100%;
+                list-style: none;
+
+                li {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    font-weight: 600;
+                    font-size: 0.8rem;
+                    color: #000;
+                    border-radius: 4px;
+                    background-color:rgb(231, 231, 231);
+                    text-align: center;
+
+                    p {
+                        width: 100%;
+                        text-align: center;
+                        font-size: 0.8rem;
+                        font-weight: 600;
+                        color: rgba(255, 255, 255, 0.95);
+                        background-color:rgb(170, 170, 170);
+                        padding: 5px 6px;
+                    }
+
+                    span {
+                        width: 100%;
+                        text-align: center;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                        padding: 5px 10px 10px;
+                    }
+                }
+
+                li:nth-child(1){
+                    p {
+                        width:80px;
+                    }
+                }
+
+                li:nth-child(2){
+                    p {
+                        width:45px;
+                    }
+                }
+
+                li:nth-child(3){
+                    p {
+                        width:70px;
+                    }
+                }
+
+                li:nth-child(4){
+                    p {
+                        width: 88px;
+                    }
+                }
+            }
+
+            .payment-list {
+                display: flex;
+                width: 100%;
+                list-style: none;
+
+                li {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    font-weight: 600;
+                    color: #000;
+                    border-radius: 4px;
+
+                    p {
+                        width: 100%;
+                        text-align: center;
+                        font-size: 0.6rem;
+                        font-weight: 600;
+                        padding: 5px 6px;
+                    }
+
+                    span {
+                        width: 100%;
+                        text-align: center;
+                        font-size: 0.7rem;
+                        font-weight: 600;
+                        padding: 5px 10px 10px;
+                    }
+                }
+
+                li:nth-child(1){
+                    p {
+                        width:80px;
+                    }
+                }
+
+                li:nth-child(2){
+                    p {
+                        width:45px;
+                    }
+                }
+
+                li:nth-child(3){
+                    p {
+                        width:70px;
+                    }
+                }
+
+                li:nth-child(4){
+                    p {
+                        width: 88px;
+                    }
+                }
+            }
+
+            .payment-list:nth-child(even) {
+                background-color:rgb(231, 231, 231);
+            };
+
+            .payment-total {
+                display: flex;
+                justify-content: flex-end;
+                padding: 5px 5px 0;
+                font-weight: 600;
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+`

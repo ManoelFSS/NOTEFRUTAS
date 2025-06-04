@@ -18,10 +18,8 @@ import { useAuthContext } from "../../context/AuthContext";
 import {Link, useLocation } from 'react-router-dom';
 
 const Menu = ({$setToogleMenu}) => {
-    const {user} = useAuthContext();
+    const {user, activeLink, setActiveLink} = useAuthContext();
     const navigate = useLocation();
-
-    const [activeLink, setActiveLink] = useState("dashboard");
 
     useEffect(() => {
         setActiveLink(navigate.pathname);
@@ -59,7 +57,7 @@ const Menu = ({$setToogleMenu}) => {
                     </li>
                 </Link>
                 <Link className="link" to="/sales" onClick={() => $setToogleMenu(false)}>
-                    <li className={activeLink === "/sales" ? "active" : ""}>
+                    <li className={activeLink === "/sales" || activeLink === "/sales/details" ? "active" : ""}>
                         <FaLayerGroup className="icon" />
                         Vendas
                     </li>

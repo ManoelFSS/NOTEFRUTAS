@@ -12,6 +12,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate();
+    const [activeLink, setActiveLink] = useState("dashboard");
 
     const [user, setUser] = useState(null);
     const [authenticated, setAuthenticated] = useState(false);
@@ -411,7 +412,8 @@ useEffect(() => {
                 messege, setMessege,
                 selectForm, setSelectForm,
                 registerUser,
-                updateUserPassword
+                updateUserPassword,
+                activeLink, setActiveLink
             }}>
             {children}
         </AuthContext.Provider>

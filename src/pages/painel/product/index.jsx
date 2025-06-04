@@ -86,6 +86,7 @@ const Product = () => {
     const totalPages = Math.ceil(caunterProduct / itemsPorPage);
 
     useEffect(() => {
+        setProduct([])
         const hendlerGetProduct = async () => {
             const produData = await  buscarProductPorAdmin(userId, itemsPorPage, paginacao);
             if(produData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
@@ -172,11 +173,11 @@ const Product = () => {
                     $width={"210px"}
                     onClick={hendlerGetProdutoSearch}
                 />
-                {totalPages > 1 && <Pagination 
+                <Pagination 
                     $totalPages={totalPages} 
                     $paginacao={paginacao} 
                     $setPaginacao={setPaginacao}
-                />}
+                />
             </section>
             <ContainerTable>
                 {

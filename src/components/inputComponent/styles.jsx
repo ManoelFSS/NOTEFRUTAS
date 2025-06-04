@@ -3,12 +3,13 @@ import styled from "styled-components";
 export const Input = styled.input`
     height: 35px;
     width: 100%;
-    background-color: var( --color-bg-input );
+    background-color: #fff;
     padding-left: 10px;
     border-radius: 5px;
     border: none;
     color: var( --color-text-primary );
-    box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.47);
+    box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.26);
+    border: 1px solid #ccc;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 500;
@@ -20,7 +21,7 @@ export const Input = styled.input`
     }
 
     &:hover {
-        background-color: var( --color-bg-input-hover );
+        background-color: #f2f2f2;
     }
 
     @media (min-width: 1920px) {
