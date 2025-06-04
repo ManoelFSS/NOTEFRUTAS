@@ -46,7 +46,7 @@
 }
 
 body {
-  min-height: 100svh;
+  min-height: 100vh;
 }
 
 body::-webkit-scrollbar {

@@ -297,6 +297,12 @@ export const ClientesProvider = ({ children }) => {
             setStatus_pagamento('Pendente');
             setValorTotalDaVenda('');
             setCloseModal(null);
+            setName('');
+            setPhone('');
+            setCpf('');
+            setCity('');
+            setEstado('Escolha o estado');
+
 
             setMessege({
                 success: true,

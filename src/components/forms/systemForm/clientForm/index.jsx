@@ -45,7 +45,7 @@ const data = [
     { category: "Tocantins" }
 ];
 
-const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
+const  ClientForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
     const {
         loading,
@@ -86,7 +86,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
     return (
         <Container>
             <div className="form-area">
-                <FormLayout state={estado}>
+                <FormLayout state={estado} $color={$color}>
                     <div className="close">
                         <FaWindowClose className="close-icon" 
                             onClick={() => {
@@ -110,7 +110,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                             $typeText="text" 
                             $textId="name" 
                             $value={name} 
-                            $onchange={(e) => setName(e.target.value.trim())}
+                            $onchange={(e) => setName(e.target.value)}
                             $name="name" 
                             $placeholder="Digite o nome do cliente" 
                             $autoComplete="current-name" 
@@ -122,8 +122,8 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                         <InputComponent 
                             $typeText="text" 
                             $textId="cpf" 
-                            $value={cpf} 
-                            $onchange={(e) => setCpf(e.target.value.trim())}
+                            $value={cpf.replace(/\D/g,'')} 
+                            $onchange={(e) => setCpf(e.target.value)}
                             $name="cpf" 
                             $placeholder="Ex: 12345678900" 
                             $autoComplete="current-number" 
@@ -148,7 +148,7 @@ const  ClientForm = ({setCloseModal, btnName, setBtnName}) => {
                             $typeText="text" 
                             $textId="city" 
                             $value={city} 
-                            $onchange={(e) => setCity(e.target.value.trim())}
+                            $onchange={(e) => setCity(e.target.value)}
                             $name="city" 
                             $placeholder="Ex: Juazeiro" 
                             $autoComplete="current-text" 
