@@ -7,8 +7,8 @@ export const Container = styled.div`
     width: 250px;
     height: calc(100vh - 45px);
     gap: 10px;
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    top: 45px;
     transition: right 0.3s  ease;
     right: ${props => props.$showModalAlert ? "0" : "-250px" };
     background-color:rgba(0, 0, 0, 0.67);

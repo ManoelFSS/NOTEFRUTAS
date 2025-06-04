@@ -47,13 +47,11 @@
 
 body {
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 body::-webkit-scrollbar {
   width: 5px;
   background-color: var( --color-bg-primary );
-
 }
 
 body::-webkit-scrollbar-thumb {
