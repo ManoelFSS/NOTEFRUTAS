@@ -28,30 +28,34 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                 
                 <h2>Detalhes da venda</h2>
                 <div className="datails-client">
-                    <h4>Cliente</h4>
-                    <p>{vendaFilter?.name}</p>
+                    <div className="datails-date">
+                        <div>
+                            <h4>Cliente</h4>
+                            <p>{vendaFilter?.name}</p>
+                        </div>
+                        <div>
+                            <h4>Data</h4>
+                            <p>{vendaFilter?.created_at?.split('T')[0].split('-').reverse().join('/')}</p>
+                        </div>
+                    </div>
+                    
                     <div className="datails-client-info">
                         <div>
                             <h4>Telefone</h4>
                             <p>{vendaFilter?.phone}</p>
                             <h4>CPF | CNPJ</h4>
                             <p>{vendaFilter?.cpf || "Não informado"}</p>
-                            <h4>Data da compra</h4>
-                            <p>{vendaFilter?.created_at?.split('T')[0].split('-').reverse().join('/')}</p>
                         </div>
-                        <div>
+                        <div style={{paddingLeft: "30px"}}>
                             <h4>Valor total</h4>
-                            <p>{vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                            <p style={{ color: "green", fontSize: "0.9rem", fontWeight: "bold" }}>{vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             <h4>Valor da entrada</h4>
                             <p>{vendaFilter?.valor_entrada?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                            <h4>Valor restante</h4>
-                            <p>{vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                     </div>
                 </div>
 
                 <div className="datails-payment">
-                    <h3>Produtos - {vendaFilter?.itens_venda?.length}</h3>
                     <ul className="payment-header" >
                         <li>
                             <p>Produto</p>
@@ -89,16 +93,16 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                 </div>
 
                 <div className="datails-payment">
-                    <h3>Parcelas - {vendaFilter?.parcelas_venda?.length}</h3>
-                    <ul className="payment-header" >
+                    <h5>Parcelas</h5>
+                    <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
                         <li>
                             <p>Data venc</p>
                         </li>
                         <li>
-                            <p style={{ width: "70px" }}>Valor</p>
+                            <p>status</p>
                         </li>
                         <li>
-                            <p>status</p>
+                            <p style={{ width: "70px" }}>Valor</p>
                         </li>
                         <li>
                             <p style={{ width: "60px" }}>Ação</p>
@@ -111,10 +115,10 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                <p>{parcela?.status}</p>
                             </li>
                             <li>
-                                <p>{parcela?.status}</p>
+                                <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "60px" }}>X</p>
@@ -122,7 +126,21 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                         </ul>
                     )}
                     <div className="payment-total">
-                        <p>Total: {vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        <div className="title">
+                            <p >Parcelas</p>
+                        </div>
+                        <div>
+                            <p>Total: {vendaFilter?.parcelas_venda?.length}</p>
+                            <p style={{ color: "red" }}>{vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        </div>
+                        <div>
+                            <p>Pagas: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").length}</p>
+                            <p style={{ color: "green" }}> <span>-</span> {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0) .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        </div>
+                        <div>
+                            <p>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Pendente").length}</p>
+                            <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        </div>
                     </div>
                 </div>
             </section>

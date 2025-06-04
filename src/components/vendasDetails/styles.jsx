@@ -33,8 +33,8 @@ export const Container_datails = styled.div`
         display: flex;
         align-items: center;
         flex-direction: column;
-        gap: 10px;
         padding: 10px 10px;
+        gap: 10px;
         background-color:rgb(255, 255, 255);
         border-radius: 6px;
         border: solid 1px #cccccc;
@@ -82,19 +82,25 @@ export const Container_datails = styled.div`
             flex-direction: column;
             width: 100%;
 
+            .datails-date {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                padding-right: 50px;
+            }
+
             h4 {
                 font-size: 0.8rem;
-                font-weight: 700;
+                font-weight: 900;
                 color: #000;
             }
 
             p {
-                font-size: 0.7rem;
+                font-size: 0.8rem;
                 font-weight: 500;
                 color: #000;
-                padding: 3px;
-                background-color:rgb(238, 236, 236);
-                margin-bottom: 5px;
+                padding: 3px 0;
+                margin-bottom: 2px;
             }
 
             .datails-client-info {
@@ -105,6 +111,7 @@ export const Container_datails = styled.div`
 
                 div {
                     width: 100%;
+                    
 
                     h4 {
                         font-size: 0.8rem;
@@ -114,11 +121,9 @@ export const Container_datails = styled.div`
 
                     p {
                         font-size: 0.7rem;
-                        font-weight: 500;
+                        font-weight: 400;
                         color: #000;
-                        padding: 3px;
-                        background-color:rgb(238, 236, 236);
-                        text-align: center;
+                        padding: 3px 0;
                     }
                 }
             }
@@ -128,10 +133,11 @@ export const Container_datails = styled.div`
             display: flex;
             width: 100%;
             flex-direction: column;
+            gap: 3px;
 
             h3 {
-                font-size: 0.8rem;
-                font-weight: 700;
+                font-size: 0.9rem;
+                font-weight: 600;
                 color: #000;
             }
         
@@ -139,6 +145,8 @@ export const Container_datails = styled.div`
                 display: flex;
                 width: 100%;
                 list-style: none;
+                background-color: #007E2A;
+
 
                 li {
                     display: flex;
@@ -148,7 +156,6 @@ export const Container_datails = styled.div`
                     font-size: 0.8rem;
                     color: #000;
                     border-radius: 4px;
-                    background-color:rgb(231, 231, 231);
                     text-align: center;
 
                     p {
@@ -157,7 +164,6 @@ export const Container_datails = styled.div`
                         font-size: 0.8rem;
                         font-weight: 600;
                         color: rgba(255, 255, 255, 0.95);
-                        background-color:rgb(170, 170, 170);
                         padding: 5px 6px;
                     }
 
@@ -178,13 +184,13 @@ export const Container_datails = styled.div`
 
                 li:nth-child(2){
                     p {
-                        width:45px;
+                        width:70px;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:70px;
+                        width:60px;
                     }
                 }
 
@@ -208,11 +214,12 @@ export const Container_datails = styled.div`
                     color: #000;
                     border-radius: 4px;
 
+
                     p {
                         width: 100%;
                         text-align: center;
                         font-size: 0.6rem;
-                        font-weight: 600;
+                        font-weight: 500;
                         padding: 5px 6px;
                     }
 
@@ -233,13 +240,13 @@ export const Container_datails = styled.div`
 
                 li:nth-child(2){
                     p {
-                        width:45px;
+                        width:70px;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:70px;
+                        width:60px;
                     }
                 }
 
@@ -251,15 +258,46 @@ export const Container_datails = styled.div`
             }
 
             .payment-list:nth-child(even) {
-                background-color:rgb(231, 231, 231);
+                background-color: #f2f2f2f2;
             };
 
             .payment-total {
                 display: flex;
-                justify-content: flex-end;
+                align-items: flex-end;
+                flex-direction: column;
                 padding: 5px 5px 0;
-                font-weight: 600;
-                font-size: 0.8rem;
+                font-size: 0.7rem;;
+
+                .title {
+                    font-weight: 900;
+                    font-size: 0.9rem;
+                    color:rgb(239, 10, 10);
+                }
+                    
+
+                div {
+                    display: flex;
+                    width: 100%;
+                    justify-content: space-between;
+                    align-items: center;
+                    border:solid 1px rgba(0, 126, 42, 0);
+
+                    p {
+                        font-weight: 500;
+                    }
+                    
+                    span {
+                        font-size: 1rem;
+                        font-weight: 900;
+                        padding-right: 3px;
+                    }
+                    
+                    p:nth-child(1){
+                        font-weight: 500;
+                        text-align: center;
+                        padding: 2px 0;
+                    }
+                }
             }
         }
     }
