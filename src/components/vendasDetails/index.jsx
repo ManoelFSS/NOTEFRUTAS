@@ -25,7 +25,6 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                     <h1>JOSIFRUTAS</h1>
                     <FaWindowClose className="close" onClick={() => setVendaModalDetails(false)} />
                 </div>
-                
                 <h2>Detalhes da venda</h2>
                 <div className="datails-client">
                     <div className="datails-date">
@@ -115,13 +114,19 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p>{parcela?.status}</p>
+                                <p className="status" style={{ color: parcela?.status === "Paga" ? "green" : "red" }}>{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
-                                <p  style={{ width: "60px" }}>X</p>
+                                <p  style={{ width: "60px" }}>
+                                    <input 
+                                        className="checkbox"
+                                        type="checkbox" 
+                                        checked={parcela?.status === "Paga" ? true : false}
+                                    />
+                                </p>
                             </li>
                         </ul>
                     )}

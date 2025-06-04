@@ -34,7 +34,7 @@ export const Container_datails = styled.div`
         align-items: center;
         flex-direction: column;
         padding: 10px 10px;
-        gap: 10px;
+        gap: 8px;
         background-color:rgb(255, 255, 255);
         border-radius: 6px;
         border: solid 1px #cccccc;
@@ -75,6 +75,8 @@ export const Container_datails = styled.div`
             font-size: 0.8rem;
             font-weight: 900;
             color: #000;
+            background-color: #f2f2f2f2;
+            padding: 3px 0;
         }
 
         .datails-client {
@@ -115,12 +117,12 @@ export const Container_datails = styled.div`
 
                     h4 {
                         font-size: 0.8rem;
-                        font-weight: 700;
+                        font-weight: 900;
                         color: #000;
                     }
 
                     p {
-                        font-size: 0.7rem;
+                        font-size: 0.8rem;
                         font-weight: 400;
                         color: #000;
                         padding: 3px 0;
@@ -205,6 +207,15 @@ export const Container_datails = styled.div`
                 display: flex;
                 width: 100%;
                 list-style: none;
+
+                .status {
+                    font-size: 0.7rem;
+                    font-weight: 500;
+                }
+
+                .checkbox {
+                    cursor: pointer;
+                }
 
                 li {
                     display: flex;
