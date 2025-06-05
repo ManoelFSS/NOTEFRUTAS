@@ -32,8 +32,12 @@ export const Container_login = styled.section`
                     width: 25vh;
                 }
 
-                @media (max-width: 340px) {
+                @media (max-width: 440px) {
                     width: 100px;
+                }
+
+                @media (max-width: 340px) {
+                    width: 90px;
                 }
             }
 
@@ -96,7 +100,7 @@ export const Container_login = styled.section`
         }
         
         @media (max-width: 552px) {
-            max-height: 36svh;
+            max-height: 30svh;
         }
 
         @media (max-width: 340px) {
@@ -115,7 +119,7 @@ export const Container_login = styled.section`
         position: relative;
 
         @media (max-width: 550px) {
-            height: 64svh;
+            height: 70svh;
         }
 
         @media (max-width: 340px) {
@@ -128,11 +132,11 @@ export const Container_login = styled.section`
             height: 100svh;
             background-color: rgba(0, 0, 0, 0.6);
             overflow: auto;
-            padding: 10px 10px 20px;
+            padding: 20px 10px 40px;
             position: relative;
             
             @media (max-width: 550px) {
-                height: 64svh;
+                height: 70svh;
             }
             
             @media (max-width: 340px) {

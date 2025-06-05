@@ -21,30 +21,17 @@ export const VendasProvider = ({ children }) => {
     const [idVenda, setIdVenda] = useState('');// controle do campo idClient
 
 
-    const editarVenda = async (novosDados, id) => {
-        setLoading(true);
+    const editarVenda = async (venda_id) => {
 
-        try {
-            const { error } = await supabase
-            .from("fornecedores")
-            .update(novosDados)
-            .eq("id", id);
+        const { data, error } = await supabase
+                .from('vendas') // substitua pelo nome correto da sua tabela
+                .update({ status: 'Pago' })
+                .eq('id', venda_id); // ou 'parcela_id', dependendo do nome do campo
 
-            if (error) throw error;
-
-            console.log("Fornecedor atualizado com sucesso!");
-            setCloseModal(false);
-            setName('');
-            setPhone('');
-            setCpf('');
-            setCity('');
-            setEstadoFornecedor('Escolha o estado');
-        } catch (error) {
-            console.error("Erro ao atualizar o fornecedor:", error.message || error);
-        } finally {
-            setTimeout(() => {
-            setLoading(false);
-            }, 2000);
+        if (error) {
+            console.error('Erro ao atualizar status da venda:', error);
+        } else {
+            console.log('Venda paga e atualizado com sucesso:', data);
         }
     };
 
@@ -158,6 +145,19 @@ export const VendasProvider = ({ children }) => {
         }
     };
 
+    const editarParcelaStatus = async (parcela_id)  => {
+        const { data, error } = await supabase
+            .from('parcelas_venda') // substitua pelo nome correto da sua tabela
+            .update({ status: 'Paga' })
+            .eq('id', parcela_id); // ou 'parcela_id', dependendo do nome do campo
+
+        if (error) {
+            console.error('Erro ao atualizar status de pagamento da parcela:', error);
+        } else {
+            console.log('Parcela paga e atualizado com sucesso:', data);
+        }
+    }
+
 
     return (
         <VendasContext.Provider value={{ 
@@ -173,6 +173,8 @@ export const VendasProvider = ({ children }) => {
                 name, setName,
                 phone, setPhone,
                 idVenda, setIdVenda,
+                editarParcelaStatus,
+                editarVenda
             }}>
         {children}
         </VendasContext.Provider>

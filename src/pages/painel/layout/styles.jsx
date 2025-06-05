@@ -20,11 +20,6 @@ export const Container = styled.div`
         width: 100%;
         height: 100vh;
         overflow: hidden;
-
-        @media (max-width: 450px) {
-            min-width: 390px;
-        }
-    
         
         .main {
             height: calc( 100vh - 45px );

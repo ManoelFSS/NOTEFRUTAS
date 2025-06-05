@@ -2,21 +2,64 @@ import { useEffect, useState } from "react";
 import { Container_datails } from "./styles"
 // icons
 import { FaWindowClose } from "react-icons/fa";
+// components
+import Loading from "../loading";
+import Messege from "../messege";
+import BtnNavigate from "../btns/btnNavigate";
 
 // context 
 import { useVendas } from "../../context/VendasContext"
 
-const VendasDetails = ({ setVendaModalDetails }) => {
+const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, ano, mes }) => {
 
-    const { vendas, idVenda  } = useVendas();
+    const { vendas, setVendas, idVenda, editarParcelaStatus, buscarVendasPorAdmin, editarVenda } = useVendas();
+
     const [vendaFilter, setVendaFilter] = useState({});
+    const [idParcela, setIdParcela] = useState('');
+    const [confirmPacela, setConfirmPacela] = useState(null);
+    const [messege, setMessege] = useState(null);
+    const [closeBtn, setCloseBtn] = useState(false);
+    const [controlerVendaFilter, setControlerVendaFilter] = useState(null);
+    const [textBtn, setTextBtn] = useState('Cancelar');
 
     useEffect(() => {
         const getVendaItem = vendas.find(venda => venda.id === idVenda);
         setVendaFilter(getVendaItem);
-        console.log(getVendaItem);
-    }, [idVenda])
+    }, [idVenda, controlerVendaFilter])
 
+    useEffect(() => {
+        setMessege(null);
+        if(!idParcela) return
+        const hendleStatusVenda  = async () => {
+            await editarParcelaStatus(idParcela);
+            const getVendas = await buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+            setVendas(getVendas);
+            const getVendaItem = getVendas.find(venda => venda.id === idVenda);
+            const getParcelas = getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'Pendente');
+
+            if(getParcelas.length === 0) {
+                await editarVenda(idVenda);
+                const getVendas = await buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+                setVendas(getVendas);
+            }
+
+            
+            setConfirmPacela(false);
+            setControlerVendaFilter(!controlerVendaFilter);
+            setCloseBtn(false);
+            setTextBtn('OK');
+            setMessege({success: true, title: "Parcela confirmada com sucesso", message: "A parcela foi confirmada como Pago"});
+
+        }
+        hendleStatusVenda ();
+    }, [confirmPacela]);
+
+    const confirmaPagamento  = (id) => {
+        setTextBtn('Cancelar');
+        setMessege({success: true, title: "Tem certeza que deseja  Confirmar  o pagamento dessa Parcela ?", message: "Atenção ao confirmar o pagamento dessa parcela Não pode ser desfeito"});
+        setIdParcela(id);
+        setCloseBtn(true);
+    }
 
     return (
         <Container_datails>
@@ -108,7 +151,7 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                         </li>
                     </ul>
                     {vendaFilter?.parcelas_venda?.length > 0 && 
-                        vendaFilter?.parcelas_venda?.map((parcela, index) =>
+                        vendaFilter?.parcelas_venda?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
                         <ul className="payment-list" key={index} >
                             <li>
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
@@ -124,7 +167,8 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                                     <input 
                                         className="checkbox"
                                         type="checkbox" 
-                                        checked={parcela?.status === "Paga" ? true : false}
+                                        checked={parcela?.status === "Paga"}
+                                        onChange={() => parcela?.status === "Pendente" && confirmaPagamento(parcela?.id)}
                                     />
                                 </p>
                             </li>
@@ -149,6 +193,7 @@ const VendasDetails = ({ setVendaModalDetails }) => {
                     </div>
                 </div>
             </section>
+            { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmPacela(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container_datails>
     )
 }

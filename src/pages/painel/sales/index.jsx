@@ -345,7 +345,16 @@ const Sales = () => {
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
             { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
-            { vendaModalDetails && <VendasDetails  setVendaModalDetails={setVendaModalDetails} />}
+            { vendaModalDetails && 
+                <VendasDetails  
+                    setVendaModalDetails={setVendaModalDetails} 
+                    userId={userId} 
+                    itemsPorPage={itemsPorPage} 
+                    paginacao={paginacao} 
+                    ano={ano} 
+                    mes={mes} 
+                />
+            }
         </Container>
     )
 }
