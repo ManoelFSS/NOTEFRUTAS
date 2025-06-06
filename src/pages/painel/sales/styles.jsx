@@ -158,7 +158,7 @@ export const ContainerTable = styled.section`
                 }
                 
                 li:nth-child(3) {
-                    width: 130px;
+                    width: 140px;
                     .icon{
                         width: 18px;
                         height: 18px;
@@ -276,7 +276,7 @@ export const ContainerTable = styled.section`
                 li:nth-child(3) {
                     display: flex;
                     gap: 10px;
-                    width: 130px;
+                    width: 140px;
                     font-weight: 500;
                     font-size: 0.8rem;
                     
@@ -341,9 +341,9 @@ export const ContainerTable = styled.section`
                 }
                 
                 .icons {
-                    width: 160px;
+                    width: 170px;
                     justify-content: center;
-                    gap: 14px;
+                    gap: 10px;
                     
                     .icon {
                         font-size: 1.5rem;
@@ -360,8 +360,7 @@ export const ContainerTable = styled.section`
                     }
                     
                     .icon-whatsapp {
-                        width: 25px;
-                        height: 25px;
+                        font-size: 1.5rem;
                         cursor: pointer;
                         trasition: color 0.3s ease;
                         padding: 2px;

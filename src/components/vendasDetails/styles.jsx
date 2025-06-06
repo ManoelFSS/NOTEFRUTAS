@@ -11,6 +11,7 @@ export const Container_datails = styled.div`
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 9999999;
     overflow-y: auto;
+    padding: 20px 5px;
 
     &::-webkit-scrollbar {
         width: 5px;
@@ -300,23 +301,42 @@ export const Container_datails = styled.div`
                     align-items: center;
                     border:solid 1px rgba(0, 126, 42, 0);
 
-                    p {
-                        font-weight: 500;
-                    }
-                    
                     span {
                         font-size: 1rem;
                         font-weight: 900;
                         padding-right: 3px;
                     }
                     
-                    p:nth-child(1){
+                    p{
                         font-weight: 500;
                         text-align: center;
                         padding: 2px 0;
                     }
                 }
             }
+        }
+
+        .datails-download {
+            height: 35px;
+            width: 100%;
+            position: relative;
+
+            .icon{
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                font-size: 1.7rem;
+                cursor: pointer;
+                transition: color 0.3s ease;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
+                border-radius: 4px;
+                padding: 2px;
+
+                &:hover {
+                    color: #FF9D00;
+                }
+            }
+
         }
     }
 

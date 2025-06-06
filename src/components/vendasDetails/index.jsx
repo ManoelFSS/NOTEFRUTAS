@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Container_datails } from "./styles"
 // icons
 import { FaWindowClose } from "react-icons/fa";
+import { FaFileDownload  } from "react-icons/fa";
 // components
 import Loading from "../loading";
 import Messege from "../messege";
@@ -12,6 +13,8 @@ import { useVendas } from "../../context/VendasContext"
 import { useClientes } from "../../context/ClientesContext";
 import { useAuthContext } from "../../context/AuthContext";
 import {useLogs} from '../../context/LogContext'
+// download
+import html2canvas from "html2canvas";
 
 const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, ano, mes }) => {
 
@@ -103,9 +106,22 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         setCloseBtn(true);
     }
 
+    const divRef = useRef();
+    const handleDownload = async () => {
+        const element = divRef.current;
+
+        const canvas = await html2canvas(element);
+        const dataUrl = canvas.toDataURL("image/png");
+
+        const link = document.createElement("a");
+        link.href = dataUrl;
+        link.download = "div-capturada.png";
+        link.click();
+    };
+
     return (
         <Container_datails>
-            <section className="datails-container">
+            <section ref={divRef} className="datails-container">
                 <div className="close-container">
                     <h1>JOSIFRUTAS</h1>
                     <FaWindowClose className="close" onClick={() => setVendaModalDetails(false)} />
@@ -221,20 +237,29 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             <p >Parcelas</p>
                         </div>
                         <div>
-                            <p>Total: {vendaFilter?.parcelas_venda?.length}</p>
+                            <h4>Total: {vendaFilter?.parcelas_venda?.length}</h4>
                             <p style={{ color: "red" }}>{vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                         <div>
-                            <p>Pagas: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").length}</p>
+                            <h4>Pagas: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").length}</h4>
                             <p style={{ color: "green" }}> <span>-</span> {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0) .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                         <div>
-                            <p>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Pendente").length}</p>
+                            <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Pendente").length}</h4>
                             <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                     </div>
                 </div>
+                <div className="datails-download">
+                    <FaFileDownload 
+                        className="icon" 
+                        onClick={() => {
+                            handleDownload();
+                        }}
+                    />
+                </div>
             </section>
+            
             { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmPacela(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container_datails>
     )

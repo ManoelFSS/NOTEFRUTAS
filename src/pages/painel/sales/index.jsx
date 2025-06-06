@@ -12,12 +12,12 @@ import ProductCard from "../../../components/cards/productCard";
 import MonthYearSelector from "../../../components/MonthYearSelector";
 import VendasDetails from "../../../components/vendasDetails";
 // icons
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus, FaFileDownload  } from "react-icons/fa";
 import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
 import {  PiHandTapFill  } from "react-icons/pi";
 import { HiMiniStar } from "react-icons/hi2";
 import { FaEdit} from "react-icons/fa";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdDownloadForOffline  } from "react-icons/md";
 import { AiOutlineAlignRight } from "react-icons/ai";
 import { IoBagHandleSharp } from "react-icons/io5";
 import { BsFillTelephonePlusFill } from "react-icons/bs";
@@ -81,8 +81,8 @@ const Sales = () => {
         { name: "Telefone", icon: <BsFillTelephonePlusFill className="icon" /> },
         { name: "Data", icon: <HiMiniCalendarDateRange  className="icon" /> },
         { name: "Forma de Pagamento", icon: <FaCreditCard  className="icon" /> },
-        { name: "Valor total", icon: <RiMoneyDollarCircleFill className="icon" /> },
-        { name: "Valor restante", icon: <GiReceiveMoney  className="icon" /> },
+        { name: "Valor Total", icon: <RiMoneyDollarCircleFill className="icon" /> },
+        { name: "Valor de Entrada", icon: <GiReceiveMoney  className="icon" /> },
         { name: "Status", icon: <HiMiniStar className="icon" /> },
         {name: "Ação", icon: <PiHandTapFill className="icon" />}
         
@@ -294,7 +294,7 @@ const Sales = () => {
                                     <li>{new Date(item.created_at).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</li>
                                     <li>{item.forma_pagamento}</li>
                                     <li>{item.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
-                                    <li>{item.valor_restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>
+                                    <li>{item.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>
                                     <li>
                                         <span style={{ 
                                             backgroundColor: item.status === "Pago" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? "rgb(58, 85, 136)" : "rgb(211, 5, 5)",
