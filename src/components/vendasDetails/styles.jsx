@@ -34,8 +34,8 @@ export const Container_datails = styled.div`
         display: flex;
         align-items: center;
         flex-direction: column;
-        padding: 10px 10px;
-        gap: 0px;
+        padding: 15px;
+        gap: 20px;
         background-color:rgb(255, 255, 255);
         border-radius: 6px;
         border: solid 1px #cccccc;
@@ -92,7 +92,7 @@ export const Container_datails = styled.div`
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
-                padding-right: 50px;
+                padding-right: 60px;
 
                 .name {
                     width: 160px;
@@ -101,12 +101,12 @@ export const Container_datails = styled.div`
 
             h4 {
                 font-size: 0.8rem;
-                font-weight: 900;
+                font-weight: 700;
                 color: #000;
             }
 
             p {
-                font-size: 0.8rem;
+                font-size: 0.7rem;
                 font-weight: 500;
                 color: #000;
                 padding: 3px 0;
@@ -122,7 +122,6 @@ export const Container_datails = styled.div`
                 div {
                     width: 100%;
                     
-
                     h4 {
                         font-size: 0.8rem;
                         font-weight: 900;
@@ -130,8 +129,8 @@ export const Container_datails = styled.div`
                     }
 
                     p {
-                        font-size: 0.8rem;
-                        font-weight: 400;
+                        font-size: 0.7rem;
+                        font-weight: 500;
                         color: #000;
                         padding: 3px 0;
                     }
@@ -218,12 +217,17 @@ export const Container_datails = styled.div`
 
                 .status {
                     font-size: 0.7rem;
-                    font-weight: 500;
+                    font-weight: 600;
                 }
 
                 .checkbox {
                     cursor: pointer;
                 }
+
+                .checkbox[type="checkbox"]:checked {
+                    accent-color: green;
+                }
+
 
                 li {
                     display: flex;
@@ -317,7 +321,7 @@ export const Container_datails = styled.div`
         }
 
         .datails-download {
-            height: 35px;
+            height: 30px;
             width: 100%;
             position: relative;
 

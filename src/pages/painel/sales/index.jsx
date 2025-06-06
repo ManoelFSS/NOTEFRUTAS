@@ -173,7 +173,7 @@ const Sales = () => {
                         setSelectForm("cadastrar produto") 
                     }}
                 />
-                <div className="box-icon">
+                {/* <div className="box-icon">
                     <LuSquareEqual 
                         className={`icon-square ${cardList && "ative-icon"}`}
                         onClick={() => setCardList(true)}
@@ -182,7 +182,7 @@ const Sales = () => {
                         className={`icon-list ${!cardList && "ative-icon"}`} 
                         onClick={() => setCardList(false)}
                     />
-                </div>
+                </div> */}
                 <Select     
                     select={select} 
                     setSelect={setSelect}

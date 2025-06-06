@@ -26,7 +26,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
 
     const [vendaFilter, setVendaFilter] = useState({});
     const [idParcela, setIdParcela] = useState('');
-    const [confirmPacela, setConfirmPacela] = useState(null);
+    const [confirmPacela, setConfirmPacela] = useState(false);
     const [messege, setMessege] = useState(null);
     const [closeBtn, setCloseBtn] = useState(false);
     const [controlerVendaFilter, setControlerVendaFilter] = useState(null);
@@ -40,8 +40,8 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
     }, [idVenda, controlerVendaFilter])
 
     useEffect(() => {
-        if (!confirmPacela || hasRun.current) return;
-        hasRun.current = true;
+        // if (!hasRun.current) return;
+        // hasRun.current = true;
 
         setMessege(null);
         if(!idParcela) return
@@ -69,7 +69,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                 }
             }
             
-            setConfirmPacela(false);
+            // setConfirmPacela(false);
             setControlerVendaFilter(!controlerVendaFilter);
             setCloseBtn(false);
             setTextBtn('OK');
@@ -107,9 +107,9 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
     }
 
     const divRef = useRef();
-    const handleDownload = async () => {
+    const handleDownload = async (phone) => {
+        console.log(phone);
         const element = divRef.current;
-
         const canvas = await html2canvas(element);
         const dataUrl = canvas.toDataURL("image/png");
 
@@ -117,7 +117,18 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         link.href = dataUrl;
         link.download = "div-capturada.png";
         link.click();
+
+        // Número do cliente (no formato internacional: ex. 55 para Brasil)
+        const numeroCliente = phone.replace(/[^\d]/g, ''); // substitua pelo número real
+        const mensagem = "Olá! Aqui está o conteúdo que você solicitou."; // pode ser personalizada
+
+        const urlWhatsapp = `https://api.whatsapp.com/send?phone=55${numeroCliente}&text=${encodeURIComponent(mensagem)}`;
+        // Abre o WhatsApp em uma nova aba
+        setTimeout(() => {
+            window.open(urlWhatsapp, "_blank");
+        }, 1000);
     };
+
 
     return (
         <Container_datails>
@@ -242,7 +253,16 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                         </div>
                         <div>
                             <h4>Pagas: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").length}</h4>
-                            <p style={{ color: "green" }}> <span>-</span> {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0) .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                            <p style={{ color: "green" }}>
+                                <span>-</span>{" "}
+                                {
+                                    (
+                                    vendaFilter?.parcelas_venda
+                                        ?.filter((parcela) => parcela.status === "Paga")
+                                        .reduce((total, parcela) => total + Math.round(Number(parcela.valor_parcela || 0) * 100), 0) / 100
+                                    ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                }
+                            </p>
                         </div>
                         <div>
                             <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Pendente").length}</h4>
@@ -254,13 +274,13 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                     <FaFileDownload 
                         className="icon" 
                         onClick={() => {
-                            handleDownload();
+                            handleDownload(vendaFilter?.phone);
                         }}
                     />
                 </div>
             </section>
             
-            { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmPacela(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmPacela(!confirmPacela)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container_datails>
     )
 }

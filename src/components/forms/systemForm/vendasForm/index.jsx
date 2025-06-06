@@ -210,11 +210,15 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     dataParcela.setDate(dataBase.getDate() + i * diasDeDiferenca);
                 }
 
+                const valorEmCentavos = Math.round(valorTotal * 100);
+                const parcelaEmCentavos = Math.floor(valorEmCentavos / quantidadeParcelas); 
+                const valorParcela = parcelaEmCentavos / 100; 
+
                 parcelasGeradas.push({
                     venda_id: null,
                     adminid: userId,
                     cliente_id: idClient,
-                    valor_parcela: Number((valorTotal / quantidadeParcelas).toFixed(2)),
+                    valor_parcela: valorParcela,
                     data_vencimento: dataParcela.toISOString().split("T")[0],
                     created_at: new Date(),
                     updated_at: new Date(),
