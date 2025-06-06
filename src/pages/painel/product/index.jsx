@@ -86,7 +86,6 @@ const Product = () => {
     const totalPages = Math.ceil(caunterProduct / itemsPorPage);
 
     useEffect(() => {
-        setProduct([])
         const hendlerGetProduct = async () => {
             const produData = await  buscarProductPorAdmin(userId, itemsPorPage, paginacao);
             if(produData.length === 0) setTimeout(() => setDataNotFound(true), 2000);

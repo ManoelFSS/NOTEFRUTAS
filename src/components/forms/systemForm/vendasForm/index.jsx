@@ -181,8 +181,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     }, []);
 
     useEffect(() => {
-        function gerarParcelas(dataInicial, id, tipoCobranca, quantidadeParcelas, valorTotal) {
-            if (!dataInicial || !id || !quantidadeParcelas || !valorTotal) {
+        function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
+            if (!dataInicial || !quantidadeParcelas || !valorTotal) {
                 console.error("Erro ao gerar parcelas: Dados insuficientes.");
                 return [];
             }
@@ -225,7 +225,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             return parcelasGeradas;
         }
 
-        const resultado = gerarParcelas(dataDeRecebimento, 1, tipoCobranca, qtParcelas, valorRestante);
+        const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
         setParcelasItensVenda(resultado);
 
     }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);

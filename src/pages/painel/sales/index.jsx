@@ -108,7 +108,6 @@ const Sales = () => {
     }, [mes, ano]);
 
     useEffect(() => {
-        setVendas([])
         setDataNotFound(false);
         const hendlerGetProduct = async () => {
             const vendaData = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);

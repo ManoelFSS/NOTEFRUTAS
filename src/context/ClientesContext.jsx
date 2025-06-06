@@ -211,10 +211,11 @@ export const ClientesProvider = ({ children }) => {
         }
     };
 
-    const atualizarStatusParaDebitos = async (cliente_id)  => {
+    const atualizarStatusParaDebitos = async (cliente_id, status)  => {
+        setCloseModal(null);
         const { data, error } = await supabase
             .from('clientes') // substitua pelo nome correto da sua tabela
-            .update({ status: 'Débitos a Pagar' })
+            .update({ status: status })
             .eq('id', cliente_id); // ou 'cliente_id', dependendo do nome do campo
 
         if (error) {
@@ -283,7 +284,7 @@ export const ClientesProvider = ({ children }) => {
                     venda_id: vendaId
                 }))
                 await inserirParcelasVenda(parcelasItems);
-                await atualizarStatusParaDebitos(vendaData.cliente_id);
+                await atualizarStatusParaDebitos(vendaData.cliente_id, "Débitos a Pagar" );
             }
 
             // 3. Resetar os campos e fechar modal
@@ -296,7 +297,7 @@ export const ClientesProvider = ({ children }) => {
             setDataDeRecebimento('');
             setStatus_pagamento('Pendente');
             setValorTotalDaVenda('');
-            setCloseModal(null);
+            setCloseModal(false);
             setName('');
             setPhone('');
             setCpf('');
@@ -310,19 +311,39 @@ export const ClientesProvider = ({ children }) => {
                 message: "A venda e os itens foram salvos com sucesso.",
             });
 
-            const log = {
-                adminid: userId,    
-                colaborador_id: user.id, 
-                name: user.name,   
-                titulo: '✅ Venda',   
-                mensagem: 'Venda realizada com sucesso!', 
-                status: 'Não lida',   
-                referencia_id: vendaId, 
-                created_at: new Date().toISOString()
-            };
+            if(vendaData.forma_pagamento === 'A vista') {
+                const log = {
+                    adminid: userId,    
+                    colaborador_id: user.id, 
+                    name: user.name,   
+                    titulo: '✅ Venda a vista',   
+                    mensagem: `Venda realizada com sucesso! no valor de R$ ${vendaData.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`, 
+                    status: 'Não lida',   
+                    referencia_id: vendaId, 
+                    created_at: new Date().toISOString()
+                };
+    
+                await cadastrarLog(log);
+            }
 
-            await cadastrarLog(log);
-            
+            if(vendaData.forma_pagamento === 'A prazo') {
+                const log = {
+                    adminid: userId,    
+                    colaborador_id: user.id, 
+                    name: user.name,   
+                    titulo: '✅ Venda a prazo',  
+                    mensagem: ` 
+                        Valor total: ${vendaData.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        Entrada: ${vendaData.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        Restante: ${vendaData.valor_restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        em ${vendaData.qtd_parcelas} parcelas de ${(vendaData.valor_restante / vendaData.qtd_parcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`, 
+                    status: 'Não lida',   
+                    referencia_id: vendaId, 
+                    created_at: new Date().toISOString()
+                };
+    
+                await cadastrarLog(log);
+            }
 
         } catch (error) {
             console.error("Erro ao cadastrar Venda:", error);
@@ -339,6 +360,7 @@ export const ClientesProvider = ({ children }) => {
     
     // Função principal para buscar clientes de um admin com paginação
     const buscarClientesPorAdmin = async (adminId, limitepage, paginacao) => {
+        
         try {
             // Validar parâmetros
             if (!adminId || limitepage <= 0 || paginacao < 1) {
@@ -429,7 +451,8 @@ export const ClientesProvider = ({ children }) => {
                 tipoPagamento, setTipoPagamento,
                 qtParcelas , setQtParcelas,
                 tipoCobranca, setTipoCobranca,
-                parcelasItensVenda, setParcelasItensVenda
+                parcelasItensVenda, setParcelasItensVenda,
+                atualizarStatusParaDebitos
             }}>
         {children}
         </ClientesContext.Provider>

@@ -4,13 +4,13 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 250px;
+    width: 290px;
     height: calc(100vh - 45px);
     gap: 10px;
     position: fixed;
     top: 45px;
     transition: right 0.3s  ease;
-    right: ${props => props.$showModalAlert ? "0" : "-250px" };
+    right: ${props => props.$showModalAlert ? "0" : "-290px" };
     background-color:rgba(0, 0, 0, 0.67);
     box-shadow: -1px 0px 5px rgb(0, 0, 0);
     z-index: 9999;
@@ -74,8 +74,8 @@ export const Container = styled.div`
         p {
             font-size: 0.7rem;
             font-weight: 500;
-            text-align: center;
             padding: 0px 10px;
+            line-height: 16px;
         }
 
         .date-area{

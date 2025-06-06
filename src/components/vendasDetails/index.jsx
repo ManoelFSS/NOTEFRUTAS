@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Container_datails } from "./styles"
 // icons
 import { FaWindowClose } from "react-icons/fa";
@@ -9,10 +9,17 @@ import BtnNavigate from "../btns/btnNavigate";
 
 // context 
 import { useVendas } from "../../context/VendasContext"
+import { useClientes } from "../../context/ClientesContext";
+import { useAuthContext } from "../../context/AuthContext";
+import {useLogs} from '../../context/LogContext'
 
-const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, ano, mes }) => {
+const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, ano, mes }) => {
 
-    const { vendas, setVendas, idVenda, editarParcelaStatus, buscarVendasPorAdmin, editarVenda } = useVendas();
+    const {user} = useAuthContext();
+    const {cadastrarLog} = useLogs();
+
+    const { atualizarStatusParaDebitos} = useClientes();
+    const {contarVendasPendentesOuAtrasadas, vendas, setVendas, idVenda, editarParcelaStatus, buscarVendasPorAdmin, editarVenda } = useVendas();
 
     const [vendaFilter, setVendaFilter] = useState({});
     const [idParcela, setIdParcela] = useState('');
@@ -22,27 +29,42 @@ const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, 
     const [controlerVendaFilter, setControlerVendaFilter] = useState(null);
     const [textBtn, setTextBtn] = useState('Cancelar');
 
+    const hasRun = useRef(false);
+
     useEffect(() => {
         const getVendaItem = vendas.find(venda => venda.id === idVenda);
         setVendaFilter(getVendaItem);
     }, [idVenda, controlerVendaFilter])
 
     useEffect(() => {
+        if (!confirmPacela || hasRun.current) return;
+        hasRun.current = true;
+
         setMessege(null);
         if(!idParcela) return
+
         const hendleStatusVenda  = async () => {
             await editarParcelaStatus(idParcela);
             const getVendas = await buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
             setVendas(getVendas);
+
             const getVendaItem = getVendas.find(venda => venda.id === idVenda);
-            const getParcelas = getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'Pendente');
+            const getParcelas = await getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'Pendente');
+            console.log(getVendaItem);
+            console.log(getParcelas);
 
             if(getParcelas.length === 0) {
                 await editarVenda(idVenda);
                 const getVendas = await buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
                 setVendas(getVendas);
-            }
 
+                const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId, getVendaItem.cliente_id);
+                console.log("contarVendas", getNumeroDeVendasDoCliente);
+                if(getNumeroDeVendasDoCliente === 0) {
+                    await atualizarStatusParaDebitos(getVendaItem.cliente_id, "Em Dias");
+                    console.log("cliente nao tem nemhuma venda pendente, status Em Dias");
+                }
+            }
             
             setConfirmPacela(false);
             setControlerVendaFilter(!controlerVendaFilter);
@@ -50,7 +72,27 @@ const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, 
             setTextBtn('OK');
             setMessege({success: true, title: "Parcela confirmada com sucesso", message: "A parcela foi confirmada como Pago"});
 
+            const parcelaItem = await  getVendaItem ?.parcelas_venda.find(parcela => parcela.id === idParcela);
+            console.log(parcelaItem);
+
+            if (parcelaItem) {
+                const log = {
+                    adminid: userId,    
+                    colaborador_id: user.id, 
+                    name: user.name,   
+                    titulo: '✅ Pagamento confirmado',   
+                    mensagem: `A parcela referente à venda de ${getVendaItem.created_at.split('T')[0].split('-').reverse().join('/')} 
+                                para o cliente: ${getVendaItem.name.split(' ').slice(0, 2).join(' ')} foi registrada como paga,
+                                no valor de: ${parcelaItem.valor_parcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`, 
+                    status: 'Não lida',   
+                    referencia_id: idVenda, 
+                    created_at: new Date().toISOString()
+                };
+
+                await cadastrarLog(log);
+            }
         }
+
         hendleStatusVenda ();
     }, [confirmPacela]);
 
@@ -73,7 +115,7 @@ const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, 
                     <div className="datails-date">
                         <div>
                             <h4>Cliente</h4>
-                            <p>{vendaFilter?.name}</p>
+                            <p className="name">{vendaFilter?.name}</p>
                         </div>
                         <div>
                             <h4>Data</h4>
@@ -147,7 +189,7 @@ const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, 
                             <p style={{ width: "70px" }}>Valor</p>
                         </li>
                         <li>
-                            <p style={{ width: "60px" }}>Ação</p>
+                            <p style={{ width: "60px", paddingLeft: "25px" }}>Ação</p>
                         </li>
                     </ul>
                     {vendaFilter?.parcelas_venda?.length > 0 && 
@@ -163,7 +205,7 @@ const VendasDetails = ({ setVendaModalDetails, userId, itemsPorPage, paginacao, 
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
-                                <p  style={{ width: "60px" }}>
+                                <p  style={{ width: "60px", paddingLeft: "30px" }}>
                                     <input 
                                         className="checkbox"
                                         type="checkbox" 

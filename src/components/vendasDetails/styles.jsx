@@ -34,7 +34,7 @@ export const Container_datails = styled.div`
         align-items: center;
         flex-direction: column;
         padding: 10px 10px;
-        gap: 8px;
+        gap: 0px;
         background-color:rgb(255, 255, 255);
         border-radius: 6px;
         border: solid 1px #cccccc;
@@ -53,18 +53,20 @@ export const Container_datails = styled.div`
                 text-align: center;
                 font-size: 1rem;
                 font-weight: 900;
+                padding-bottom: 5px;
             }
 
             .close{
                 position: absolute;
                 right: 0;
-                top: 0;
+                top: -3px;
                 cursor: pointer;
                 font-size: 1.2rem;
                 transition: color 0.3s ease;
+                color:rgb(250, 61, 61);
 
                 &:hover {
-                    color: #FF9D00;
+                    color:rgb(209, 0, 0);
                 }
             }
         }
@@ -74,9 +76,10 @@ export const Container_datails = styled.div`
             text-align: center;
             font-size: 0.8rem;
             font-weight: 900;
-            color: #000;
-            background-color: #f2f2f2f2;
-            padding: 3px 0;
+            color: #fff;
+            background-color:rgba(127, 127, 127, 0.95);
+            padding: 5px 0;
+            margin-bottom: 6px;
         }
 
         .datails-client {
@@ -89,6 +92,10 @@ export const Container_datails = styled.div`
                 justify-content: space-between;
                 width: 100%;
                 padding-right: 50px;
+
+                .name {
+                    width: 160px;
+                }
             }
 
             h4 {
