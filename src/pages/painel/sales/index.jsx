@@ -156,6 +156,8 @@ const Sales = () => {;
         setIdVenda(id);
         setCloseBtn(true);
     }
+        
+
 
     return (
         <Container>
