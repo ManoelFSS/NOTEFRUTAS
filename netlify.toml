@@ -1,5 +1,5 @@
 [build]
   functions = "netlify/functions"
 
-[functions."update-parcelas-status"]
-  schedule = "30 0 * * *" # Executa todos os dias às 00:30 UTC
+[functions.update-parcelas-status]
+  schedule = "10 2 * * *" Executa todos os dias às 00:30 UTC
