@@ -116,16 +116,6 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         link.href = dataUrl;
         link.download = "div-capturada.png";
         link.click();
-
-        // // Número do cliente (no formato internacional: ex. 55 para Brasil)
-        // const numeroCliente = phone.replace(/[^\d]/g, ''); // substitua pelo número real
-        // const mensagem = "Olá! Aqui está o conteúdo que você solicitou."; // pode ser personalizada
-
-        // const urlWhatsapp = `https://api.whatsapp.com/send?phone=55${numeroCliente}&text=${encodeURIComponent(mensagem)}`;
-        // // Abre o WhatsApp em uma nova aba
-        // setTimeout(() => {
-        //     window.open(urlWhatsapp, "_blank");
-        // }, 1000);
     };
 
 
@@ -225,7 +215,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p className="status" style={{ color: parcela?.status === "Paga" ? "green" : "red" }}>{parcela?.status}</p>
+                                <p className="status" style={{ color: parcela?.status === "Paga" ? "rgb(12, 103, 4)" :parcela?.status === "Pendente" ? "rgb(0, 0, 0)" :parcela?.status === "A receber" ? "rgb(5, 34, 122) " : "rgb(232, 8, 8)" }}>{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>

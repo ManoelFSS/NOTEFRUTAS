@@ -216,8 +216,14 @@ export const Container_datails = styled.div`
                 list-style: none;
 
                 .status {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     font-size: 0.7rem;
-                    font-weight: 600;
+                    font-weight: 800;
+                    color: #fff;
+                    height: 18px;
+
                 }
 
                 .checkbox {

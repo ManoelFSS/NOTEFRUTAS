@@ -222,7 +222,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     data_vencimento: dataParcela.toISOString().split("T")[0],
                     created_at: new Date(),
                     updated_at: new Date(),
-                    status: "Pendente",
+                    status: "A vencer",
                 });
             }
 
