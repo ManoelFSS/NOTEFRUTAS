@@ -2,13 +2,17 @@ import { createContext, useContext, useState } from "react";
 import { supabase } from '../services/supabase';
 // context
 import { useAuthContext } from "./AuthContext";
+import { useClientes } from "./ClientesContext";
 
 
 const VendasContext = createContext();
 
 export const VendasProvider = ({ children }) => {
 
+
+    const { idClient, atualizarStatusParaDebitos } = useClientes();
     const {user, userId} = useAuthContext();
+
     
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
@@ -21,35 +25,57 @@ export const VendasProvider = ({ children }) => {
     const [idVenda, setIdVenda] = useState('');// controle do campo idClient
 
 
-    const editarVenda = async (venda_id) => {
-
-        const { data, error } = await supabase
-                .from('vendas') // substitua pelo nome correto da sua tabela
-                .update({ status: 'Pago' })
-                .eq('id', venda_id); // ou 'parcela_id', dependendo do nome do campo
-
-        if (error) {
-            console.error('Erro ao atualizar status da venda:', error);
-        } else {
-            console.log('Venda paga e atualizado com sucesso:', data);
-        }
-    };
-
-
-    const deletarVenda = async (idDoCliente) => {
+    const editarVenda = async (venda_id, status) => {
         try {
-            const { error } = await supabase
-            .from("fornecedores")
-            .delete()
-            .eq("id", idDoCliente);
+            const { data: vendaAtualizada, error: erroVenda } = await supabase
+                .from('vendas')
+                .update({ status })
+                .eq('id', venda_id);
 
-            if (error) throw error;
+            if (erroVenda) {
+                console.error('[ERRO VENDA] Falha ao atualizar status da venda:', {
+                    venda_id,
+                    status,
+                    erro: erroVenda.message,
+                });
+                return;
+            }
 
-            console.log("Fornecedor deletado com sucesso!");
-        } catch (error) {
-            console.error("Erro ao deletar fornecedor:", error.message || error);
+            console.log('[SUCESSO VENDA] Venda atualizada com sucesso:', vendaAtualizada);
+
+            if (status === "Cancelada") {
+                const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
+                    .from('parcelas_venda')
+                    .update({ status: "Cancelada" })
+                    .eq('venda_id', venda_id);
+
+                if (erroParcelas) {
+                    console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da venda:', {
+                        venda_id,
+                        erro: erroParcelas.message,
+                    });
+                } else {
+                    console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
+                }
+
+                const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId,  idClient);
+                console.log("contarVendas", getNumeroDeVendasDoCliente);
+                if(getNumeroDeVendasDoCliente === 0) {
+                    await atualizarStatusParaDebitos(idClient, "Em Dias");
+                    console.log("cliente nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+                }
+            }
+
+        } catch (err) {
+            console.error('[ERRO GERAL] Erro inesperado ao editar a venda:', {
+                venda_id,
+                status,
+                erro: err.message,
+            });
         }
     };
+
+
 
 
 
@@ -145,10 +171,10 @@ export const VendasProvider = ({ children }) => {
         }
     };
 
-    const editarParcelaStatus = async (parcela_id)  => {
+    const editarParcelaStatus = async (parcela_id, status)  => {
         const { data, error } = await supabase
             .from('parcelas_venda') // substitua pelo nome correto da sua tabela
-            .update({ status: 'Paga' })
+            .update({ status: status })
             .eq('id', parcela_id); // ou 'parcela_id', dependendo do nome do campo
 
         if (error) {
@@ -185,7 +211,6 @@ export const VendasProvider = ({ children }) => {
                 caunterVendas, setCaunterVendas,
                 buscarVendasSeach,
                 editarVenda,
-                deletarVenda,
                 name, setName,
                 phone, setPhone,
                 idVenda, setIdVenda,

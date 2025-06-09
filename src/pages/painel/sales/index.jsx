@@ -8,16 +8,12 @@ import Pagination from "../../../components/pagination"
 import ProductForm from "../../../components/forms/systemForm/produtForm";
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
-import ProductCard from "../../../components/cards/productCard";
 import MonthYearSelector from "../../../components/MonthYearSelector";
 import VendasDetails from "../../../components/vendasDetails";
 // icons
-import { FaUserPlus, FaFileDownload  } from "react-icons/fa";
-import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
+import { FaUserPlus} from "react-icons/fa";
 import {  PiHandTapFill  } from "react-icons/pi";
 import { HiMiniStar } from "react-icons/hi2";
-import { FaEdit} from "react-icons/fa";
-import { MdDeleteForever, MdDownloadForOffline  } from "react-icons/md";
 import { AiOutlineAlignRight } from "react-icons/ai";
 import { IoBagHandleSharp } from "react-icons/io5";
 import { BsFillTelephonePlusFill } from "react-icons/bs";
@@ -33,42 +29,39 @@ import useSelect from "../../../hooks/useSelect"
 // context
 import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
+import { useClientes } from "../../../context/ClientesContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 // rota aninhada
-import { useNavigate  } from "react-router-dom";
+;
 
-const Sales = () => {
+const Sales = () => {;
 
-    const navigate = useNavigate();
+    const { setIdClient } = useClientes();
 
     const { 
         buscarVendasPorAdmin,
-        loading, setLoading,
         messege, setMessege,
         closeModal, setCloseModal,
         vendas, setVendas,
-        caunterVendas, setCaunterVendas,
+        caunterVendas,
         buscarVendasSeach,
         editarVenda,
-        deletarVenda,
-        name, setName,
-        phone, setPhone,
         idVenda, setIdVenda,
     } = useVendas();
     
-    const { setSelectForm, userId,  activeLink, setActiveLink } = useAuthContext();
+    const { setSelectForm, userId} = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
     const [btnName, setBtnName] = useState("Cadastrar");
     const [deleteControl, setDeleteControl] = useState(null);
-    const [confirmDelete, setConfirmDelete] = useState(false);
-    const [idProduct, setIdProductCard] = useState(null);
+    const [confirmCancelaVenda, setConfirmCancelaVenda] = useState(false);
     const [closeBtn, setCloseBtn] = useState(false);
     const [mes, setMes] = useState( new Date().getMonth() + 1);
     const [ano, setAno] = useState(new Date().getFullYear());
     const [vendaModalDetails, setVendaModalDetails] = useState(false);
+    const [textBtn, setTextBtn] = useState("Cancelar");
 
     const handleDateChange = ({ month, year }) => {
         setAno(year);
@@ -89,7 +82,7 @@ const Sales = () => {
     ]
 
     const data = [
-        { category: "Pago" },
+        { category: "Cancelada" },
         { category: "Pendente" },
         { category: "Atrasada" },
     ];
@@ -144,21 +137,22 @@ const Sales = () => {
     }
 
     useEffect(() => {
-        if(!idProduct) return
+        if(!idVenda) return
         
-        const deletaItem = async () => {
-            await deletarProduto(idProduct);
+        const cancelarVenda = async () => {
+            await editarVenda(idVenda, "Cancelada");
             setDeleteControl(!deleteControl)
             setMessege(null);
-            setConfirmDelete(false);
+            setIdVenda(null);
+            setCloseBtn(false);
         }
-        deletaItem();
-        console.log("confirmDelete", confirmDelete);
-    }, [confirmDelete]);
+        cancelarVenda(); 
 
-    const hendledeliteProduct = (id) => {
-        setMessege({success: true, title: "Tem certeza que deseja deletar esse produto ?", message: "Atenção ao deletar o produto ele sera removido permanentemente e informações relacionadas ao mesmo"});
-        setIdProductCard(id);
+    }, [confirmCancelaVenda]);
+
+    const hendleCancelaVenda = (id) => {
+        setMessege({success: true, title: "Tem certeza que deseja Cancelar essa Venda?", message: "Atenção recomendamos cancelar a venda em casos de problemas com o pagamento ou devolução"});
+        setIdVenda(id);
         setCloseBtn(true);
     }
 
@@ -173,16 +167,6 @@ const Sales = () => {
                         setSelectForm("cadastrar produto") 
                     }}
                 />
-                {/* <div className="box-icon">
-                    <LuSquareEqual 
-                        className={`icon-square ${cardList && "ative-icon"}`}
-                        onClick={() => setCardList(true)}
-                    />
-                    <LuLayoutList  
-                        className={`icon-list ${!cardList && "ative-icon"}`} 
-                        onClick={() => setCardList(false)}
-                    />
-                </div> */}
                 <Select     
                     select={select} 
                     setSelect={setSelect}
@@ -193,7 +177,7 @@ const Sales = () => {
                     valueSearch={valueSearch}
                     setValueSearch={setValueSearch}
                     $height={"35px"}
-                    $width={"210px"}
+                    $width={"200px"}
                     onClick={hendlerGetclienteSearch}
                 />
                 <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
@@ -208,62 +192,6 @@ const Sales = () => {
                 {
                     cardList ? (
                     <>
-                        {vendas?.length > 0  ? (
-                        <div className="body-card">
-                            {vendas
-                            .filter(item => {
-                                const search = valueSearch.toLowerCase();
-                                const nomeInclui = item.name?.toLowerCase().includes(search);
-                                const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.status === select && contemTermo;
-                                return contemTermo;
-                            })
-                            .map(item => (
-                                <ProductCard
-                                    key={item.id}
-                                    index={item.id}
-                                    image={item.url_image}
-                                    name={item.name}
-                                    stock={item.stock}
-                                    description={item.description}
-                                    category={item.category}
-                                    status={item.status}
-                                    acao={[
-                                    {
-                                        icon: <FaEdit 
-                                                    className="icon" 
-                                                    style={{ color: "rgb(14, 115, 143)" }} 
-                                                    onClick={() => {
-                                                        setCloseModal(true);
-                                                        setName(item.name);
-                                                        setDescription(item.description);
-                                                        setCategory(item.category);
-                                                        setSelectForm("editar produto");
-                                                        setIdProduct(item.id);
-                                                        setBtnName("Editar produto");
-                                                    }}
-                                                />,
-                                    },
-                                    {
-                                        icon: <MdDeleteForever 
-                                                    className="icon" 
-                                                    style={{ color: "rgb(224, 2, 2)" }} 
-                                                    onClick={() => {
-                                                        hendledeliteProduct(item.id);
-                                                    }}
-                                                />,
-                                    },
-                                ]}
-                                />
-                            ))}
-                        </div>
-                        ) : !dataNotFound ? (
-                        <div style={{ margin: "auto" }}><Loading /></div>
-                        ) : (
-                        <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
-                        </p>
-                        )}
                     </>
                     ) : (
                     <section className="table">
@@ -297,7 +225,7 @@ const Sales = () => {
                                     <li>{item.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>
                                     <li>
                                         <span style={{ 
-                                            backgroundColor: item.status === "Pago" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? "rgb(58, 85, 136)" : "rgb(211, 5, 5)",
+                                            backgroundColor: item.status === "Paga" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? "rgb(58, 85, 136)" : item.status === "Atrasada" ? "rgb(193, 117, 23)" : "rgb(211, 5, 5)",
                                         }}>
                                             {item.status}
                                         </span>
@@ -323,7 +251,10 @@ const Sales = () => {
                                             className="icon" 
                                             style={{ color: "rgb(224, 2, 2)" }} 
                                             onClick={() => {
-                                                // hendledeliteProduct(item.id);
+                                                item.status !== "Cancelada" ? hendleCancelaVenda(item.id) : setMessege({title: "Atenção", message: "Essa venda ja foi cancelada!"});
+                                                item.status === "Cancelada" && setCloseBtn(false)
+                                                item.status === "Cancelada" && setTextBtn("OK");
+                                                setIdClient(item.cliente_id);
                                             }}
                                         />
                                     </li>
@@ -343,7 +274,7 @@ const Sales = () => {
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege $buttonText="Cancelar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege setIdVenda={setIdVenda} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaVenda(!confirmCancelaVenda)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
             { vendaModalDetails && 
                 <VendasDetails  
                     setVendaModalDetails={setVendaModalDetails} 

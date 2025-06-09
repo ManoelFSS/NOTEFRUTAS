@@ -49,7 +49,8 @@ const Client = () => {
         setEstado,
         setIdClient,
         deletarCliente,
-        modalVendas, setModalVendas
+        modalVendas, setModalVendas,
+        textBtn, setTextBtn
     } = useClientes();
 
     const { setSelectForm, userId } = useAuthContext();
@@ -129,6 +130,7 @@ const Client = () => {
         }
         deletaItem();
         console.log("confirmDelete", confirmDelete);
+        setTextBtn("Cancelar");
     }, [confirmDelete]);
 
     const hendledeliteCliente = (id) => {
@@ -145,7 +147,8 @@ const Client = () => {
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
-                        setSelectForm("cadastrar cliente") 
+                        setSelectForm("cadastrar cliente")
+                        setCloseBtn(false); 
                     }}
                 />
                 <div className="box-icon">
@@ -235,6 +238,7 @@ const Client = () => {
                                                     setIdClient(item.id)
                                                     setBtnName("Realizar Venda");
                                                     setSelectForm("cadastrar venda")
+                                                    setTextBtn("OK")
                                                 }}
                                             />
                                     },
@@ -259,7 +263,10 @@ const Client = () => {
                                         icon: <MdDeleteForever 
                                                 className="icon" 
                                                 style={{ color: "rgb(224, 2, 2)" }} 
-                                                onClick={() => hendledeliteCliente(item.id)}    
+                                                onClick={() =>{ 
+                                                    hendledeliteCliente(item.id)
+                                                    setTextBtn("Cancelar")
+                                                }}    
                                             />,
                                     },
                                 ]}
@@ -333,6 +340,7 @@ const Client = () => {
                                             setIdClient(item.id)
                                             setBtnName("Realizar Venda");
                                             setSelectForm("cadastrar venda")
+                                            setTextBtn("OK")
                                         }}
                                     />
                                     {/* <FaInfoCircle
@@ -358,7 +366,10 @@ const Client = () => {
                                     <MdDeleteForever 
                                         className="icon" 
                                         style={{ color: "rgb(224, 2, 2)" }} 
-                                        onClick={() => hendledeliteCliente(item.id)}
+                                        onClick={() =>{ 
+                                            hendledeliteCliente(item.id)
+                                            setTextBtn("Cancelar")
+                                        }}
                                     />
                                 </li>
                                 </ul>
@@ -377,7 +388,7 @@ const Client = () => {
                 </ContainerTable>
                 { closeModal &&< ClientForm $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
             { modalVendas  && <VendasForm $color="#fff"  setModalVendas={setModalVendas} btnName={btnName} setBtnName={setBtnName}  />}
-            { messege && <Messege $buttonText="Fechar" button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Deletar" onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )

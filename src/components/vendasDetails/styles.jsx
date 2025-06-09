@@ -92,7 +92,7 @@ export const Container_datails = styled.div`
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
-                padding-right: 60px;
+                padding-right: 25px;
 
                 .name {
                     width: 160px;
@@ -321,9 +321,22 @@ export const Container_datails = styled.div`
         }
 
         .datails-download {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 30px;
             width: 100%;
             position: relative;
+            padding-top: 5px ;
+
+            p {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #000;
+                border-radius: 4px;
+                padding: 4px 15px;
+                color:rgb(229, 9, 9);
+            }
 
             .icon{
                 position: absolute;

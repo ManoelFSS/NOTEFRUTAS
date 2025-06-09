@@ -28,7 +28,8 @@ const FormLayout = ({ children, $height, state, $color }) => {
             tipoPagamento,
             qtParcelas,
             tipoCobranca,
-            itensVenda
+            itensVenda,
+            setTextBtn
         } = useClientes()
 
     const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
@@ -148,6 +149,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             case "cadastrar cliente":
                 if(estado === "Escolha o estado") return alert("Escolha um estado");
                 await cadastrarCliente(userClient);
+                setTextBtn("OK");
                 break;  
             case "editar cliente":
                 await editarCliente(editClient, idClient);

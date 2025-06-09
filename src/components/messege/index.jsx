@@ -2,7 +2,7 @@ import { Container_messege } from "./styles"
 // context 
 import Btn from "../btns/btnSubmit"
 
-const Messege = ({$title, $text, $setMessege, button, $buttonText}) => {
+const Messege = ({$title, $text, $setMessege, button, $buttonText, setTextBtn, setIdVenda}) => {
     
     return (
         <Container_messege>
@@ -11,7 +11,11 @@ const Messege = ({$title, $text, $setMessege, button, $buttonText}) => {
                 <p>{$text}</p>
                 <Btn 
                     $text={$buttonText}
-                    onClick={() => $setMessege(null)}
+                    onClick={() => { 
+                        $setMessege(null); 
+                        setTextBtn("Cancelar"); 
+                        setIdVenda(null)
+                    }}
                 />
                 { button }
             </div>

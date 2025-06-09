@@ -39,6 +39,8 @@ export const ClientesProvider = ({ children }) => {
 
     const [itensVenda, setItensVenda] = useState([]); // produtos vendidos e seus respectivos quantidades
     const [parcelasItensVenda, setParcelasItensVenda] = useState([]); 
+    const [textBtn, setTextBtn] = useState("Cancelar");
+
 
      // Função para contar total de clientes de um admin
     const contarClientes = async (adminId) => {
@@ -121,6 +123,12 @@ export const ClientesProvider = ({ children }) => {
 
             console.log("Cliente atualizado com sucesso!");
             setCloseModal(false);
+            setName('');
+            setPhone('');
+            setCpf('');
+            setCity('');
+            setEstado('Escolha o estado');
+            
         } catch (error) {
             console.error("Erro ao atualizar o cliente:", error.message || error);
         } finally {
@@ -452,7 +460,8 @@ export const ClientesProvider = ({ children }) => {
                 qtParcelas , setQtParcelas,
                 tipoCobranca, setTipoCobranca,
                 parcelasItensVenda, setParcelasItensVenda,
-                atualizarStatusParaDebitos
+                atualizarStatusParaDebitos,
+                textBtn, setTextBtn
             }}>
         {children}
         </ClientesContext.Provider>
