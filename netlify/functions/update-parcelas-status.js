@@ -1,5 +1,7 @@
 export const handler = async () => {
     const SUPABASE_FUNCTION_URL = process.env.VITE_SUPABASE_FUNCTION_URL;
+
+    console.log(process.env.VITE_SUPABASE_FUNCTION_URL);
     
     const res = await fetch(SUPABASE_FUNCTION_URL, {
         method: "POST", // ou "GET" conforme sua função

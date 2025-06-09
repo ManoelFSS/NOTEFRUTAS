@@ -38,6 +38,8 @@ import Perfil from "../../../assets/perfil.png"
 const Sales = () => {;
 
     const { setIdClient } = useClientes();
+   
+
 
     const { 
         buscarVendasPorAdmin,
@@ -109,7 +111,6 @@ const Sales = () => {;
         }
         hendlerGetProduct();    
     }, [closeModal, paginacao, deleteControl, mes, ano]);
-
 
 
     useEffect(() => {
