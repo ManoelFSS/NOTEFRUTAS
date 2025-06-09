@@ -3,4 +3,4 @@
 
 [functions.update-parcelas-status]
 # Executa todo dia às 03:15 UTC (00:15 horário de Brasília)
-schedule = "20 3 * * *"
+schedule = "25 3 * * *"
