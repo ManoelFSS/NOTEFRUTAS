@@ -64,7 +64,7 @@ const VendasChart = ({ $height, $ocult }) => {
         labels,
         datasets: [
             {
-                label: 'Vendidas | Dia',
+                label: '',
                 data: vendidos,
                 backgroundColor: 'rgba(0, 72, 255, 0)',
                 minBarLength: 0,
