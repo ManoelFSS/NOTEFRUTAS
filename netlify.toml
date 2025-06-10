@@ -1,7 +1,8 @@
 [build]
   functions = "netlify/functions"
 
+
 [functions.update-parcelas-status]
-# Executa todo dia às 10:42 da manhã no horário de Brasília (13:42 UTC)
-schedule = "45 13 * * *"
+# Executa todo dia às 00:10 da manhã no horário de Brasília (03:10 UTC)
+schedule = "10 3 * * *"
 

@@ -52,7 +52,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
             setVendas(getVendas);
 
             const getVendaItem = getVendas.find(venda => venda.id === idVenda);
-            const getParcelas = await getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'Pendente');
+            const getParcelas = await getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'A vencer');
             console.log(getVendaItem);
             console.log(getParcelas);
 
@@ -215,7 +215,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p className="status" style={{ color: parcela?.status === "Paga" ? "rgb(12, 103, 4)" :parcela?.status === "Pendente" ? "rgb(0, 0, 0)" :parcela?.status === "A receber" ? "rgb(5, 34, 122) " : "rgb(232, 8, 8)" }}>{parcela?.status}</p>
+                                <p className="status" style={{ color: parcela?.status === "Paga" ? "rgb(12, 103, 4)" :parcela?.status === "A vencer" ? "rgb(0, 0, 0)" :parcela?.status === "Hoje" ? "rgb(5, 34, 122) " : "rgb(232, 8, 8)" }}>{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
@@ -254,7 +254,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             </p>
                         </div>
                         <div>
-                            <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Pendente").length}</h4>
+                            <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "A vencer").length}</h4>
                             <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                     </div>

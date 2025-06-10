@@ -15,6 +15,7 @@ export const Container = styled.div`
 
     .card-header {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         height: 100%;
         width: 100%;
@@ -40,6 +41,31 @@ export const Container = styled.div`
 
         .rotate-icon {
             transform: rotate(180deg);
+        }
+
+        .list-valores {
+            display: flex;
+            width: 70%;
+            flex-direction: column;
+            gap: 10px;
+
+            .valor {
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            h4 {
+                color: var( --color-text-primary );
+                font-size: 0.8rem;
+                font-weight: 900;
+            }
+
+            span {
+                color: var( --color-text-primary );
+                font-size: 0.7rem;
+                font-weight: 600;
+            }
         }
     }
 

@@ -180,59 +180,119 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         }
     }, []);
 
+    // useEffect(() => {
+    //     function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
+    //         if (!dataInicial || !quantidadeParcelas || !valorTotal) {
+    //             console.error("Erro ao gerar parcelas: Dados insuficientes.");
+    //             return [];
+    //         }
+
+    //         const tipos = {
+    //             "Diário": 1,
+    //             "Semanal": 7,
+    //             "Quinzenal": 15,
+    //             "Mensal": 30,
+    //         };
+
+    //         const parcelasGeradas = [];
+    //         const dataBase = new Date(dataInicial);
+
+    //         for (let i = 0; i < quantidadeParcelas; i++) {
+    //             let dataParcela = new Date(dataBase);
+
+    //             // Se mais de uma parcela, calcular intervalo entre parcelas
+    //             if (quantidadeParcelas > 1) {
+    //                 const diasDeDiferenca = tipos[tipoCobranca];
+    //                 if (!diasDeDiferenca) {
+    //                     console.error("Tipo de cobrança inválido.");
+    //                     return [];
+    //                 }
+    //                 dataParcela.setDate(dataBase.getDate() + i * diasDeDiferenca);
+    //             }
+
+    //             const valorEmCentavos = Math.round(valorTotal * 100);
+    //             const parcelaEmCentavos = Math.floor(valorEmCentavos / quantidadeParcelas); 
+    //             const valorParcela = parcelaEmCentavos / 100; 
+
+    //             parcelasGeradas.push({
+    //                 venda_id: null,
+    //                 adminid: userId,
+    //                 cliente_id: idClient,
+    //                 valor_parcela: valorParcela,
+    //                 data_vencimento: dataParcela.toISOString().split("T")[0],
+    //                 created_at: new Date(),
+    //                 updated_at: new Date(),
+    //                 status: "A vencer",
+    //             });
+    //         }
+
+    //         return parcelasGeradas;
+    //     }
+
+    //     const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
+    //     setParcelasItensVenda(resultado);
+
+    // }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
+
+    
     useEffect(() => {
-        function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
-            if (!dataInicial || !quantidadeParcelas || !valorTotal) {
-                console.error("Erro ao gerar parcelas: Dados insuficientes.");
-                return [];
-            }
-
-            const tipos = {
-                "Diário": 1,
-                "Semanal": 7,
-                "Quinzenal": 15,
-                "Mensal": 30,
-            };
-
-            const parcelasGeradas = [];
-            const dataBase = new Date(dataInicial);
-
-            for (let i = 0; i < quantidadeParcelas; i++) {
-                let dataParcela = new Date(dataBase);
-
-                // Se mais de uma parcela, calcular intervalo entre parcelas
-                if (quantidadeParcelas > 1) {
-                    const diasDeDiferenca = tipos[tipoCobranca];
-                    if (!diasDeDiferenca) {
-                        console.error("Tipo de cobrança inválido.");
-                        return [];
-                    }
-                    dataParcela.setDate(dataBase.getDate() + i * diasDeDiferenca);
-                }
-
-                const valorEmCentavos = Math.round(valorTotal * 100);
-                const parcelaEmCentavos = Math.floor(valorEmCentavos / quantidadeParcelas); 
-                const valorParcela = parcelaEmCentavos / 100; 
-
-                parcelasGeradas.push({
-                    venda_id: null,
-                    adminid: userId,
-                    cliente_id: idClient,
-                    valor_parcela: valorParcela,
-                    data_vencimento: dataParcela.toISOString().split("T")[0],
-                    created_at: new Date(),
-                    updated_at: new Date(),
-                    status: "A vencer",
-                });
-            }
-
-            return parcelasGeradas;
+    function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
+        if (!dataInicial || !quantidadeParcelas || !valorTotal) {
+            console.error("Erro ao gerar parcelas: Dados insuficientes.");
+            return [];
         }
 
-        const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
-        setParcelasItensVenda(resultado);
+        const tipos = {
+            "Diário": 1,
+            "Semanal": 7,
+            "Quinzenal": 15,
+            "Mensal": 30,
+        };
 
-    }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
+        const dataBase = new Date(dataInicial);
+        const parcelasGeradas = [];
+
+        const totalCentavos = Math.round(valorTotal * 100);
+        const valorBaseParcela = Math.floor(totalCentavos / quantidadeParcelas);
+        const restante = totalCentavos - (valorBaseParcela * quantidadeParcelas); // Centavos que sobram
+
+        for (let i = 0; i < quantidadeParcelas; i++) {
+            let dataParcela;
+
+            console.log( quantidadeParcelas);
+
+            if (quantidadeParcelas === 1) {
+                dataParcela = new Date(dataBase); // Única parcela = data original
+            } else {
+                const diasDeDiferenca = tipos[tipoCobranca];
+                if (!diasDeDiferenca) {
+                    console.error("Tipo de cobrança inválido.");
+                    return [];
+                }
+                dataParcela = new Date(dataBase);
+                dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
+            }
+
+            const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+
+            parcelasGeradas.push({
+                venda_id: null,
+                adminid: userId,
+                cliente_id: idClient,
+                valor_parcela: valorFinalParcela / 100,
+                data_vencimento: dataParcela.toISOString().split("T")[0],
+                created_at: new Date(),
+                updated_at: new Date(),
+                status: "A vencer",
+            });
+        }
+
+        return parcelasGeradas;
+    }
+
+    const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
+    setParcelasItensVenda(resultado);
+}, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
 
 
     useEffect(() => {
