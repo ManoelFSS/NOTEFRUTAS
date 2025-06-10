@@ -42,12 +42,12 @@ const VendasChart = ({ $height, $ocult }) => {
     // Dados simulando retorno de banco de dados com múltiplas vendas por dia
     const items = [
         // Dia 1 (4 vendas)
-        { data: "2025-05-01", sold: 10, moneyTotal: 100 },
-        { data: "2025-05-01", sold: 30, moneyTotal: 300 },
+        { data: "2025-05-01", sold: 10, moneyTotal: 3000 },
+        { data: "2025-05-01", sold: 340, moneyTotal: 300 },
         { data: "2025-05-01", sold: 20, moneyTotal: 200 },
         { data: "2025-05-01", sold: 10, moneyTotal: 100 },
         // Dia 2 (3 vendas)
-        { data: "2025-05-02", sold: 10, moneyTotal: 100 },
+        { data: "2025-05-02", sold: 1044, moneyTotal: 2100 },
         { data: "2025-05-02", sold: 10, moneyTotal: 100 },
         { data: "2025-05-02", sold: 10, moneyTotal: 100 },
     ];
@@ -63,6 +63,12 @@ const VendasChart = ({ $height, $ocult }) => {
     const data = {
         labels,
         datasets: [
+            {
+                label: 'Vendidas | Dia',
+                data: vendidos,
+                backgroundColor: 'rgba(0, 72, 255, 0)',
+                minBarLength: 0,
+            },
             {
                 label: 'Vendidas | Dia',
                 data: vendidos,
@@ -91,10 +97,10 @@ const VendasChart = ({ $height, $ocult }) => {
                 const bar = datasetMeta.data[index];
     
                 if (bar) {
-                    const barX = bar.x;
+                    const barX = bar.x - 2;
     
                     ctx.save();
-                    ctx.translate(barX + 3, chart.chartArea.bottom - 20);
+                    ctx.translate(barX + 3, chart.chartArea.bottom - 5);
                     ctx.rotate(-Math.PI / 2);
                     ctx.textAlign = 'left';
                     ctx.fillStyle = '#000';
