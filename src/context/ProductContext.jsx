@@ -24,6 +24,9 @@ export const ProductProvider = ({ children }) => {
 
     const [images, setImages] = useState([]);// controle do campo images
 
+    const [month, setMonth] = useState(new Date().getMonth() + 1); // obtendo o mês atual para o chart
+    const [year, setYear] = useState(new Date().getFullYear()); // obtendo o ano atual para o chart
+
 // counter para paginacao
     const contarProdutos = async (adminId) => {
         const { count, error } = await supabase
@@ -227,7 +230,9 @@ export const ProductProvider = ({ children }) => {
                 deletarProduto,
                 buscarImagens,
                 images, setImages,
-                state, setState
+                state, setState,
+                month, setMonth,
+                year, setYear
             }}>
         {children}
         </ProductContext.Provider>

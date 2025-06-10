@@ -1,6 +1,7 @@
-import { Container } from "./styles"
+import { useState } from "react";
+import { Container } from "./styles";
 // componentes
-import MonthYearSelector from "../../MonthYearSelector"
+import MonthYearSelector from "../../MonthYearSelector";
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -10,95 +11,64 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+// context 
+import { useProduct } from "../../../context/ProductContext";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-// Função para agrupar vendas por dia
-const agruparVendasPorDia = (vendas) => {
-    const grouped = {};
+const VendasChart = ({ vendas, $height, $ocult }) => {
 
-    // Agrupar vendas por data
-    vendas.forEach(({ data, sold, moneyTotal }) => {
-        if (!grouped[data]) {
-            grouped[data] = { data, sold: 0, moneyTotal: 0 };
-        }
-        grouped[data].sold += sold;
-        grouped[data].moneyTotal += moneyTotal;
-    });
+    console.log(vendas);
 
-    // Converter para array e garantir todos os dias do mês
-    const result = [];
-    for (let day = 1; day <= 31; day++) {
-        const data = `2025-05-${day.toString().padStart(2, '0')}`;
-        result.push(
-            grouped[data] || { data, sold: 0, moneyTotal: 0 }
-        );
-    }
-    return result;
-};
+    const {setMonth, setYear} = useProduct();
 
-const VendasChart = ({ $height, $ocult }) => {
-    
-    // Dados simulando retorno de banco de dados com múltiplas vendas por dia
-    const items = [
-        // Dia 1 (4 vendas)
-        { data: "2025-05-01", sold: 10, moneyTotal: 3000 },
-        { data: "2025-05-01", sold: 340, moneyTotal: 300 },
-        { data: "2025-05-01", sold: 20, moneyTotal: 200 },
-        { data: "2025-05-01", sold: 10, moneyTotal: 100 },
-        // Dia 2 (3 vendas)
-        { data: "2025-05-02", sold: 1044, moneyTotal: 2100 },
-        { data: "2025-05-02", sold: 10, moneyTotal: 100 },
-        { data: "2025-05-02", sold: 10, moneyTotal: 100 },
-    ];
+    // vendas[0] = dados do mês anterior
+    // vendas[1] = dados do mês atual
+    const vendaAnterior = vendas[0];
+    const vendaAtual = vendas[1];
 
-    // Agrupar vendas por dia
-    const vendasAgrupadas = agruparVendasPorDia(items);
-
-    // Mapeamento dos dados agrupados
-    const labels = vendasAgrupadas.map(item => `Dia ${parseInt(item.data.split('-')[2])}`);
-    const vendidos = vendasAgrupadas.map(item => item.sold);
-    const valorEmDinheiro = vendasAgrupadas.map(item => item.moneyTotal);
+    // Criar labels "Dia 1", "Dia 2", ... baseado no tamanho do array de dados
+    const labels = vendaAtual.map((_, index) => `Dia ${index }`);
 
     const data = {
         labels,
         datasets: [
             {
                 label: '',
-                data: vendidos,
-                backgroundColor: 'rgba(0, 72, 255, 0)',
+                data: vendaAnterior,
+                backgroundColor: 'rgba(0, 72, 255, 0)',  // invisível
                 minBarLength: 0,
             },
             {
-                label: 'Vendidas | Dia',
-                data: vendidos,
-                backgroundColor: 'rgb(0, 72, 255)',
+                label: 'Vendas do mês anterior',
+                data: vendaAnterior,
+                backgroundColor: 'rgb(8, 155, 160)',
                 minBarLength: 0,
             },
             {
-                label: 'Valor total em Vendas | Dia',
-                data: valorEmDinheiro,
-                backgroundColor: 'rgb(4, 184, 37)',    
-                minBarLength:0,
+                label: 'Vendas do mês atual',
+                data: vendaAtual,
+                backgroundColor: ' #00A91F',
+                minBarLength: 0,
             },
         ],
     };
 
-    // Plugin para desenhar os nomes na vertical
+    // Plugin para desenhar os nomes na vertical com os labels "Dia 1", "Dia 2", ...
     const verticalLabelPlugin = {
         id: 'verticalLabels',
         afterDatasetsDraw(chart) {
             const { ctx } = chart;
-            const datasetMeta = chart.getDatasetMeta(0);
-    
+            const datasetMeta = chart.getDatasetMeta(0); // pegar posição das barras invisíveis para base do x
+
             ctx.save();
-    
+
             chart.data.labels.forEach((label, index) => {
                 const bar = datasetMeta.data[index];
-    
+
                 if (bar) {
                     const barX = bar.x - 2;
-    
+
                     ctx.save();
                     ctx.translate(barX + 3, chart.chartArea.bottom - 5);
                     ctx.rotate(-Math.PI / 2);
@@ -109,11 +79,11 @@ const VendasChart = ({ $height, $ocult }) => {
                     ctx.restore();
                 }
             });
-    
+
             ctx.restore();
         }
     };
-    
+
     const options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -127,11 +97,7 @@ const VendasChart = ({ $height, $ocult }) => {
                     label: function (context) {
                         const label = context.dataset.label || '';
                         const value = context.raw;
-                        if (label.includes('Valor total')) {
-                            return `${label}: R$ ${value.toLocaleString('pt-BR')} reais`;
-                        } else {
-                            return `${label}: ${value} Unidades`;
-                        }
+                        return `${label}:  ${value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                     },
                 },
             },
@@ -158,6 +124,8 @@ const VendasChart = ({ $height, $ocult }) => {
 
     const handleDateChange = ({ month, year }) => {
         console.log('Mês:', month, 'Ano:', year);
+        setMonth(month + 1);
+        setYear(year);
     };
 
     return (
@@ -167,7 +135,7 @@ const VendasChart = ({ $height, $ocult }) => {
                 <div className="selects-ano-mes">
                     <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
                 </div>
-                
+
                 <div className="custom-legend">
                     {data.datasets.map((dataset, index) => (
                         dataset.label && (

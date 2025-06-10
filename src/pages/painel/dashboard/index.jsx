@@ -7,6 +7,7 @@ import ChartPizza from "../../../components/charts/chartPizza";
 import CardDashboard from "../../../components/cards/cardDashboard";
 import StockProductChart from "../../../components/charts/stockProductChart";
 import VendasChart from "../../../components/charts/vendasChart";
+import Loading from "../../../components/loading";
 import Checkout from "../../../components/checkount";
 // icons 
 import { FaChartSimple, FaArrowUpRightDots, FaHandshake   } from "react-icons/fa6";
@@ -15,49 +16,82 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 // context
 import { useAuthContext } from "../../../context/AuthContext"
-//db
-import { vendas, clientes, fornecedores } from "../../../DB";
+import { useProduct } from "../../../context/ProductContext"
+// data
 import { 
     getResumoFinanceiro, 
     getTotalParcelasVencimentoHoje, 
     getParcelasAtrasadas,
     getResumoClientes,
     getResumoFornecedores,
-    getResumoVendas
+    getResumoVendas,
+    getProdutosMaisVendidos,
+    getClientesQueMaisCompraram,
+    getComparativoVendasPorDia
 } from "./dashboard_data";
 
 const data = [{value:1000000}]
 
 const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
+    const { month, year} = useProduct();
     const { userId } = useAuthContext();
+
     const [financeiro, setFinanceiro  ] = useState([0])
     const [totalDeParcelasAReceberHoje , setTotalDeParcelasAReceberHoje  ] = useState([0])
     const [totalDeParcelasAtrasadas , setTotalDeParcelasAtrasadas  ] = useState([0])
     const [totalDeClientes , setTotalDeClientes  ] = useState([0])
     const [totalDeFornecedores , setTotalDeFornecedores  ] = useState([0])
     const [totalDeVendas , setTotalDeVendas  ] = useState([0])
+    const [totalDeProdutos , setTotalDeProdutos  ] = useState([])
+    const [comparativoVendas , setComparativoVendas  ] = useState([])
+    const [totalDeClientsMaisCompraram , setTotalDeClientsMaisCompraram  ] = useState([])
+
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if(!userId) return
+        if (!userId) return;
 
         const hendleFinanceiro = async () => {
-            const getFinanceiro = await getResumoFinanceiro(userId)
-            const getParcelasDoDia = await getTotalParcelasVencimentoHoje(userId)
-            const getTotalPacerlasAtrasadas = await  getParcelasAtrasadas(userId)
-            const getTotalData = await getResumoClientes(userId)
-            const getTotalFornecedores = await getResumoFornecedores(userId)
-            const getTotalVendas = await getResumoVendas(userId)
+                console.log(userId, year, month);
+                setLoading(true);
+            try {
+                const getFinanceiro = await getResumoFinanceiro(userId);
+                const getParcelasDoDia = await getTotalParcelasVencimentoHoje(userId);
+                const getTotalPacerlasAtrasadas = await getParcelasAtrasadas(userId);
+                const getTotalData = await getResumoClientes(userId);
+                const getTotalFornecedores = await getResumoFornecedores(userId);
+                const getTotalVendas = await getResumoVendas(userId);
+                const getTotalProdutos = await getProdutosMaisVendidos(userId);
+                const getTotalClientsMaisCompraram = await getClientesQueMaisCompraram(userId);
+                
+                setFinanceiro(getFinanceiro || [0]);
+                setTotalDeParcelasAReceberHoje(getParcelasDoDia || [0]);
+                setTotalDeParcelasAtrasadas(getTotalPacerlasAtrasadas || [0]);
+                setTotalDeClientes(getTotalData || [0]);
+                setTotalDeFornecedores(getTotalFornecedores || [0]);
+                setTotalDeVendas(getTotalVendas || [0]);
+                setTotalDeClientsMaisCompraram(getTotalClientsMaisCompraram || []);
+                setTotalDeProdutos(getTotalProdutos || []);
+                
+            } catch (error) {
+            console.error('Erro ao carregar dados do dashboard:', error);
+                setTotalDeProdutos([]);
+            }finally {
+                setLoading(false);
+            }
+        };
+        hendleFinanceiro();
+    }, []);
 
-            setFinanceiro(getFinanceiro)
-            setTotalDeParcelasAReceberHoje(getParcelasDoDia)
-            setTotalDeParcelasAtrasadas(getTotalPacerlasAtrasadas)
-            setTotalDeClientes(getTotalData)
-            setTotalDeFornecedores(getTotalFornecedores)
-            setTotalDeVendas(getTotalVendas)
+    useEffect(() => {
+        const getComparativoVendas = async () => {
+            const getComparativoVendas = await getComparativoVendasPorDia(userId, year, month);
+            setComparativoVendas(getComparativoVendas || []);
         }
-        hendleFinanceiro()
-    }, [])
+        getComparativoVendas();
+
+    }, [ year, month]);
 
     useEffect(() => {
         console.log(financeiro)
@@ -65,7 +99,15 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
         console.log(totalDeParcelasAtrasadas)
         console.log(totalDeClientes)
         console.log(totalDeFornecedores)
+        console.log(totalDeVendas)
+        console.log(totalDeProdutos)
+        console.log(totalDeClientsMaisCompraram)
+        console.log(comparativoVendas)
     }, [financeiro])
+
+    if (loading) {
+        return <Loading />
+    }
 
 
     return (
@@ -142,7 +184,9 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                             text="Mais vendidos no Mês"
                             icon={<FaChartSimple className="icon" />}
                         >
-                            <BarChart_x />
+                            <BarChart_x 
+                                data={totalDeProdutos}
+                            />
                         </TopProductsChart>
 
                         <TopProductsChart 
@@ -150,7 +194,9 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                             text="Que mais Compraram no Mês"
                             icon={<FaChartSimple className="icon" />}
                         >
-                            <BarChart_x />
+                            <BarChart_x 
+                                data={totalDeClientsMaisCompraram}
+                            />
                         </TopProductsChart>
                     </section>
 
@@ -203,7 +249,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     </TopProductsChart>
                 </section>
                 <section className="chart-stock">
-                    <VendasChart  />
+                    <VendasChart vendas={comparativoVendas}  />
                 </section>
             </section>
             <section className="charts-container-vendas">

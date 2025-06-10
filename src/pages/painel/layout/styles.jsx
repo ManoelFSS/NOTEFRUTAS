@@ -22,6 +22,7 @@ export const Container = styled.div`
         overflow: hidden;
         
         .main {
+            display: flex;
             height: calc( 100vh - 45px );
             transition: padding 0.3s ease;
             margin-top: 45px;

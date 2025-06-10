@@ -254,7 +254,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             </p>
                         </div>
                         <div>
-                            <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "A vencer").length}</h4>
+                            <h4>Pendentes: {vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status !== "Paga").length}</h4>
                             <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_venda?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                         </div>
                     </div>

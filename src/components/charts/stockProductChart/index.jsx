@@ -90,6 +90,13 @@ const StockProductChart = ({ $height, $ocult }) => {
         labels,
         datasets: [
             {
+                label: '',
+                data: estoque,
+                backgroundColor: 'rgba(255, 157, 0, 0)',
+                minBarLength:3, 
+                // barThickness: 10,
+            },
+            {
                 label: 'Estoque atual',
                 data: estoque,
                 backgroundColor: ' #FF9D00',

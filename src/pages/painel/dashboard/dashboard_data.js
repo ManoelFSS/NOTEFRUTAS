@@ -132,7 +132,7 @@ export const getResumoClientes = async (adminid) => {
     return [
         { name: 'Total', value: total},               // Verde
         { name: 'Débitos pendentes', value: debitosPendentes}, // Vermelho
-        { name: 'Novos | Mês', value: novosMes}        // Azul
+        { name: 'Novos Clientes | Mês', value: novosMes}        // Azul
     ];
 };
 
@@ -173,28 +173,32 @@ export const getResumoFornecedores = async (adminid) => {
     return [
         { name: 'Total', value: total },                // Verde
         { name: 'Débitos a Pagar', value: debitosPendentes }, // Vermelho
-        { name: 'Novos | Mês', value: novosMes }        // Azul
+        { name: 'Novos Fornecedores | Mês', value: novosMes }        // Azul
     ];
 };
+
 
 
 export const getResumoVendas = async (adminid) => {
     const now = new Date();
     const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
     const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-    const hoje = new Date().toISOString().slice(0, 10);
+    
+    const hoje = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+    const hojeInicio = `${hoje}T00:00:00`;
+    const hojeFim = `${hoje}T23:59:59`;
 
     const filtroMes = (query) =>
         query
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia);
+            .gte('created_at', primeiroDia)
+            .lte('created_at', ultimoDia);
 
     // Total de vendas no mês
     const { count: total, error: errorTotal } = await filtroMes(
         supabase
-        .from('vendas')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
+            .from('vendas')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
     );
     if (errorTotal) throw errorTotal;
 
@@ -203,88 +207,82 @@ export const getResumoVendas = async (adminid) => {
         .from('vendas')
         .select('*', { count: 'exact', head: true })
         .eq('adminid', adminid)
-        .gte('created_at', `${hoje}T00:00:00`)
-        .lte('created_at', `${hoje}T23:59:59`);
+        .gte('created_at', hojeInicio)
+        .lte('created_at', hojeFim);
     if (errorHoje) throw errorHoje;
 
     // Vendas pagas no mês
     const { count: pagas, error: errorPagas } = await filtroMes(
         supabase
-        .from('vendas')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .eq('status', 'Paga')
+            .from('vendas')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Paga')
     );
     if (errorPagas) throw errorPagas;
 
     // Vendas pendentes no mês
     const { count: pendentes, error: errorPendentes } = await filtroMes(
         supabase
-        .from('vendas')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .eq('status', 'Pendente')
+            .from('vendas')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Pendente')
     );
     if (errorPendentes) throw errorPendentes;
 
     // Vendas canceladas no mês
     const { count: canceladas, error: errorCanceladas } = await filtroMes(
         supabase
-        .from('vendas')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .eq('status', 'Cancelada')
+            .from('vendas')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Cancelada')
     );
     if (errorCanceladas) throw errorCanceladas;
 
-    // IDs de vendas no mês para buscar parcelas "A vencer"
+    // IDs das vendas do mês
     const { data: vendasMes, error: errorVendasMes } = await filtroMes(
         supabase
-        .from('vendas')
-        .select('id')
-        .eq('adminid', adminid)
+            .from('vendas')
+            .select('id')
+            .eq('adminid', adminid)
     );
     if (errorVendasMes) throw errorVendasMes;
 
     const idsVendasMes = vendasMes.map(v => v.id);
 
-    // Parcelas com status "A vencer"
-    const { data: parcelasAVencer, error: errorParcelas } = await supabase
+    // Parcelas com status "A vencer" e vencendo HOJE
+    const { data: parcelasHoje, error: errorParcelas } = await supabase
         .from('parcelas_venda')
         .select('venda_id')
-        .eq('status', 'A vencer');
+        .in('status', ['A vencer', 'Hoje'])
+        .gte('data_vencimento', hojeInicio)
+        .lte('data_vencimento', hojeFim);
     if (errorParcelas) throw errorParcelas;
 
-    const vendasAReceber = [
+    // Filtrar apenas vendas do mês
+    const vendasAReceberHoje = [
         ...new Set(
-            parcelasAVencer
-            .filter(p => idsVendasMes.includes(p.venda_id))
-            .map(p => p.venda_id)
+            parcelasHoje
+                .filter(p => idsVendasMes.includes(p.venda_id))
+                .map(p => p.venda_id)
         )
     ];
 
-
-    // Parcelas com status "Atrasada"
+    // Parcelas "Atrasadas"
     const { data: parcelasAtrasadas, error: errorAtrasadas } = await supabase
         .from('parcelas_venda')
         .select('venda_id')
         .eq('status', 'Atrasada');
     if (errorAtrasadas) throw errorAtrasadas;
 
-    const vendasAtrasadas = [
-        ...new Set(
-            parcelasAtrasadas
-            .filter(p => idsVendasMes.includes(p.venda_id))
-            .map(p => p.venda_id)
-        )
-    ];
-
-
+    const vendasAtrasadas = [...new Set(parcelasAtrasadas.map(p => p.venda_id))];
 
     return [
         { name: 'Total', value: total },
         { name: 'Vendas Hoje', value: hojeCount },
-        { name: 'Vendas com parcelas a vencer hoje', value: vendasAReceber.length },
+        { name: 'Vendas com parcelas a vencer hoje', value: vendasAReceberHoje.length },
         { name: 'Vendas Pagas', value: pagas },
         { name: 'Vendas com pagamento pendente', value: pendentes },
         { name: 'Vendas com parcelas atrasadas', value: vendasAtrasadas.length },
@@ -293,3 +291,166 @@ export const getResumoVendas = async (adminid) => {
 };
 
 
+
+export const getProdutosMaisVendidos = async (adminid) => {
+    const now = new Date();
+    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+    // Buscar todos os produtos (apenas id e name)
+    const { data: produtos, error: errorProdutos } = await supabase
+        .from('produtos')
+        .select('id, name')
+        .eq('adminid', adminid); // se necessário filtrar por admin
+
+    if (errorProdutos) throw errorProdutos;
+
+    // Buscar todos os itens de venda do mês/ano atual
+    const { data: itensVenda, error: errorItens } = await supabase
+        .from('itens_venda')
+        .select('produto_id, valor_total, created_at')
+        .gte('created_at', primeiroDia)
+        .lte('created_at', ultimoDia);
+
+    if (errorItens) throw errorItens;
+
+    // Montar um mapa com soma total por produto
+    const mapaTotais = {};
+
+    for (const item of itensVenda) {
+        const id = item.produto_id;
+        if (!mapaTotais[id]) {
+        mapaTotais[id] = 0;
+        }
+        mapaTotais[id] += item.valor_total;
+    }
+
+    // Montar a resposta com nome do produto e valor total
+    const resultado = produtos
+        .filter(p => mapaTotais[p.id]) // Só produtos com venda
+        .map(p => ({
+            name: p.name,
+            value: mapaTotais[p.id]
+        }));
+
+    return resultado;
+};
+
+
+
+export const getClientesQueMaisCompraram = async (adminid) => {
+    const now = new Date();
+    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+    // Buscar todos os clientes (id e nome)
+    const { data: clientes, error: errorClientes } = await supabase
+        .from('clientes')
+        .select('id, name')
+        .eq('adminid', adminid); // se necessário
+
+    if (errorClientes) throw errorClientes;
+
+    // Buscar todas as vendas do mês atual com id do cliente e valor total
+    const { data: vendas, error: errorVendas } = await supabase
+        .from('vendas')
+        .select('cliente_id, valor_total, created_at')
+        .gte('created_at', primeiroDia)
+        .lte('created_at', ultimoDia)
+        .eq('adminid', adminid); // se necessário
+
+    if (errorVendas) throw errorVendas;
+
+    // Somar valor total por cliente
+    const mapaTotais = {};
+
+    for (const venda of vendas) {
+        const id = venda.cliente_id;
+        if (!mapaTotais[id]) {
+            mapaTotais[id] = 0;
+        }
+        mapaTotais[id] += venda.valor_total;
+    }
+
+    // Montar a resposta com nome do cliente e valor total
+    const resultado = clientes
+        .filter(c => mapaTotais[c.id]) // Apenas clientes que compraram
+        .map(c => ({
+            name: c.name,
+            value: mapaTotais[c.id]
+        }))
+        .sort((a, b) => b.value - a.value); // Opcional: ordenar por valor decrescente
+
+    return resultado;
+};
+
+
+export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSelecionado) => {
+    // Ajusta mesSelecionado de 1-12 para 0-11 (ex.: 5 para maio vira 4)
+    const mesAjustado = mesSelecionado - 1;
+
+    // Ajusta o mês anterior considerando ano e mês selecionados
+    const dataAtual = new Date(anoSelecionado, mesAjustado, 1);
+    const dataAnterior = new Date(anoSelecionado, mesAjustado - 1, 1);
+    
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth();
+
+    const anoAnterior = dataAnterior.getFullYear();
+    const mesAnterior = dataAnterior.getMonth();
+
+    const getLimitesDoMes = (ano, mes) => {
+        const primeiro = new Date(ano, mes, 1);
+        const ultimo = new Date(ano, mes + 1, 0, 23, 59, 59);
+        return [primeiro.toISOString(), ultimo.toISOString()];
+    };
+
+    const [inicioAtual, fimAtual] = getLimitesDoMes(anoAtual, mesAtual);
+    const [inicioAnterior, fimAnterior] = getLimitesDoMes(anoAnterior, mesAnterior);
+
+    const { data: vendasAtual, error: erroAtual } = await supabase
+        .from('vendas')
+        .select('created_at, valor_total')
+        .gte('created_at', inicioAtual)
+        .lte('created_at', fimAtual)
+        .eq('adminid', adminid);
+
+    if (erroAtual) throw erroAtual;
+
+    const { data: vendasAnterior, error: erroAnterior } = await supabase
+        .from('vendas')
+        .select('created_at, valor_total')
+        .gte('created_at', inicioAnterior)
+        .lte('created_at', fimAnterior)
+        .eq('adminid', adminid);
+
+    if (erroAnterior) throw erroAnterior;
+
+    const agruparPorDia = (vendas, ano, mes) => {
+        const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+        const totaisPorDia = Array(diasNoMes).fill(0);
+        for (const venda of vendas) {
+            const data = new Date(venda.created_at);
+            const dia = data.getDate(); // 1 a 31
+            totaisPorDia[dia - 1] += venda.valor_total;
+        }
+        return totaisPorDia;
+    };
+
+    const vendasPorDiaAtual = agruparPorDia(vendasAtual, anoAtual, mesAtual);
+    const vendasPorDiaAnterior = agruparPorDia(vendasAnterior, anoAnterior, mesAnterior);
+
+    // Gera os rótulos de 1 até o maior número de dias entre os dois meses
+    const diasMax = Math.max(vendasPorDiaAtual.length, vendasPorDiaAnterior.length);
+    const labels = Array.from({ length: diasMax }, (_, i) => `Dia ${i + 1}`);
+
+    // Preenche com zeros extras se necessário
+    while (vendasPorDiaAtual.length < diasMax) vendasPorDiaAtual.push(0);
+    while (vendasPorDiaAnterior.length < diasMax) vendasPorDiaAnterior.push(0);
+
+    return [
+        vendasPorDiaAnterior, // índice 0: mês anterior
+        vendasPorDiaAtual,    // índice 1: mês selecionado
+        labels                // índice 2: labels do gráfico
+    ];
+};

@@ -11,27 +11,30 @@ export const Container_bar_x = styled.div`
 
     .bar-area {
         display: flex;
+        width: 100%;
         align-items: center;
         justify-content: space-between;
         position: relative;
         cursor: pointer;
 
         .bar {
-            width: 100%;
+            width:150px;
             height: 5px;
             background-color: var( --color-bg-secondary-element);
             border-radius: 5px;
             margin-right: 10px;
             cursor: pointer;
+            
 
             .bar-fill {
-                width: 100%;
+                width: 150px;
                 height: 100%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
                 transition: width 0.3s  ease;
                 box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.3);
                 position: relative;
+                
                 
             }
         }

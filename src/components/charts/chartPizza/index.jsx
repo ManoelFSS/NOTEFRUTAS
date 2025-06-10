@@ -32,24 +32,28 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
         
         if (color === "Total") {
             return 'rgba(228, 228, 228, 0.87)';
-        } else if (["Vendas Hoje"].includes(color)) {
+        } else if (["Vendas Hoje",].includes(color)) {
             return 'rgb(4, 36, 141)';
         }  else if (["Vendas com parcelas a vencer hoje"].includes(color)) {
             return 'rgb(43, 36, 254)';
-        } else if (["Pacelada"].includes(color)) {
-            return 'rgb(122, 249, 253)';    
-        }
-        else if (["Entregues", "Vendas Pagas", "Ativos","Novos | Mês"].includes(color)) {
+        } 
+        else if (["Vendas Pagas",].includes(color)) {
             return 'rgb(0, 191, 10)';
-        } else if (["Acaminho", "Vendas com pagamento pendente", "Débitos pendentes", "Infração registrada", "Débitos a Pagar"].includes(color)) {
+        } else if (["Vendas com pagamento pendente",].includes(color)) {
             return 'rgb(255, 203, 31)';
-        } else if (["No prazo", "Pagamento Parcial", "Inativos"].includes(color)) {
-            return 'rgb(0, 138, 213)';
-        } else if (color === "Vendas com parcelas atrasadas") {
+        } else if ([ "Vendas com parcelas atrasadas"].includes(color))  {
             return 'rgb(247, 132, 0)';
-        } else if (["Vendas cancelada", "Bloqueados"].includes(color)) {
-            return 'rgb(215, 5, 5)';
-        } else {
+        } else if (["Débitos pendentes"].includes(color))  {
+            return 'rgb(255, 208, 0)';
+        } else if (["Novos Clientes | Mês"].includes(color))  {
+            return 'rgb(135, 194, 162)';
+        } else if (["Novos Fornecedores | Mês"].includes(color))  {
+            return 'rgb(3, 186, 150)';
+        } else if (["Débitos a Pagar"].includes(color)) {
+            return 'rgb(233, 158, 20)';
+        } else if (["Vendas cancelada"].includes(color)) {
+            return 'rgb(255, 0, 0)';
+        }else {
             return color;
         }
     }
