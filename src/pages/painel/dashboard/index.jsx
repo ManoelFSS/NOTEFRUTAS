@@ -17,7 +17,14 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { useAuthContext } from "../../../context/AuthContext"
 //db
 import { vendas, clientes, fornecedores } from "../../../DB";
-import { getResumoFinanceiro, getTotalParcelasVencimentoHoje, getParcelasAtrasadas } from "./dashboard_data";
+import { 
+    getResumoFinanceiro, 
+    getTotalParcelasVencimentoHoje, 
+    getParcelasAtrasadas,
+    getResumoClientes,
+    getResumoFornecedores,
+    getResumoVendas
+} from "./dashboard_data";
 
 const data = [{value:1000000}]
 
@@ -27,6 +34,9 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
     const [financeiro, setFinanceiro  ] = useState([0])
     const [totalDeParcelasAReceberHoje , setTotalDeParcelasAReceberHoje  ] = useState([0])
     const [totalDeParcelasAtrasadas , setTotalDeParcelasAtrasadas  ] = useState([0])
+    const [totalDeClientes , setTotalDeClientes  ] = useState([0])
+    const [totalDeFornecedores , setTotalDeFornecedores  ] = useState([0])
+    const [totalDeVendas , setTotalDeVendas  ] = useState([0])
 
     useEffect(() => {
         if(!userId) return
@@ -35,10 +45,16 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
             const getFinanceiro = await getResumoFinanceiro(userId)
             const getParcelasDoDia = await getTotalParcelasVencimentoHoje(userId)
             const getTotalPacerlasAtrasadas = await  getParcelasAtrasadas(userId)
+            const getTotalData = await getResumoClientes(userId)
+            const getTotalFornecedores = await getResumoFornecedores(userId)
+            const getTotalVendas = await getResumoVendas(userId)
 
             setFinanceiro(getFinanceiro)
             setTotalDeParcelasAReceberHoje(getParcelasDoDia)
             setTotalDeParcelasAtrasadas(getTotalPacerlasAtrasadas)
+            setTotalDeClientes(getTotalData)
+            setTotalDeFornecedores(getTotalFornecedores)
+            setTotalDeVendas(getTotalVendas)
         }
         hendleFinanceiro()
     }, [])
@@ -47,6 +63,8 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
         console.log(financeiro)
         console.log(totalDeParcelasAReceberHoje)
         console.log(totalDeParcelasAtrasadas)
+        console.log(totalDeClientes)
+        console.log(totalDeFornecedores)
     }, [financeiro])
 
 
@@ -144,7 +162,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={vendas} 
+                            data={totalDeVendas} 
                             pizzHeight={140}
                             pizzWidth={220}
                             innerRadius={20}
@@ -160,7 +178,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={clientes} 
+                            data={totalDeClientes} 
                             pizzHeight={180}
                             pizzWidth={220}
                             innerRadius={30}
@@ -176,7 +194,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={fornecedores} 
+                            data={totalDeFornecedores} 
                             pizzHeight={180}
                             pizzWidth={220}
                             innerRadius={30}

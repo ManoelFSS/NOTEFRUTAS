@@ -32,22 +32,22 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
         
         if (color === "Total") {
             return 'rgba(228, 228, 228, 0.87)';
-        } else if (["Hoje"].includes(color)) {
+        } else if (["Vendas Hoje"].includes(color)) {
             return 'rgb(4, 36, 141)';
-        }  else if (["A Receber hoje"].includes(color)) {
+        }  else if (["Vendas com parcelas a vencer hoje"].includes(color)) {
             return 'rgb(43, 36, 254)';
         } else if (["Pacelada"].includes(color)) {
             return 'rgb(122, 249, 253)';    
         }
-        else if (["Entregues", "Pagamento efetuado", "Ativos","Novos | Mês"].includes(color)) {
+        else if (["Entregues", "Vendas Pagas", "Ativos","Novos | Mês"].includes(color)) {
             return 'rgb(0, 191, 10)';
-        } else if (["Acaminho", "Pagamento Pendente - Fiado", "Débitos pendentes", "Infração registrada", "Débitos a Pagar"].includes(color)) {
+        } else if (["Acaminho", "Vendas com pagamento pendente", "Débitos pendentes", "Infração registrada", "Débitos a Pagar"].includes(color)) {
             return 'rgb(255, 203, 31)';
         } else if (["No prazo", "Pagamento Parcial", "Inativos"].includes(color)) {
             return 'rgb(0, 138, 213)';
-        } else if (color === "Atrasadas - Prazo esgotado") {
+        } else if (color === "Vendas com parcelas atrasadas") {
             return 'rgb(247, 132, 0)';
-        } else if (["Canceladas", "Bloqueados"].includes(color)) {
+        } else if (["Vendas cancelada", "Bloqueados"].includes(color)) {
             return 'rgb(215, 5, 5)';
         } else {
             return color;
@@ -57,7 +57,11 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
 
     return (
         <Container_chart_pizza>
-            <PieChart width={ pizzWidth } height={ pizzHeight }>
+            <PieChart 
+                key={setTimeout(() => {})} // 👈 força a remontagem quando os dados mudam
+                width={ pizzWidth } 
+                height={ pizzHeight }
+            >
                 <Pie
                     data={data}
                     cx="48%"
@@ -69,6 +73,9 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
                     label={renderLabel} // 👈 usando o label customizado
                     labelLine={false}
                     minAngle={15}
+                    isAnimationActive={true}        // Ativa a animação
+                    animationBegin={500}           // ⏱️ atraso de 1000ms (1 segundo)
+                    animationDuration={1000} 
                 >
                     {data.map((entry, index) => (
                         <Cell key={index} fill={hendleColor(entry.name)} />
