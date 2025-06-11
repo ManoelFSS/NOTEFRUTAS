@@ -5,9 +5,11 @@ import { useClientes } from "../../../context/ClientesContext"
 import { useProduct } from "../../../context/ProductContext"
 import { useFornecedores } from "../../../context/FornecedoresContext"
 import { useVendas } from "../../../context/VendasContext"
+import { useDashboard } from "../../../context/DashboardContext"
 
 const FormLayout = ({ children, $height, state, $color }) => {
 
+    const {setReloadDashboard, reloadDashboard} = useDashboard()
     const { caunterVendas } = useVendas()
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
 
@@ -150,6 +152,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
                 if(estado === "Escolha o estado") return alert("Escolha um estado");
                 await cadastrarCliente(userClient);
                 setTextBtn("OK");
+                setReloadDashboard(!reloadDashboard);
                 break;  
             case "editar cliente":
                 await editarCliente(editClient, idClient);
@@ -157,6 +160,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             case "cadastrar fornecedor":
                 if(  estadoFornecedor  === "Escolha o estado") return alert("Escolha um estado");
                 await cadastrarFornecedor(userFornecedor);
+                setReloadDashboard(!reloadDashboard);
                 break;  
             case "editar fornecedor":
                 await editarFornecedor(editFornecedor, idFornecedor);
@@ -171,7 +175,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             case "cadastrar venda":
                 console.log(venda);
                 await cadastrarVenda(venda);
-                // await cadastrarProduct(Product);
+                setReloadDashboard(!reloadDashboard);
                 break; 
             default:
                 break;

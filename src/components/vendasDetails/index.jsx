@@ -13,11 +13,13 @@ import { useVendas } from "../../context/VendasContext"
 import { useClientes } from "../../context/ClientesContext";
 import { useAuthContext } from "../../context/AuthContext";
 import {useLogs} from '../../context/LogContext'
+import { useDashboard } from "../../context/DashboardContext";
 // download
 import html2canvas from "html2canvas";
 
 const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, ano, mes }) => {
 
+    const { reloadDashboard, setReloadDashboard } = useDashboard();
     const {user} = useAuthContext();
     const {cadastrarLog} = useLogs();
 
@@ -42,12 +44,12 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
     useEffect(() => {
         // if (!hasRun.current) return;
         // hasRun.current = true;
-
         setMessege(null);
         if(!idParcela) return
 
         const hendleStatusVenda  = async () => {
             await editarParcelaStatus(idParcela, 'Paga');
+
             const getVendas = await buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
             setVendas(getVendas);
 
@@ -69,7 +71,6 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                 }
             }
             
-            // setConfirmPacela(false);
             setControlerVendaFilter(!controlerVendaFilter);
             setCloseBtn(false);
             setTextBtn('OK');
@@ -94,6 +95,8 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
 
                 await cadastrarLog(log);
             }
+
+            setReloadDashboard(!reloadDashboard);// atualiza o dashboard
         }
 
         hendleStatusVenda ();
@@ -117,7 +120,6 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         link.download = "div-capturada.png";
         link.click();
     };
-
 
     return (
         <Container_datails>

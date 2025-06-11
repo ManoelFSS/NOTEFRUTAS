@@ -30,6 +30,7 @@ export const DashboardProvider = ({ children }) => {
     const [dados, setDados] = useState({});
     const [comparativoVendas, setComparativoVendas] = useState([]);
     const [comparativoProduto, setComparativoProduto] = useState([]);
+    const [reloadDashboard, setReloadDashboard] = useState(null);
 
     useEffect(() => {
         if (!userId) return;
@@ -75,7 +76,7 @@ export const DashboardProvider = ({ children }) => {
         };
 
         fetchDashboard();
-    }, [userId]);
+    }, [userId, reloadDashboard]);
 
     useEffect(() => {
         if (!userId) return;
@@ -85,7 +86,7 @@ export const DashboardProvider = ({ children }) => {
             setLoading(false);
         }
         getComparativoVendas();
-    }, [year , month, userId ]);
+    }, [year , month, userId, reloadDashboard ]);
 
 
 
@@ -96,7 +97,7 @@ export const DashboardProvider = ({ children }) => {
             setComparativoProduto(getComparativo || []);
         }
         getComparativoprodutos();
-    }, [ userId,  yearProdutos, monthproduto ]);
+    }, [ userId,  yearProdutos, monthproduto, reloadDashboard]);
 
     useEffect(() => {
         console.log(dados);
@@ -113,7 +114,8 @@ export const DashboardProvider = ({ children }) => {
                 loading, setLoading, 
                 comparativoVendas,
                 comparativoProduto,
-                dados 
+                dados, 
+                reloadDashboard, setReloadDashboard
             }}>
         {children}
         </DashboardContext.Provider>

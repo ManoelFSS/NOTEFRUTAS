@@ -15,19 +15,19 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <LogsProvider>
-          <ClientesProvider>
-            <VendasProvider>
-              <FornecedoresProvider>
-                <ProductProvider>
-                  <DashboardProvider>
+        <DashboardProvider>
+          <LogsProvider>
+            <ClientesProvider>
+              <VendasProvider>
+                <FornecedoresProvider>
+                  <ProductProvider>
                     <App />
-                  </DashboardProvider>
-                </ProductProvider>
-              </FornecedoresProvider>
-            </VendasProvider>
-          </ClientesProvider>
-        </LogsProvider>
+                  </ProductProvider>
+                </FornecedoresProvider>
+              </VendasProvider>
+            </ClientesProvider>
+          </LogsProvider>
+        </DashboardProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
