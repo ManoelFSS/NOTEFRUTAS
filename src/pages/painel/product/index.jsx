@@ -16,7 +16,6 @@ import {  PiHandTapFill  } from "react-icons/pi";
 import { HiMiniStar } from "react-icons/hi2";
 import { FaEdit} from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
-import { IoLogoWhatsapp } from "react-icons/io";
 import {  MdCategory } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
 import { AiOutlineAlignRight } from "react-icons/ai";

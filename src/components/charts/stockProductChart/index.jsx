@@ -5,8 +5,6 @@ import Select from "../../select"
 import Pagination from "../../pagination"
 import useSelect from "../../../hooks/useSelect"
 import MonthYearSelector from "../../MonthYearSelector"
-
-import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -16,46 +14,17 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+// context 
+import { useDashboard } from "../../../context/DashboardContext";
+import { useAuthContext } from "../../../context/AuthContext";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const StockProductChart = ({ $height, $ocult }) => {
+const StockProductChart = ({vendas, $height, $ocult}) => {
     
-    const items = [
-        { fruta: 'Mamão', stock: 1000, sold: 200, minStock: 100, moneyTotal: 2000, category: 'Frutas' },
-        { fruta: 'Melancia', stock: 1500, sold: 3000, minStock: 100, moneyTotal: 44000, category: 'Frutas' },
-        { fruta: 'Meçã', stock: 3000, sold: 3000, minStock: 100, moneyTotal: 20000, category: 'Frutas' },
-        { fruta: 'Melão', stock: 2000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
-        { fruta: 'Menga', stock: 4000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
-        { fruta: 'Moranga', stock: 15000, sold: 3000, minStock: 100, moneyTotal: 30000, category: 'Frutas' },
-        { fruta: 'Laranja', stock: 1500, sold: 3000, minStock: 100, moneyTotal: 24000, category: 'Frutas' },
-        { fruta: 'Banana', stock: 3000, sold: 3000, minStock: 100, moneyTotal: 20000, category: 'Frutas' },
-        { fruta: 'Abacaxi', stock: 2000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
-        { fruta: 'Uva', stock: 4000, sold: 3000, minStock: 100, moneyTotal: 15000, category: 'Frutas' },
-
-        { fruta: 'Cebola', stock: 5000, sold: 10000, minStock: 100, moneyTotal: 30000, category: 'Legumes' },
-        { fruta: 'Pepino', stock: 1500, sold: 10000, minStock: 100, moneyTotal: 24000, category: 'Legumes' },
-        { fruta: 'Tomate', stock: 3000, sold: 10000, minStock: 100, moneyTotal: 20000, category: 'Legumes' },
-        { fruta: 'Alface', stock: 2000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Pimentão', stock: 4000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Cenoura', stock: 5000, sold: 10000, minStock: 100, moneyTotal: 30000, category: 'Legumes' },
-        { fruta: 'Cebolinha', stock: 1500, sold: 10000, minStock: 100, moneyTotal: 24000, category: 'Legumes' },
-        { fruta: 'Batata', stock: 3000, sold: 10000, minStock: 100, moneyTotal: 20000, category: 'Legumes' },
-        { fruta: 'Alcachofra', stock: 2000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Beterraba', stock: 4000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-
-        
-        { fruta: 'Cebola', stock: 5000, sold: 10000, minStock: 100, moneyTotal: 30000, category: 'Legumes' },
-        { fruta: 'Pepino', stock: 1500, sold: 10000, minStock: 100, moneyTotal: 24000, category: 'Legumes' },
-        { fruta: 'Tomate', stock: 3000, sold: 10000, minStock: 100, moneyTotal: 20000, category: 'Legumes' },
-        { fruta: 'Alface', stock: 2000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Pimentão', stock: 4000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Cenoura', stock: 5000, sold: 10000, minStock: 100, moneyTotal: 30000, category: 'Legumes' },
-        { fruta: 'Cebolinha', stock: 1500, sold: 10000, minStock: 100, moneyTotal: 24000, category: 'Legumes' },
-        { fruta: 'Batata', stock: 3000, sold: 10000, minStock: 100, moneyTotal: 20000, category: 'Legumes' },
-        { fruta: 'Alcachofra', stock: 2000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-        { fruta: 'Beterraba', stock: 4000, sold: 10000, minStock: 100, moneyTotal: 15000, category: 'Legumes' },
-    ]
+    console.log(vendas);
+    const {setMonthProduto, setYearProduto} = useDashboard();
+    const { user } = useAuthContext();
 
     const { select, setSelect  } = useSelect()
     const [paginacao, setPaginacao] = useState(1);
@@ -65,24 +34,24 @@ const StockProductChart = ({ $height, $ocult }) => {
     const endIndex = startIndex + itemsPerPage;
 
     // fiter e mimite 12 items
-    const filteredItems = items.filter(item => select !== "Todos" ? item.category === select : item)
+    const filteredItems = vendas.filter(item => select !== "Todos" ? item.category === select : item)
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
-    const labels = filteredItems.slice(startIndex, endIndex).map(item => item.fruta);
+    const labels = filteredItems.slice(startIndex, endIndex).map(item => item.name);
 
-    const estoque = items.map(item =>
+    const estoque = vendas.map(item =>
         item.stock 
     );
     
-    const vendidos = items.map(item =>
-        item.sold 
+    const vendidos = vendas.map(item =>
+        item.quantidade
     );
     
-    const valorEmDinheiro = items.map(item =>
-        item.moneyTotal 
+    const valorEmDinheiro = vendas.map(item =>
+        item.valor_total
     );
     
-    const esgotado = items.map(item =>
-        item.stock <= 0 && item.sold > 0 ? item.sold : null
+    const esgotado = vendas.map(item =>
+        item.stock <= 0 && item.quantidade > 0 ? item.quantidade : null
     );
     
 
@@ -91,9 +60,9 @@ const StockProductChart = ({ $height, $ocult }) => {
         datasets: [
             {
                 label: '',
-                data: estoque,
+                data: esgotado ,
                 backgroundColor: 'rgba(255, 157, 0, 0)',
-                minBarLength:3, 
+                minBarLength:0, 
                 // barThickness: 10,
             },
             {
@@ -160,20 +129,20 @@ const StockProductChart = ({ $height, $ocult }) => {
             },
             tooltip: {
                 callbacks: {
-                label: function (context) {
-                    const label = context.dataset.label || '';
-                    const value = context.raw;
-                    
-                    // Se for o dataset "Esgotado", mostra valor negativo
-                    if (label === 'Valor total em Vendas') {
-                        return `${label}: R$ ${value.toLocaleString('pt-BR')} reais`;
-                    }else {
-                        return `${label}: ${value} Unidades`; 
-                    }
-                    
-                    // Outros normais
-                    return `${label}: ${value}`;
-                },
+                    label: function (context) {
+                        const label = context.dataset.label || '';
+                        const value = context.raw;
+                        
+                        // Se for o dataset "Esgotado", mostra valor negativo
+                        if (label === 'Valor total em Vendas | Mês') {
+                            return `${label}:${value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                        }else {
+                            return `${label}: ${value} Unid`; 
+                        }
+                        
+                        // Outros normais
+                        return `${label}: ${value}`;
+                    },
                 },
             },
         },
@@ -200,7 +169,8 @@ const StockProductChart = ({ $height, $ocult }) => {
 
     const handleDateChange = ({ month, year }) => {
         console.log('Mês:', month, 'Ano:', year);
-        // Aqui você pode chamar seu hook com os dados
+        setMonthProduto(month + 1), 
+        setYearProduto(year)
     };
 
 
@@ -208,7 +178,7 @@ const StockProductChart = ({ $height, $ocult }) => {
         <Container >
             <div className="chart-header">
                 <Select 
-                    data={items} 
+                    data={vendas} 
                     select={select} 
                     setSelect={setSelect}
                     $setPaginacao={setPaginacao}
@@ -222,7 +192,7 @@ const StockProductChart = ({ $height, $ocult }) => {
                 <h3>Controle de Estoque</h3>
 
                 <div className="selects-ano-mes">
-                    <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
+                    <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
                 </div>
                 
                 <div className="custom-legend">

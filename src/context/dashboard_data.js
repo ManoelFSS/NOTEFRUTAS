@@ -1,4 +1,4 @@
-import { supabase } from '../../../services/supabase';
+import { supabase } from '../services/supabase';
 
 
 export const getResumoFinanceiro = async (adminid) => {
@@ -453,4 +453,58 @@ export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSel
         vendasPorDiaAtual,    // índice 1: mês selecionado
         labels                // índice 2: labels do gráfico
     ];
+};
+
+
+
+export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSelecionado) => {
+    const mesAjustado = mesSelecionado - 1; // Ajusta 1-12 para 0-11
+    const primeiroDia = new Date(anoSelecionado, mesAjustado, 1).toISOString();
+    const ultimoDia = new Date(anoSelecionado, mesAjustado + 1, 0, 23, 59, 59).toISOString();
+
+    // Buscar produtos
+    const { data: produtos, error: errorProdutos } = await supabase
+        .from('produtos')
+        .select('id, name, category, stock')
+        .eq('adminid', adminid);
+
+    if (errorProdutos) throw errorProdutos;
+
+    // Buscar itens de venda no período
+    const { data: itensVenda, error: errorItens } = await supabase
+        .from('itens_venda')
+        .select('produto_id, valor_total, quantidade, created_at')
+        .gte('created_at', primeiroDia)
+        .lte('created_at', ultimoDia);
+
+    if (errorItens) throw errorItens;
+
+    // Agrupar totais por produto
+    const mapaTotais = {};
+
+    for (const item of itensVenda) {
+        const id = item.produto_id;
+        if (!mapaTotais[id]) {
+        mapaTotais[id] = {
+            valor_total: 0,
+            quantidade: 0,
+        };
+        }
+        mapaTotais[id].valor_total += item.valor_total;
+        mapaTotais[id].quantidade += item.quantidade;
+    }
+
+    // Montar resultado final
+    const resultado = produtos
+        .filter(p => mapaTotais[p.id])
+        .map(p => ({
+        id: p.id,
+        name: p.name,
+        category: p.category,
+        stock: p.stock,
+        valor_total: mapaTotais[p.id].valor_total,
+        quantidade: mapaTotais[p.id].quantidade,
+        }));
+
+    return resultado;
 };

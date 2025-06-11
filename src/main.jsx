@@ -9,17 +9,7 @@ import {FornecedoresProvider } from './context/FornecedoresContext.jsx';
 import {LogsProvider} from './context/LogContext.jsx';
 import {VendasProvider} from './context/VendasContext.jsx';
 import { BrowserRouter } from 'react-router-dom';
-import OneSignal from 'onesignal-cordova-plugin';
-
-// OneSignal.setAppId("SEU_ONESIGNAL_APP_ID");
-
-// OneSignal.promptForPushNotificationsWithUserResponse();
-
-// OneSignal.getDeviceState().then((state) => {
-//   const playerId = state.userId;
-//   // Salvar o playerId no Supabase
-// });
-
+import { DashboardProvider } from './context/DashboardContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -30,7 +20,9 @@ createRoot(document.getElementById('root')).render(
             <VendasProvider>
               <FornecedoresProvider>
                 <ProductProvider>
-                  <App />
+                  <DashboardProvider>
+                    <App />
+                  </DashboardProvider>
                 </ProductProvider>
               </FornecedoresProvider>
             </VendasProvider>

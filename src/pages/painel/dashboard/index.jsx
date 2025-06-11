@@ -8,117 +8,22 @@ import CardDashboard from "../../../components/cards/cardDashboard";
 import StockProductChart from "../../../components/charts/stockProductChart";
 import VendasChart from "../../../components/charts/vendasChart";
 import Loading from "../../../components/loading";
-import Checkout from "../../../components/checkount";
 // icons 
 import { FaChartSimple, FaArrowUpRightDots, FaHandshake   } from "react-icons/fa6";
 import { FaHandHoldingUsd, FaCartArrowDown  } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
-// context
-import { useAuthContext } from "../../../context/AuthContext"
-import { useProduct } from "../../../context/ProductContext"
-// data
-import { 
-    getResumoFinanceiro, 
-    getTotalParcelasVencimentoHoje, 
-    getParcelasAtrasadas,
-    getResumoClientes,
-    getResumoFornecedores,
-    getResumoVendas,
-    getProdutosMaisVendidos,
-    getClientesQueMaisCompraram,
-    getComparativoVendasPorDia
-} from "./dashboard_data";
+// cpontext
+import {useDashboard} from "../../../context/DashboardContext"
 
-const data = [{value:1000000}]
 
 const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
-    const { month, year} = useProduct();
-    const { userId } = useAuthContext();
-
-    const [financeiro, setFinanceiro  ] = useState([0])
-    const [totalDeParcelasAReceberHoje , setTotalDeParcelasAReceberHoje  ] = useState([0])
-    const [totalDeParcelasAtrasadas , setTotalDeParcelasAtrasadas  ] = useState([0])
-    const [totalDeClientes , setTotalDeClientes  ] = useState([0])
-    const [totalDeFornecedores , setTotalDeFornecedores  ] = useState([0])
-    const [totalDeVendas , setTotalDeVendas  ] = useState([0])
-    const [totalDeProdutos , setTotalDeProdutos  ] = useState([])
-    const [comparativoVendas , setComparativoVendas  ] = useState([])
-    const [totalDeClientsMaisCompraram , setTotalDeClientsMaisCompraram  ] = useState([])
-
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        if (!userId) return;
-
-        const hendleFinanceiro = async () => {
-            console.log(userId, year, month);
-            setLoading(true);
-            try {
-                const [
-                    financeiro,
-                    parcelasDoDia,
-                    parcelasAtrasadas,
-                    clientes,
-                    fornecedores,
-                    vendas,
-                    produtos,
-                    clientesMaisCompraram
-                ] = await Promise.all([
-                    getResumoFinanceiro(userId),
-                    getTotalParcelasVencimentoHoje(userId),
-                    getParcelasAtrasadas(userId),
-                    getResumoClientes(userId),
-                    getResumoFornecedores(userId),
-                    getResumoVendas(userId),
-                    getProdutosMaisVendidos(userId),
-                    getClientesQueMaisCompraram(userId)
-                ]);
-
-                setFinanceiro(financeiro || [0]);
-                setTotalDeParcelasAReceberHoje(parcelasDoDia || [0]);
-                setTotalDeParcelasAtrasadas(parcelasAtrasadas || [0]);
-                setTotalDeClientes(clientes || [0]);
-                setTotalDeFornecedores(fornecedores || [0]);
-                setTotalDeVendas(vendas || [0]);
-                setTotalDeClientsMaisCompraram(clientesMaisCompraram || []);
-                setTotalDeProdutos(produtos || []);
-            } catch (error) {
-                console.error('Erro ao carregar dados do dashboard:', error);
-                setTotalDeProdutos([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        hendleFinanceiro();
-    }, []);
-
-    useEffect(() => {
-        const getComparativoVendas = async () => {
-            const getComparativoVendas = await getComparativoVendasPorDia(userId, year, month);
-            setComparativoVendas(getComparativoVendas || []);
-        }
-        getComparativoVendas();
-
-    }, [ year, month]);
-
-    useEffect(() => {
-        console.log(financeiro)
-        console.log(totalDeParcelasAReceberHoje)
-        console.log(totalDeParcelasAtrasadas)
-        console.log(totalDeClientes)
-        console.log(totalDeFornecedores)
-        console.log(totalDeVendas)
-        console.log(totalDeProdutos)
-        console.log(totalDeClientsMaisCompraram)
-        console.log(comparativoVendas)
-    }, [financeiro])
-
-    if (loading) {
-        return <Loading />
-    }
+    const {
+        comparativoVendas, 
+        comparativoProduto,
+        dados 
+    } = useDashboard();
 
 
     return (
@@ -126,7 +31,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
             <section className="cards" style={{width: $toogleMenu ? "100%" : ""}}>
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $money={financeiro} 
+                    $money={dados.financeiro} 
                     text="Vendas Total | Mês" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={"rgb(3, 205, 114)"}
@@ -141,7 +46,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $money={data[0]?.value} 
+                    $money={"0"} 
                     text="Despesas Total | Mês" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={"rgb(206, 12, 12)"}
@@ -156,7 +61,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $money={data[0]?.value} 
+                    $money={"0"} 
                     text="Pagar Hoje" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={" #FF9D00"}
@@ -171,9 +76,9 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $moneyHoje={totalDeParcelasAReceberHoje} 
-                    $moneyAtrasado={totalDeParcelasAtrasadas}
-                    $moneyTotal={totalDeParcelasAReceberHoje + totalDeParcelasAtrasadas}
+                    $moneyHoje={dados.parcelasHoje} 
+                    $moneyAtrasado={dados.parcelasAtrasadas}
+                    $moneyTotal={dados.parcelasHoje + dados.parcelasAtrasadas}
                     text="A Receber" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={"rgb(2, 119, 16)"}
@@ -196,7 +101,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                             icon={<FaChartSimple className="icon" />}
                         >
                             <BarChart_x 
-                                data={totalDeProdutos}
+                                data={dados.produtos}
                             />
                         </TopProductsChart>
 
@@ -206,7 +111,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                             icon={<FaChartSimple className="icon" />}
                         >
                             <BarChart_x 
-                                data={totalDeClientsMaisCompraram}
+                                data={dados.clientesMais}
                             />
                         </TopProductsChart>
                     </section>
@@ -219,7 +124,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={totalDeVendas} 
+                            data={dados.vendas} 
                             pizzHeight={140}
                             pizzWidth={220}
                             innerRadius={20}
@@ -235,7 +140,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={totalDeClientes} 
+                            data={dados.clientes} 
                             pizzHeight={180}
                             pizzWidth={220}
                             innerRadius={30}
@@ -251,7 +156,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         height="350px"
                     >
                         <ChartPizza 
-                            data={totalDeFornecedores} 
+                            data={dados.fornecedores} 
                             pizzHeight={180}
                             pizzWidth={220}
                             innerRadius={30}
@@ -265,11 +170,9 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
             </section>
             <section className="charts-container-vendas">
                 <section className="chart-vendas"> 
-                    <StockProductChart />
+                    <StockProductChart vendas={comparativoProduto} />
                 </section>
-            </section>
-            {/* <Checkout /> */}
-            
+            </section>       
         </Container_dashboard>
     )
 }

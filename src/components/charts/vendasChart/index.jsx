@@ -12,15 +12,16 @@ import {
     Legend,
 } from 'chart.js';
 // context 
-import { useProduct } from "../../../context/ProductContext";
+import { useDashboard } from "../../../context/DashboardContext";
+import { useAuthContext } from "../../../context/AuthContext";
+
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const VendasChart = ({ vendas, $height, $ocult }) => {
 
-    console.log(vendas);
-
-    const {setMonth, setYear} = useProduct();
+    const {setMonth, setYear} = useDashboard();
+    const { user } = useAuthContext();
 
     // vendas[0] = dados do mês anterior
     // vendas[1] = dados do mês atual
@@ -133,7 +134,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
             <div className="chart-header">
                 <h3>Controle de Vendas</h3>
                 <div className="selects-ano-mes">
-                    <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
+                    <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
                 </div>
 
                 <div className="custom-legend">
