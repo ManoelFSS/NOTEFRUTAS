@@ -441,12 +441,11 @@ export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSel
     const vendasPorDiaAnterior = agruparPorDia(vendasAnterior, anoAnterior, mesAnterior);
 
     // Gera os rótulos de 1 até o maior número de dias entre os dois meses
-    const diasMax = Math.max(vendasPorDiaAtual.length, vendasPorDiaAnterior.length);
-    const labels = Array.from({ length: diasMax }, (_, i) => `Dia ${i + 1}`);
+    const diasNoMesSelecionado = new Date(anoSelecionado, mesSelecionado, 0).getDate();
+    const labels = Array.from({ length: diasNoMesSelecionado }, (_, i) => `Dia ${i + 1}`);
 
-    // Preenche com zeros extras se necessário
-    while (vendasPorDiaAtual.length < diasMax) vendasPorDiaAtual.push(0);
-    while (vendasPorDiaAnterior.length < diasMax) vendasPorDiaAnterior.push(0);
+    while (vendasPorDiaAtual.length < diasNoMesSelecionado) vendasPorDiaAtual.push(0);
+    while (vendasPorDiaAnterior.length < diasNoMesSelecionado) vendasPorDiaAnterior.push(0);
 
     return [
         vendasPorDiaAnterior, // índice 0: mês anterior

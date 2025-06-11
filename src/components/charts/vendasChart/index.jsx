@@ -20,8 +20,9 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const VendasChart = ({ vendas, $height, $ocult }) => {
 
-    const {setMonth, setYear} = useDashboard();
+    const {setMonth, setYear, comparativoVendas} = useDashboard();
     const { user } = useAuthContext();
+    console.log(comparativoVendas);
 
     // vendas[0] = dados do mês anterior
     // vendas[1] = dados do mês atual
@@ -29,7 +30,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
     const vendaAtual = vendas[1];
 
     // Criar labels "Dia 1", "Dia 2", ... baseado no tamanho do array de dados
-    const labels = vendaAtual.map((_, index) => `Dia ${index }`);
+    const labels = comparativoVendas[2].map((_, index) => `Dia ${String(index + 1).padStart(2, '0')}`);
 
     const data = {
         labels,

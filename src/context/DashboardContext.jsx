@@ -85,7 +85,7 @@ export const DashboardProvider = ({ children }) => {
             setLoading(false);
         }
         getComparativoVendas();
-    }, [ year, month, userId ]);
+    }, [year , month, userId ]);
 
 
 
@@ -96,7 +96,7 @@ export const DashboardProvider = ({ children }) => {
             setComparativoProduto(getComparativo || []);
         }
         getComparativoprodutos();
-    }, [ year,  yearProdutos, monthproduto ]);
+    }, [ userId,  yearProdutos, monthproduto ]);
 
     useEffect(() => {
         console.log(dados);
