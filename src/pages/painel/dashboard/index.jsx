@@ -53,34 +53,45 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
         if (!userId) return;
 
         const hendleFinanceiro = async () => {
-                console.log(userId, year, month);
-                setLoading(true);
+            console.log(userId, year, month);
+            setLoading(true);
             try {
-                const getFinanceiro = await getResumoFinanceiro(userId);
-                const getParcelasDoDia = await getTotalParcelasVencimentoHoje(userId);
-                const getTotalPacerlasAtrasadas = await getParcelasAtrasadas(userId);
-                const getTotalData = await getResumoClientes(userId);
-                const getTotalFornecedores = await getResumoFornecedores(userId);
-                const getTotalVendas = await getResumoVendas(userId);
-                const getTotalProdutos = await getProdutosMaisVendidos(userId);
-                const getTotalClientsMaisCompraram = await getClientesQueMaisCompraram(userId);
-                
-                setFinanceiro(getFinanceiro || [0]);
-                setTotalDeParcelasAReceberHoje(getParcelasDoDia || [0]);
-                setTotalDeParcelasAtrasadas(getTotalPacerlasAtrasadas || [0]);
-                setTotalDeClientes(getTotalData || [0]);
-                setTotalDeFornecedores(getTotalFornecedores || [0]);
-                setTotalDeVendas(getTotalVendas || [0]);
-                setTotalDeClientsMaisCompraram(getTotalClientsMaisCompraram || []);
-                setTotalDeProdutos(getTotalProdutos || []);
-                
+                const [
+                    financeiro,
+                    parcelasDoDia,
+                    parcelasAtrasadas,
+                    clientes,
+                    fornecedores,
+                    vendas,
+                    produtos,
+                    clientesMaisCompraram
+                ] = await Promise.all([
+                    getResumoFinanceiro(userId),
+                    getTotalParcelasVencimentoHoje(userId),
+                    getParcelasAtrasadas(userId),
+                    getResumoClientes(userId),
+                    getResumoFornecedores(userId),
+                    getResumoVendas(userId),
+                    getProdutosMaisVendidos(userId),
+                    getClientesQueMaisCompraram(userId)
+                ]);
+
+                setFinanceiro(financeiro || [0]);
+                setTotalDeParcelasAReceberHoje(parcelasDoDia || [0]);
+                setTotalDeParcelasAtrasadas(parcelasAtrasadas || [0]);
+                setTotalDeClientes(clientes || [0]);
+                setTotalDeFornecedores(fornecedores || [0]);
+                setTotalDeVendas(vendas || [0]);
+                setTotalDeClientsMaisCompraram(clientesMaisCompraram || []);
+                setTotalDeProdutos(produtos || []);
             } catch (error) {
-            console.error('Erro ao carregar dados do dashboard:', error);
+                console.error('Erro ao carregar dados do dashboard:', error);
                 setTotalDeProdutos([]);
-            }finally {
+            } finally {
                 setLoading(false);
             }
         };
+
         hendleFinanceiro();
     }, []);
 
