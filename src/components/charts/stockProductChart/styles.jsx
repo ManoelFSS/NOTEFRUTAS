@@ -46,6 +46,10 @@ export const Container = styled.div`
                 margin-right: 6px;
                 border-radius: 2px;
             }
+
+            .legend-item:nth-child(1) .legend-color {
+                background-color: #FF9D00 !important;
+            }
         }
 
         .selects-ano-mes {

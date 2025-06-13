@@ -257,6 +257,13 @@ export const ContainerTable = styled.section`
                 li:nth-child(3) {
                     display: flex;
                     width: 160px;
+                    gap: 5px;
+
+                    span {
+                        font-weight: 600;
+                        font-size: 1rem;
+
+                    }
                 }
                 
                 li:nth-child(4) {

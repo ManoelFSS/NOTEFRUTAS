@@ -263,7 +263,7 @@ const Product = () => {
                                 <ul className="body-list" key={index}>
                                 <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                 <li>{item.name}</li>
-                                <li>{item.stock}</li>
+                                <li style={{ color: item.stock === 0 ? "rgb(211, 5, 5)" : "rgb(78, 138, 98)" }}>{item.stock} <span>Itens</span></li>
                                 <li>{item.description}</li>
                                 <li>{item.category}</li>
                                 <li>

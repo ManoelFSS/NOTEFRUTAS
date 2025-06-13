@@ -68,22 +68,22 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
             {
                 label: 'Estoque atual',
                 data: estoque,
-                backgroundColor: ' #FF9D00',
-                minBarLength:3, 
+                backgroundColor: estoque.map((stock, index) => stock <= 0 ? 'red' : 'rgb(255, 157, 0)'),
+                minBarLength:5, 
                 // barThickness: 10,
             },
             {
                 label: 'vendidas | Mês',
                 data: vendidos,
                 backgroundColor: 'rgb(0, 72, 255)',
-                minBarLength:3,
+                minBarLength:5,
                 // barThickness: 10,
             },
             {
                 label: 'Valor total em Vendas | Mês',
                 data: valorEmDinheiro,
                 backgroundColor: 'rgb(4, 184, 37)',    
-                minBarLength: 3, 
+                minBarLength: 5, 
                 // barThickness: 10,
             },
         ],
@@ -207,6 +207,13 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                             </div>
                         )
                     ))}
+                    <div className="legend-item">
+                        <span
+                            className="legend-color"
+                            style={{ backgroundColor: "red" }}
+                        ></span>
+                        {"Esgotado"}
+                    </div>
                 </div>
             </div>
             <div className="chart-main" style={{ height:  "285px"}}>
