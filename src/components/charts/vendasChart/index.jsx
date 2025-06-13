@@ -30,7 +30,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
     const vendaAtual = vendas[1];
 
     // Criar labels "Dia 1", "Dia 2", ... baseado no tamanho do array de dados
-    const labels = comparativoVendas[2].map((_, index) => `Dia ${String(index + 1).padStart(2, '0')}`);
+    const labels = comparativoVendas[2]?.map((_, index) => `Dia ${String(index + 1).padStart(2, '0')}`);
 
     const data = {
         labels,
