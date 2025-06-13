@@ -2,54 +2,53 @@ import { createContext, useContext, useState } from "react";
 import { supabase } from '../services/supabase';
 // context
 import { useAuthContext } from "./AuthContext";
-import { useClientes } from "./ClientesContext";
+import { useFornecedores } from "./FornecedoresContext";
 
 
 const BuysContext = createContext();
 
 export const BuysProvider = ({ children }) => {
 
-
-    const { idClient, atualizarStatusParaDebitos, setCaunterVendas, contarVendas } = useClientes();
-    const {user, userId} = useAuthContext();
+    const { idFornecedor, atualizarStatusParaDebitos, setCaunterCompras } = useFornecedores();
+    const { userId} = useAuthContext();
 
     
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
     const [closeModal, setCloseModal] = useState(false);
-    const [vendas, setVendas] = useState([]);// lista de clientes
+    const [compras, setCompras] = useState([]);// lista de clientes
 
     const [name, setName] = useState('');// controle do campo name
     const [phone, setPhone] = useState('');// controle do campo phone
-    const [idVenda, setIdVenda] = useState('');// controle do campo idClient
+    const [idCompra, setIdCompra] = useState('');// controle do campo idClient
 
 
-    const editarVenda = async (venda_id, status) => {
+    const editarCompra = async (venda_id, status) => {
         try {
-            const { data: vendaAtualizada, error: erroVenda } = await supabase
-                .from('vendas')
+            const { data: compraAtualizada, error: erroCompra } = await supabase
+                .from('compras')
                 .update({ status })
                 .eq('id', venda_id);
 
-            if (erroVenda) {
-                console.error('[ERRO VENDA] Falha ao atualizar status da venda:', {
-                    venda_id,
+            if (erroCompra) {
+                console.error('[ERRO VENDA] Falha ao atualizar status da compra:', {
+                    compra_id,
                     status,
-                    erro: erroVenda.message,
+                    erro: erroCompra.message,
                 });
                 return;
             }
 
-            console.log('[SUCESSO VENDA] Venda atualizada com sucesso:', vendaAtualizada);
+            console.log('[SUCESSO COMPRA] compra atualizada com sucesso:', compraAtualizada);
 
             if (status === "Cancelada") {
                 const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
-                    .from('parcelas_venda')
+                    .from('parcelas_compra')
                     .update({ status: "Cancelada" })
-                    .eq('venda_id', venda_id);
+                    .eq('compra_id', venda_id);
 
                 if (erroParcelas) {
-                    console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da venda:', {
+                    console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da compra:', {
                         venda_id,
                         erro: erroParcelas.message,
                     });
@@ -57,17 +56,17 @@ export const BuysProvider = ({ children }) => {
                     console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
                 }
 
-                const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId,  idClient);
-                console.log("contarVendas", getNumeroDeVendasDoCliente);
-                if(getNumeroDeVendasDoCliente === 0) {
-                    await atualizarStatusParaDebitos(idClient, "Em Dias");
-                    console.log("cliente nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+                const getNumeroDeVendasDoFornecedor = await contarVendasPendentesOuAtrasadas(userId, idFornecedor);
+                console.log("contarCompra", getNumeroDeVendasDoFornecedor);
+                if(getNumeroDeVendasDoFornecedor === 0) {
+                    await atualizarStatusParaDebitos(idFornecedor, "Em Dias");
+                    console.log("Fornecedor nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
                 }
             }
 
         } catch (err) {
-            console.error('[ERRO GERAL] Erro inesperado ao editar a venda:', {
-                venda_id,
+            console.error('[ERRO GERAL] Erro inesperado ao editar a compra:', {
+                compra_id,
                 status,
                 erro: err.message,
             });
@@ -76,7 +75,7 @@ export const BuysProvider = ({ children }) => {
 
 
    // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
-    const buscarVendasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
+    const buscarComprasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
         try {
             // Validar parâmetros
             if (!adminId || limitepage <= 0 || paginacao < 1 || !ano || !mes) {
@@ -93,7 +92,7 @@ export const BuysProvider = ({ children }) => {
 
             // Contar total de vendas do mês ou com status pendente/atrasada com created_at <= fimMes
             const { count, error: countError } = await supabase
-                .from("vendas")
+                .from("compras")
                 .select("id", { count: "exact", head: true })
                 .eq("adminid", adminId)
                 .or(
@@ -103,42 +102,41 @@ export const BuysProvider = ({ children }) => {
             if (countError) throw countError;
 
             // Atualiza o contador
-            setCaunterVendas(count);
+            setCaunterCompras(count);
 
             // Buscar vendas com dados das parcelas e itens
             const { data, error } = await supabase
-                .from("vendas")
+                .from("compras")
                 .select(`
                     *,
-                    parcelas_venda(*),
-                    itens_venda(*)
+                    parcelas_compra(*),
+                    itens_compra(*)
                 `)
                 .eq("adminid", adminId)
                 .or(
                     `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes}),and(status.eq.Atrasada,created_at.lte.${fimMes})`
                 )
-                .order("contador_vendas", { ascending: true })
+                .order("contador_compras", { ascending: true })
                 .range(from, to);
 
             if (error) throw error;
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar vendas:", error);
+            console.error("Erro ao buscar compras:", error);
             throw error;
         }
     };
     
-    const buscarVendasSeach = async (searchText, adminId) => {
+    const buscarComprasSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];
 
-        console.log("vendasSeach");
         try {
             // Normaliza o texto
             const texto = `%${searchText.toLowerCase()}%`;
             // Busca múltiplas colunas com `or`
             const { data, error } = await supabase
-            .from("vendas")
+            .from("compras")
             .select("*")
             .eq("adminid", adminId)
             .or(`name.ilike.${texto},phone.ilike.${texto}`);
@@ -147,7 +145,7 @@ export const BuysProvider = ({ children }) => {
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar venda:", error.message || error);
+            console.error("Erro ao buscar compra:", error.message || error);
             return [];
         }
     };
@@ -184,18 +182,17 @@ export const BuysProvider = ({ children }) => {
 
     return (
         <BuysContext.Provider value={{ 
-                buscarVendasPorAdmin,
+                buscarComprasPorAdmin,
                 loading, setLoading,
                 messege, setMessege,
                 closeModal, setCloseModal,
-                vendas, setVendas,
-                buscarVendasSeach,
-                editarVenda,
+                compras, setCompras,
+                buscarComprasSeach,
+                editarCompra,
                 name, setName,
                 phone, setPhone,
-                idVenda, setIdVenda,
+                idCompra, setIdCompra,
                 editarParcelaStatus,
-                editarVenda,
                 contarVendasPendentesOuAtrasadas
             }}>
         {children}

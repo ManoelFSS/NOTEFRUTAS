@@ -10,6 +10,7 @@ import {LogsProvider} from './context/LogContext.jsx';
 import {VendasProvider} from './context/VendasContext.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { DashboardProvider } from './context/DashboardContext.jsx';
+import {BuysProvider} from './context/BuysContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,9 +21,11 @@ createRoot(document.getElementById('root')).render(
             <ClientesProvider>
               <VendasProvider>
                 <FornecedoresProvider>
-                  <ProductProvider>
-                    <App />
-                  </ProductProvider>
+                  <BuysProvider>
+                    <ProductProvider>
+                      <App />
+                    </ProductProvider>
+                  </BuysProvider>
                 </FornecedoresProvider>
               </VendasProvider>
             </ClientesProvider>

@@ -10,8 +10,8 @@ const VendasContext = createContext();
 export const VendasProvider = ({ children }) => {
 
 
-    const { idClient, atualizarStatusParaDebitos, setCaunterVendas, contarVendas } = useClientes();
-    const {user, userId} = useAuthContext();
+    const { idClient, atualizarStatusParaDebitos, setCaunterVendas } = useClientes();
+    const { userId} = useAuthContext();
 
     
     const [loading, setLoading] = useState(false);

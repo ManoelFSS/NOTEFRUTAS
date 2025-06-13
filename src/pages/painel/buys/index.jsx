@@ -30,6 +30,7 @@ import useSelect from "../../../hooks/useSelect"
 import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
 import { useClientes } from "../../../context/ClientesContext";
+import { useBuys } from "../../../context/BuysContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 // rota aninhada
@@ -37,30 +38,33 @@ import Perfil from "../../../assets/perfil.png"
 
 const Buys = () => {;
 
+    const { 
+        buscarComprasPorAdmin,
+        compras, setCompras,
+        messege, setMessege,
+        closeModal, setCloseModal,
+        buscarComprasSeach,
+        editarCompra,
+        idCompra, setIdCompra
+    } = useBuys();
+
     const { setIdClient } = useClientes();
 
     const { 
-        buscarVendasPorAdmin,
-        messege, setMessege,
-        closeModal, setCloseModal,
-        vendas, setVendas,
         caunterVendas,
-        buscarVendasSeach,
-        editarVenda,
-        idVenda, setIdVenda,
     } = useVendas();
     
-    const { setSelectForm, userId} = useAuthContext();
+    const {user, setSelectForm, userId} = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
     const [btnName, setBtnName] = useState("Cadastrar");
     const [deleteControl, setDeleteControl] = useState(null);
-    const [confirmCancelaVenda, setConfirmCancelaVenda] = useState(false);
+    const [confirmCancelaCompra, setConfirmCancelaCompra] = useState(false);
     const [closeBtn, setCloseBtn] = useState(false);
     const [mes, setMes] = useState( new Date().getMonth() + 1);
     const [ano, setAno] = useState(new Date().getFullYear());
-    const [vendaModalDetails, setVendaModalDetails] = useState(false);
+    const [compraModalDetails, setCompraModalDetails] = useState(false);
     const [textBtn, setTextBtn] = useState("Cancelar");
 
     const handleDateChange = ({ month, year }) => {
@@ -77,7 +81,7 @@ const Buys = () => {;
         { name: "Valor Total", icon: <RiMoneyDollarCircleFill className="icon" /> },
         { name: "Valor de Entrada", icon: <GiReceiveMoney  className="icon" /> },
         { name: "Status", icon: <HiMiniStar className="icon" /> },
-        {name: "Ação", icon: <PiHandTapFill className="icon" />}
+        { name: "Ação", icon: <PiHandTapFill className="icon" />}
         
     ]
 
@@ -96,18 +100,16 @@ const Buys = () => {;
 
     useEffect(() => {
         if(totalPages > 1 ) return setPaginacao(1);
-        console.log(paginacao)  
-        console.log(totalPages)
     }, [mes, ano]);
 
     useEffect(() => {
         setDataNotFound(false);
-        const hendlerGetProduct = async () => {
-            const vendaData = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
-            if(vendaData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-            setVendas(vendaData)
+        const  hendlerGetCompras = async () => {
+            const comprasData  = await  buscarComprasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+            if(comprasData .length === 0) setTimeout(() => setDataNotFound(true), 2000);
+            setCompras(comprasData )
         }
-        hendlerGetProduct();    
+        hendlerGetCompras();    
     }, [closeModal, paginacao, deleteControl, mes, ano]);
 
 
@@ -115,43 +117,43 @@ const Buys = () => {;
         const searchLength = valueSearch.split("").length;
 
         if(searchLength <= 0) {
-            const hendlerGetVendas = async () => {
-                const vendas = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
-                if(vendas.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-                setVendas(vendas)
+            const hendlerGetCompras = async () => {
+                const comprasData = await   buscarComprasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+                if(comprasData .length === 0) setTimeout(() => setDataNotFound(true), 2000);
+                setCompras(comprasData )
                 
             }
-            hendlerGetVendas();
+            hendlerGetCompras();
         }
     }, [valueSearch]);
 
     
 
-    const hendlerGetclienteSearch = async () => {
-        setVendas([])
-        const vendaSeach = await   buscarVendasSeach(valueSearch, userId);
+    const hendlerGetCompraSearch = async () => {
+        setCompras([])
+        const vendaSeach = await   buscarComprasSeach(valueSearch, userId);
         if(vendaSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
-        setVendas(vendaSeach)
+        setCompras(vendaSeach)
         console.log(vendaSeach)
     }
 
     useEffect(() => {
-        if(!idVenda) return
+        if(!idCompra) return
         
-        const cancelarVenda = async () => {
-            await editarVenda(idVenda, "Cancelada");
+        const cancelarCompra = async () => {
+            await editarCompra(idCompra, "Cancelada");
             setDeleteControl(!deleteControl)
             setMessege(null);
-            setIdVenda(null);
+            setIdCompra(null);
             setCloseBtn(false);
         }
-        cancelarVenda(); 
+        cancelarCompra(); 
 
-    }, [confirmCancelaVenda]);
+    }, [confirmCancelaCompra]);
 
-    const hendleCancelaVenda = (id) => {
-        setMessege({success: true, title: "Tem certeza que deseja Cancelar essa Venda?", message: "Atenção recomendamos cancelar a venda em casos de problemas com o pagamento ou devolução"});
-        setIdVenda(id);
+    const hendleCancelaCompra = (id) => {
+        setMessege({success: true, title: "Tem certeza que deseja Cancelar essa compra?", message: "Atenção recomendamos cancelar a compra em casos de não recebimento ou devolução"});
+        setIdCompra(id);
         setCloseBtn(true);
     }
         
@@ -179,9 +181,9 @@ const Buys = () => {;
                     setValueSearch={setValueSearch}
                     $height={"35px"}
                     $width={"200px"}
-                    onClick={hendlerGetclienteSearch}
+                    onClick={hendlerGetCompraSearch}
                 />
-                <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
+                <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
 
                 {totalPages > 1 && <Pagination 
                     $totalPages={totalPages} 
@@ -205,9 +207,9 @@ const Buys = () => {;
                                 ))}
                             </ul>
                         </div>
-                        {vendas?.length > 0 ? (
+                        { compras?.length > 0 ? (
                         <div className="body">
-                            {vendas.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                            { compras.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                             .filter(item => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
@@ -244,18 +246,18 @@ const Buys = () => {;
                                             className="icon" 
                                             style={{ color: "rgb(53, 53, 53)" }} 
                                             onClick={() => {
-                                                setIdVenda(item.id);
-                                                setVendaModalDetails(true);
+                                                setIdCompra(item.id);
+                                                setCompraModalDetails(true);
                                             }}
                                         />
                                         <TbCancel  
                                             className="icon" 
                                             style={{ color: "rgb(224, 2, 2)" }} 
                                             onClick={() => {
-                                                item.status !== "Cancelada" ? hendleCancelaVenda(item.id) : setMessege({title: "Atenção", message: "Essa venda ja foi cancelada!"});
+                                                item.status !== "Cancelada" ? hendleCancelaCompra(item.id) : setMessege({title: "Atenção", message: "Essa compra ja foi cancelada!"});
                                                 item.status === "Cancelada" && setCloseBtn(false)
                                                 item.status === "Cancelada" && setTextBtn("OK");
-                                                setIdClient(item.cliente_id);
+                                                setIdCompra(item.cliente_id);
                                             }}
                                         />
                                     </li>
@@ -275,10 +277,10 @@ const Buys = () => {;
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege setIdVenda={setIdVenda} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaVenda(!confirmCancelaVenda)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
-            { vendaModalDetails && 
+            { messege && <Messege setIdCompra={setIdCompra} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaCompra(!confirmCancelaCompra)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { compraModalDetails && 
                 <VendasDetails  
-                    setVendaModalDetails={setVendaModalDetails} 
+                    setCompraModalDetails={setCompraModalDetails} 
                     userId={userId} 
                     itemsPorPage={itemsPorPage} 
                     paginacao={paginacao} 

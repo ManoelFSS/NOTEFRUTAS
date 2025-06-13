@@ -89,7 +89,7 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
             </PieChart>
 
             <ul style={{ width: "100%" }}>
-                {data.map((entry, index) => (
+                {data?.map((entry, index) => (
                     <IndicadorColor
                         color={hendleColor(entry.name)}
                         width="10px"

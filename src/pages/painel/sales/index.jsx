@@ -49,7 +49,7 @@ const Sales = () => {;
         idVenda, setIdVenda,
     } = useVendas();
     
-    const { setSelectForm, userId} = useAuthContext();
+    const {user, setSelectForm, userId} = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);
@@ -175,7 +175,7 @@ const Sales = () => {;
                     $width={"200px"}
                     onClick={hendlerGetclienteSearch}
                 />
-                <MonthYearSelector userRegisterYear={2023} onChange={handleDateChange} />
+                <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
 
                 {totalPages > 1 && <Pagination 
                     $totalPages={totalPages} 

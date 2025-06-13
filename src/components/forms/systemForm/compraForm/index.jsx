@@ -100,7 +100,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
     function adicionarProduto(produto) {
         const jaExiste = itensCompra.some(item => item.produtoId === produto.id);
         if (jaExiste) {
-            alert("Produto já adicionado à venda!");
+            alert("Produto já adicionado à comprar!");
             return;
         }
 
@@ -164,7 +164,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
         if(valorRestante <= 0){
             setVisibleInputs(false)  
             setFormaDEPagamento("A vista")
-            setStatus_pagamento("Pago");
+            setStatus_pagamento("Paga");
             setQtParcelas(0);
             setTipoCobranca('');
         }  
@@ -414,7 +414,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                                         setValorDaEntrada("")
                                         setVisibleInputs(false)
                                         setFormaDEPagamento("A vista")
-                                        setStatus_pagamento("Pago")
+                                        setStatus_pagamento("Paga")
                                         handleFormaDePagamentoClick("A vista")
                                         setDataDeRecebimento('')
                                         setQtParcelas(0)
