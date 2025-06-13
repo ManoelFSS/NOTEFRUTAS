@@ -166,7 +166,7 @@ const Suppliers = () => {
                     select={select} 
                     setSelect={setSelect}
                     data={data} 
-                    $width={"196px"}
+                    $width={"170px"}
                 />
                 <Search 
                     valueSearch={valueSearch}

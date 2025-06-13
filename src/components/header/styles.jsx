@@ -13,6 +13,7 @@ export const Container_header = styled.div`
     background-color: var( --color-bg-primary );
     right: 0;
     z-index: 99;
+    gap: 20px;
 
     @media (min-width:  1910px) {
         height: 5vh;

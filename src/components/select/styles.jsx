@@ -34,9 +34,9 @@ export const Container_select = styled.div`
 
     .select_list {
         overflow:auto;
-        transition: all 0.2s;
+        // transition: all 0.2s;
         position: absolute;
-        max-height: 90px;
+        max-height: 120px;
         top: 40px;
         left: 0px;
         background-color: #fff;
@@ -45,7 +45,7 @@ export const Container_select = styled.div`
         border-radius: 4px;
 
         &::-webkit-scrollbar {
-            width: 3px;
+            width: 5px;
         }
 
         &::-webkit-scrollbar-track {
@@ -53,13 +53,14 @@ export const Container_select = styled.div`
         }
 
         &::-webkit-scrollbar-thumb {
-            background:rgb(179, 179, 179);   
+            background: #007E2A;   
+            cursor: pointer;
         }
 
         li {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: ;
             padding: 0px 10px;
             width: 100%;
             height: 30px;

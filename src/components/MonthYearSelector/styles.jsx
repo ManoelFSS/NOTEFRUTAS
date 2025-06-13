@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   gap: 1rem;
   position: relative;
+  flex-wrap: wrap;
   
 `;
 
@@ -43,7 +44,7 @@ export const DropdownList = styled.div`
   z-index: 10;
 
   &::-webkit-scrollbar {
-    width: 3px;
+    width: 5px;
   }
 
   &::-webkit-scrollbar-track {
@@ -51,7 +52,8 @@ export const DropdownList = styled.div`
   }
 
   &::-webkit-scrollbar-thumb {
-    background: #ccc;
+    background: #007E2A; 
+    cursor: pointer;
   }
 
 `;

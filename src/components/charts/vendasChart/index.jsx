@@ -44,7 +44,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
             {
                 label: 'Vendas do mês anterior',
                 data: vendaAnterior,
-                backgroundColor: 'rgb(8, 155, 160)',
+                backgroundColor: 'rgb(91, 113, 114)',
                 minBarLength: 0,
             },
             {

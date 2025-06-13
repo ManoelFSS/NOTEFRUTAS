@@ -13,12 +13,13 @@ export const Button = styled.button`
     color: var( --color-text-primary );
     box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3), inset 0px 0px 8px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 700;
 
     .icon {
-        height: 20px;
-        width: 20px;
+        // height: 25px;
+        // width: 25px;
+        font-size: 1.5rem;
     }
 
     &:hover {

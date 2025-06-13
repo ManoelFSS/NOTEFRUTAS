@@ -162,7 +162,7 @@ const Product = () => {
                     select={select} 
                     setSelect={setSelect}
                     data={data} 
-                    $width={"196px"}
+                    $width={"160px"}
                 />
                 <Search 
                     valueSearch={valueSearch}

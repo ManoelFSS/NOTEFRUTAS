@@ -82,7 +82,6 @@ const Sales = () => {;
     const data = [
         { category: "Cancelada" },
         { category: "Pendente" },
-        { category: "Atrasada" },
     ];
 
     const img = Perfil;
@@ -154,7 +153,7 @@ const Sales = () => {;
         <Container>
             <section className="box-filter">
                 <BtnNavigate 
-                    $text="Cadastrar venda" 
+                    $text="Cadastrar Venda" 
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
@@ -165,7 +164,7 @@ const Sales = () => {;
                     select={select} 
                     setSelect={setSelect}
                     data={data} 
-                    $width={"196px"}
+                    $width={"130px"}
                 />
                 <Search 
                     valueSearch={valueSearch}

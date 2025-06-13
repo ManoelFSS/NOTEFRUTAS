@@ -33,6 +33,7 @@ export const Container = styled.div`
 
             &::-webkit-scrollbar {
                 width: 8px;
+                height: 3px;
             }
             
             &::-webkit-scrollbar-track {

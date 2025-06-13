@@ -29,7 +29,7 @@ const Select = ({data, setSelect, select,  $width, $ocult, setState,}) => {
             style={{width: $width}}
             onClick={(e) => {
                 e.stopPropagation();
-                setselect_heigth(select_heigth === "0px" ? ([...new Set(data.map(item => item.category))].length * 30) + "px" : "0px");
+                setselect_heigth($ocult === undefined && select_heigth === "0px" ? (([...new Set(data.map(item => item.category))].length * 30) + 30) + "px" : !$ocult === true && select_heigth === "0px" ? "0px" : (select_heigth === "0px" ? (([...new Set(data.map(item => item.category))].length * 30) + 30) + "px" : "0px"));
             }}
         >        
             <div className="select_header" style={{width: $width}}>

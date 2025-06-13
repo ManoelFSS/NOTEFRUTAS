@@ -84,7 +84,6 @@ const Buys = () => {;
     const data = [
         { category: "Cancelada" },
         { category: "Pendente" },
-        { category: "Atrasada" },
     ];
 
     const img = Perfil;
@@ -171,7 +170,7 @@ const Buys = () => {;
                     select={select} 
                     setSelect={setSelect}
                     data={data} 
-                    $width={"196px"}
+                    $width={"130px"}
                 />
                 <Search 
                     valueSearch={valueSearch}
