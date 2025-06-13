@@ -414,7 +414,8 @@ export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSel
         .select('created_at, valor_total')
         .gte('created_at', inicioAtual)
         .lte('created_at', fimAtual)
-        .eq('adminid', adminid);
+        .eq('adminid', adminid)
+        .neq('status', 'Cancelada'); // <- Adicionado filtro
 
     if (erroAtual) throw erroAtual;
 
@@ -423,7 +424,8 @@ export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSel
         .select('created_at, valor_total')
         .gte('created_at', inicioAnterior)
         .lte('created_at', fimAnterior)
-        .eq('adminid', adminid);
+        .eq('adminid', adminid)
+        .neq('status', 'Cancelada'); // <- Adicionado filtro
 
     if (erroAnterior) throw erroAnterior;
 

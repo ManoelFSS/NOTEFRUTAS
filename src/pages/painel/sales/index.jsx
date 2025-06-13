@@ -36,14 +36,13 @@ import Perfil from "../../../assets/perfil.png"
 
 const Sales = () => {;
 
-    const { setIdClient } = useClientes();
+    const { setIdClient, caunterVendas } = useClientes();
 
     const { 
         buscarVendasPorAdmin,
         messege, setMessege,
         closeModal, setCloseModal,
         vendas, setVendas,
-        caunterVendas,
         buscarVendasSeach,
         editarVenda,
         idVenda, setIdVenda,

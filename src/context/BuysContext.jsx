@@ -23,12 +23,12 @@ export const BuysProvider = ({ children }) => {
     const [idCompra, setIdCompra] = useState('');// controle do campo idClient
 
 
-    const editarCompra = async (venda_id, status) => {
+    const editarCompra = async (compra_id, status) => {
         try {
             const { data: compraAtualizada, error: erroCompra } = await supabase
                 .from('compras')
                 .update({ status })
-                .eq('id', venda_id);
+                .eq('id', compra_id);
 
             if (erroCompra) {
                 console.error('[ERRO VENDA] Falha ao atualizar status da compra:', {
@@ -45,21 +45,24 @@ export const BuysProvider = ({ children }) => {
                 const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
                     .from('parcelas_compra')
                     .update({ status: "Cancelada" })
-                    .eq('compra_id', venda_id);
+                    .eq('compra_id', compra_id);
 
                 if (erroParcelas) {
                     console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da compra:', {
-                        venda_id,
+                        compra_id,
                         erro: erroParcelas.message,
                     });
                 } else {
                     console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
                 }
 
-                const getNumeroDeVendasDoFornecedor = await contarVendasPendentesOuAtrasadas(userId, idFornecedor);
+                console.log(userId)
+                console.log(idFornecedor)
+
+                const getNumeroDeVendasDoFornecedor = await contarCompraPendentesOuAtrasadas(userId, idFornecedor);
                 console.log("contarCompra", getNumeroDeVendasDoFornecedor);
                 if(getNumeroDeVendasDoFornecedor === 0) {
-                    await atualizarStatusParaDebitos(idFornecedor, "Em Dias");
+                    await atualizarStatusParaDebitos(idFornecedor, "Nada a Pagar");
                     console.log("Fornecedor nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
                 }
             }
@@ -164,16 +167,16 @@ export const BuysProvider = ({ children }) => {
     }
 
     
-    const contarVendasPendentesOuAtrasadas = async (adminId, clienteId) => {
+    const contarCompraPendentesOuAtrasadas = async (adminId, fornecedorId) => {
         const { count, error } = await supabase
-            .from('vendas')
+            .from('compras')
             .select('*', { count: 'exact', head: true }) // não retorna dados, só conta
             .eq('adminid', adminId)
-            .eq('cliente_id', clienteId)
+            .eq('fornecedor_id', fornecedorId)
             .in('status', ['Pendente', 'Atrasada']); // status igual a um dos dois
 
         if (error) {
-            console.error('Erro ao contar vendas:', error);
+            console.error('Erro ao contar compras:', error);
             throw error;
         }
         return count;
@@ -193,7 +196,7 @@ export const BuysProvider = ({ children }) => {
                 phone, setPhone,
                 idCompra, setIdCompra,
                 editarParcelaStatus,
-                contarVendasPendentesOuAtrasadas
+                contarCompraPendentesOuAtrasadas 
             }}>
         {children}
         </BuysContext.Provider>

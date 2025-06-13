@@ -8,12 +8,9 @@ import { useClientes } from "./ClientesContext";
 const VendasContext = createContext();
 
 export const VendasProvider = ({ children }) => {
-
-
     const { idClient, atualizarStatusParaDebitos, setCaunterVendas } = useClientes();
     const { userId} = useAuthContext();
 
-    
     const [loading, setLoading] = useState(false);
     const [messege, setMessege] = useState(null);// controle do componente messege
     const [closeModal, setCloseModal] = useState(false);
@@ -190,13 +187,12 @@ export const VendasProvider = ({ children }) => {
                 closeModal, setCloseModal,
                 vendas, setVendas,
                 buscarVendasSeach,
-                editarVenda,
                 name, setName,
                 phone, setPhone,
                 idVenda, setIdVenda,
                 editarParcelaStatus,
                 editarVenda,
-                contarVendasPendentesOuAtrasadas
+                contarVendasPendentesOuAtrasadas,
             }}>
         {children}
         </VendasContext.Provider>

@@ -9,7 +9,7 @@ import ProductForm from "../../../components/forms/systemForm/produtForm";
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import MonthYearSelector from "../../../components/MonthYearSelector";
-import VendasDetails from "../../../components/vendasDetails";
+import CompraDetails from "../../../components/compraDetails";
 // icons
 import { FaUserPlus} from "react-icons/fa";
 import {  PiHandTapFill  } from "react-icons/pi";
@@ -29,14 +29,16 @@ import useSelect from "../../../hooks/useSelect"
 // context
 import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
-import { useClientes } from "../../../context/ClientesContext";
 import { useBuys } from "../../../context/BuysContext";
+import { useFornecedores } from "../../../context/FornecedoresContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 // rota aninhada
 ;
 
 const Buys = () => {;
+
+    const { setIdFornecedor, caunterCompras} = useFornecedores();
 
     const { 
         buscarComprasPorAdmin,
@@ -45,14 +47,8 @@ const Buys = () => {;
         closeModal, setCloseModal,
         buscarComprasSeach,
         editarCompra,
-        idCompra, setIdCompra
+        idCompra, setIdCompra,
     } = useBuys();
-
-    const { setIdClient } = useClientes();
-
-    const { 
-        caunterVendas,
-    } = useVendas();
     
     const {user, setSelectForm, userId} = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
@@ -96,7 +92,7 @@ const Buys = () => {;
     const [paginacao, setPaginacao] = useState(1);
 
     const itemsPorPage = 100;
-    const totalPages = Math.ceil(caunterVendas / itemsPorPage);
+    const totalPages = Math.ceil(caunterCompras / itemsPorPage);
 
     useEffect(() => {
         if(totalPages > 1 ) return setPaginacao(1);
@@ -139,6 +135,7 @@ const Buys = () => {;
 
     useEffect(() => {
         if(!idCompra) return
+        console.log(idCompra)
         
         const cancelarCompra = async () => {
             await editarCompra(idCompra, "Cancelada");
@@ -257,7 +254,7 @@ const Buys = () => {;
                                                 item.status !== "Cancelada" ? hendleCancelaCompra(item.id) : setMessege({title: "Atenção", message: "Essa compra ja foi cancelada!"});
                                                 item.status === "Cancelada" && setCloseBtn(false)
                                                 item.status === "Cancelada" && setTextBtn("OK");
-                                                setIdCompra(item.cliente_id);
+                                                setIdFornecedor(item.fornecedor_id);
                                             }}
                                         />
                                     </li>
@@ -277,9 +274,9 @@ const Buys = () => {;
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege setIdCompra={setIdCompra} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaCompra(!confirmCancelaCompra)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege setIdVenda={setIdCompra} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaCompra(!confirmCancelaCompra)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
             { compraModalDetails && 
-                <VendasDetails  
+                <CompraDetails  
                     setCompraModalDetails={setCompraModalDetails} 
                     userId={userId} 
                     itemsPorPage={itemsPorPage} 
