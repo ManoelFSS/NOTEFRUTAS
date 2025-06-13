@@ -105,7 +105,22 @@ export const Container_bar_x = styled.div`
                 border-top: 5px solid transparent;
                 border-bottom: 5px solid transparent;
                 border-right: 10px solid var( --color-bg-secondary-element);
-                z-index: 3;            }
+                z-index: 3;     
+                
+                @media (max-width: 460px) {
+                    left: -10px;
+                }
+            }
+
+            @media (max-width: 460px) {
+                top: -8px;
+                left: 170px;
+            }
+
+            @media (max-width: 330px) {
+                top: -8px;
+                left: 140px;
+            }
         }
 
         &:hover  .value-hover {

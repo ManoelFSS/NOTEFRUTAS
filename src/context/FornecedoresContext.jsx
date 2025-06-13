@@ -1,90 +1,146 @@
 import { createContext, useContext, useState } from "react";
-import { registerClientSchema } from "../validationSchemas/Schemas"
+import { registerClientSchema, compraSchema} from "../validationSchemas/Schemas";
 import { supabase } from '../services/supabase';
-
+import { useLogs } from './LogContext';
+import { useAuthContext } from "./AuthContext";
 
 const FornecedoresContext = createContext();
 
 export const FornecedoresProvider = ({ children }) => {
-    
-    const [loading, setLoading] = useState(false);
-    const [messege, setMessege] = useState(null);// controle do componente messege
-    const [closeModal, setCloseModal] = useState(false);
-    const [fornecedores, setFornecedores] = useState([]);// lista de clientes
-    const [caunterFornecedores, setCaunterFornecedores] = useState(0);
 
-    const [name, setName] = useState('');// controle do campo name
-    const [phone, setPhone] = useState('');// controle do campo phone
+    const { user, userId } = useAuthContext();
+    const { cadastrarLog } = useLogs();
+
+    const [loading, setLoading] = useState(false);
+    const [messege, setMessege] = useState(null);
+    const [closeModal, setCloseModal] = useState(false);
+    const [fornecedores, setFornecedores] = useState([]);
+    const [caunterFornecedores, setCaunterFornecedores] = useState(0);
+    const [caunterCompras, setCaunterCompras] = useState(0);
+    const [modalCompras, setModalCompras] = useState(false);
+
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
     const [cpf, setCpf] = useState('');
     const [city, setCity] = useState('');
     const [estadoFornecedor, setEstadoFornecedor] = useState('Escolha o estado');
-    const [idFornecedor, setIdFornecedor] = useState('');// controle do campo idClient
+    const [idFornecedor, setIdFornecedor] = useState('');
+    const [formaDEPagamento, setFormaDEPagamento] = useState("A prazo");
+    const [dataDeRecebimento, setDataDeRecebimento] = useState('');
+    const [status_pagamento, setStatus_pagamento] = useState('Pendente');
+    const [valorTotalDaCompra, setValorTotalDaCompra] = useState('');
+    const [valorRestante, setValorRestante] = useState('');
+    const [valorRecebido, setValorRecebido] = useState(0);
+    const [valorDaEntrada, setValorDaEntrada] = useState('');
+    const [tipoPagamento, setTipoPagamento] = useState('');
+    const [qtParcelas, setQtParcelas] = useState(1);
+    const [tipoCobranca, setTipoCobranca] = useState('');
+
+    const [itensCompra, setItensCompra] = useState([]);
+    const [parcelasItensCompra, setParcelasItensCompra] = useState([]);
+    const [textBtn, setTextBtn] = useState("Cancelar");
+
+    const contarFornecedores = async (adminId) => {
+        try {
+            const { count, error } = await supabase
+                .from("fornecedores")
+                .select("", { count: "exact", head: true })
+                .eq("adminid", adminId);
+
+            if (error) {
+                console.error("Erro ao contar compras:", error.message);
+                return null; // ou `null`, ou lançar novamente se for o caso
+            }
+
+            console.log("Contagem de compras:", count);
+            return count;
+        } catch (err) {
+            console.error("Erro inesperado ao contar compras:", err.message);
+            return null; // ou lançar o erro, dependendo do que você preferir
+        }
+    };
 
 
-    // Função para cadastrar cliente
-    const cadastrarFornecedor = async (FornecedorData) => {
+    const contarCompras = async (adminId) => {
+        try {
+            const { count, error } = await supabase
+                .from("compras")
+                .select("", { count: "exact", head: true })
+                .eq("adminid", adminId);
+
+            if (error) {
+                console.error("Erro ao contar compras:", error.message);
+                return null; // ou `null`, ou lançar novamente se for o caso
+            }
+
+            console.log("Contagem de compras:", count);
+            return count;
+        } catch (err) {
+            console.error("Erro inesperado ao contar compras:", err.message);
+            return null; // ou lançar o erro, dependendo do que você preferir
+        }
+    };
+
+
+    const cadastrarFornecedor = async (fornecedorData) => {
         setLoading(true);
-        
-        const tamanhoEmBytes = new TextEncoder().encode(JSON.stringify(FornecedorData)).length;
-        const tamanhoEmKB = (tamanhoEmBytes / 1024).toFixed(2);
-        console.log(`Tamanho: ${tamanhoEmKB} KB`);
+        console.log(fornecedorData);
 
         try {
-            // Valida o objeto com Zod
-            const validatedClient = registerClientSchema.parse(FornecedorData);
+            const validatedFornecedor = registerClientSchema.parse(fornecedorData);
 
-            if (!validatedClient) {
-            // Se invalidado, retorna os erros do Zod (aqui só para referência, geralmente parse lança erro)
-            return validatedClient.errors;
+            if (!validatedFornecedor) {
+                return validatedFornecedor.errors;
             }
 
-            // Se cpf for undefined, define como "Não informado"
-            if (validatedClient.cpf === undefined) {
-            validatedClient.cpf = "Não informado";
+            if (validatedFornecedor.cpf === undefined) {
+                validatedFornecedor.cpf = "Não informado";
             }
 
-            // Insere o cliente na tabela "clientes"
             const { data, error } = await supabase
-            .from("fornecedores")
-            .insert([FornecedorData]);
-
+                .from("fornecedores")
+                .insert([fornecedorData]);
             if (error) throw error;
 
-            console.log("fornecedor cadastrado com ID:", data);
+            setMessege({
+                success: true,
+                title: "✅ Fornecedor cadastrado com sucesso",
+                message: `O Fornecedor, ${validatedFornecedor.name}, foi salvo com sucesso.`
+            });
+            setTextBtn("OK")
+
+            console.log("Fornecedor cadastrado com ID:", data);
             setCloseModal(false);
             setName('');
             setPhone('');
             setCpf('');
             setCity('');
-            setEstadoFornecedor('Escolha o estado');
+            setEstadoFornecedor('Escolha o estado');///////////////
 
         } catch (error) {
             console.error("Erro ao cadastrar fornecedor:", error);
             setTimeout(() => {
-            setMessege({
-                success: false,
-                title: "❌ Erro ao Cadastrar",
-                message:
-                error?.errors?.[0]?.message || error.message || "Erro desconhecido",
-            });
+                setMessege({
+                    success: false,
+                    title: "❌ Erro ao Cadastrar",
+                    message: error?.errors?.[0]?.message || error.message || "Erro desconhecido",
+                });
             }, 2000);
             throw error;
         } finally {
             setTimeout(() => {
-            setLoading(false);
+                setLoading(false);
             }, 2000);
         }
     };
 
-
     const editarFornecedor = async (novosDados, id) => {
         setLoading(true);
-
         try {
             const { error } = await supabase
-            .from("fornecedores")
-            .update(novosDados)
-            .eq("id", id);
+                .from("fornecedores")
+                .update(novosDados)
+                .eq("id", id);
 
             if (error) throw error;
 
@@ -95,22 +151,22 @@ export const FornecedoresProvider = ({ children }) => {
             setCpf('');
             setCity('');
             setEstadoFornecedor('Escolha o estado');
+
         } catch (error) {
             console.error("Erro ao atualizar o fornecedor:", error.message || error);
         } finally {
             setTimeout(() => {
-            setLoading(false);
+                setLoading(false);
             }, 2000);
         }
     };
 
-
-    const deletarFornecedor = async (idDoCliente) => {
+    const deletarFornecedor = async (idDoFornecedor) => {
         try {
             const { error } = await supabase
-            .from("fornecedores")
-            .delete()
-            .eq("id", idDoCliente);
+                .from("fornecedores")
+                .delete()
+                .eq("id", idDoFornecedor);
 
             if (error) throw error;
 
@@ -120,24 +176,223 @@ export const FornecedoresProvider = ({ children }) => {
         }
     };
 
+    const inserirParcelasCompra = async (parcelas) => {
+        try {
+            const { data, error } = await supabase
+                .from("parcelas_compra")
+                .insert(parcelas);
 
+            if (error) {
+                console.error("Erro ao inserir parcelas:", error.message);
+                throw error;
+            }
 
-   // Função para contar total de clientes de um admin
-    const contarFornecedores = async (adminId) => {
-        const { count, error } = await supabase
-            .from("fornecedores")
-            .select("*", { count: "exact", head: true })
-            .eq("adminid", adminId);
-
-        if (error) {
-            throw error;
+            console.log("Parcelas registradas com sucesso:", data);
+            return data;
+        } catch (err) {
+            console.error("Erro inesperado ao registrar parcelas:", err.message);
+            throw err;
         }
-
-        return count;
     };
 
-    // Função principal para buscar clientes de um admin com paginação
+    const atualizarEstoqueProdutos = async (itensComCompraId) => {
+        try {
+            for (const item of itensComCompraId) {
+                const { produto_id, quantidade } = item;
+
+                const { data: produto, error: erroBusca } = await supabase
+                    .from("produtos")
+                    .select("stock")
+                    .eq("id", produto_id)
+                    .single();
+
+                if (erroBusca) {
+                    console.error(`Erro ao buscar produto ${produto_id}:`, erroBusca.message);
+                    continue;
+                }
+
+                const novoEstoque = Math.max(produto.stock + quantidade, 0);
+                const statusAtualizado = novoEstoque === 0 ? "Indisponivel" : "Disponivel";
+
+                const { error: erroUpdate } = await supabase
+                    .from("produtos")
+                    .update({
+                        stock: novoEstoque,
+                        status: statusAtualizado
+                    })
+                    .eq("id", produto_id);
+
+                if (erroUpdate) {
+                    console.error(`Erro ao atualizar produto ${produto_id}:`, erroUpdate.message);
+                } else {
+                    console.log(`Produto ${produto_id} atualizado: estoque=${novoEstoque}, status=${statusAtualizado}`);
+                }
+            }
+        } catch (err) {
+            console.error("Erro geral ao atualizar estoques:", err.message);
+            throw err;
+        }
+    };
+
+    const atualizarStatusParaDebitos = async (fornecedor_id, status) => {
+        setCloseModal(null);
+        const { data, error } = await supabase
+            .from('fornecedores')
+            .update({ status: status })
+            .eq('id', fornecedor_id);
+
+        if (error) {
+            console.error('Erro ao atualizar status:', error);
+        } else {
+            console.log('Débito do fornecedor atualizado com sucesso:', data);
+        }
+    };
+
+    // Função para cadastrar vendas
+    const cadastrarCompra = async (compraData) => {
+        setLoading(true);
+
+        try {
+
+            const cauntCompra = await contarCompras(userId);
+            if(cauntCompra === null) return setMessege({
+                success: false,
+                title: "❌ Erro ao Cadastrar",
+                message: "Tente novamente em alguns instantes",
+            })
+            compraData.contador_compras = cauntCompra + 1;
+
+            const validatedCompra = compraSchema.parse(compraData);
+
+            if (itensCompra.length === 0) {
+                setMessege({
+                    success: false,
+                    title: "❌ Erro ao Cadastrar",
+                    message: "Nenhum produto foi adicionado na venda.",
+                });
+                return;
+            }
+
+            if (validatedCompra.valor_entrada > 0 || validatedCompra.forma_pagamento === "A vista") {
+                if (!validatedCompra.tipo_pagamento) {
+                    setMessege({
+                        success: false,
+                        title: "❌ Erro ao Cadastrar",
+                        message: `Você informou um valor de entrada de R$ ${validatedCompra.valor_entrada}, mas ainda não selecionou a forma de pagamento. Por favor, escolha o tipo de pagamento para continuar.`
+                    });
+                    return;
+                }
+            }
+
+            // 1. Inserir a venda e obter o ID
+            const { data: compraInserida, error: vendaErro } = await supabase
+                .from("compras")
+                .insert([compraData])
+                .select(); // <- Importante: usar select() para retornar os dados inseridos, incluindo o id
+
+            if (vendaErro) throw vendaErro;
+
+            const compraId = compraInserida?.[0]?.id;
+            console.log("Compra cadastrada com ID:", compraId);
+
+            // 2. Inserir os itens da venda usando o venda_id
+            const itensCompraId = itensCompra.map((item) => ({
+                ...item,
+                compra_id: compraId
+            }));
+
+            const { error: itensErro } = await supabase
+                .from("itens_compra")
+                .insert(itensCompraId);
+            if (itensErro) throw itensErro;
+
+            // 3. Atualizar o estoque dos produtos
+            await atualizarEstoqueProdutos(itensCompraId);
+
+            // 4. Inserir as parcelas da venda usando o venda_id
+            if(parcelasItensCompra.length > 0) {
+                const parcelasItems = parcelasItensCompra.map((item) => ({
+                    ...item,
+                    compra_id: compraId
+                }))
+                await inserirParcelasCompra(parcelasItems);
+                await atualizarStatusParaDebitos(compraData.fornecedor_id, "Débitos a Pagar" );
+            }
+
+            // 3. Resetar os campos e fechar modal
+            setModalCompras(false);
+            setItensCompra([]);
+            setFormaDEPagamento("A prazo");
+            setValorRestante('');
+            setValorRecebido(0);
+            setValorDaEntrada('');
+            setDataDeRecebimento('');
+            setStatus_pagamento('Pendente');
+            setValorTotalDaCompra('');
+            setCloseModal(false);
+            setName('');
+            setPhone('');
+            setCpf('');
+            setCity('');
+            setEstadoFornecedor('Escolha o estado');
+
+
+            setMessege({
+                success: true,
+                title: "✅ Compra cadastrada com sucesso",
+                message: "A compra e os itens foram salvos com sucesso.",
+            });
+
+            if(compraData.forma_pagamento === 'A vista') {
+                const log = {
+                    adminid: userId,    
+                    colaborador_id: user.id, 
+                    name: user.name,   
+                    titulo: '✅ Compra a vista',   
+                    mensagem: `Compra realizada com sucesso! no valor de R$ ${compraData.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`, 
+                    status: 'Não lida',   
+                    referencia_id: compraId, 
+                    created_at: new Date().toISOString()
+                };
+    
+                await cadastrarLog(log);
+            }
+
+            if(compraData.forma_pagamento === 'A prazo') {
+                const log = {
+                    adminid: userId,    
+                    colaborador_id: user.id, 
+                    name: user.name,   
+                    titulo: '✅ Compra a prazo',  
+                    mensagem: ` 
+                        Valor total: ${compraData.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        Entrada: ${compraData.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        Restante: ${compraData.valor_restante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}.
+                        em ${compraData.qtd_parcelas} parcelas de ${(compraData.valor_restante / compraData.qtd_parcelas).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`, 
+                    status: 'Não lida',   
+                    referencia_id:  compraId, 
+                    created_at: new Date().toISOString()
+                };
+    
+                await cadastrarLog(log);
+            }
+
+        } catch (error) {
+            console.error("Erro ao cadastrar compra:", error);
+            setMessege({
+                success: false,
+                title: "❌ Erro ao Cadastrar",
+                message: error?.errors?.[0]?.message || error.message || "Erro desconhecido",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+       // Função principal para buscar clientes de um admin com paginação
     const buscarFornecedoresPorAdmin = async (adminId, limitepage, paginacao) => {
+        
         try {
             // Validar parâmetros
             if (!adminId || limitepage <= 0 || paginacao < 1) {
@@ -171,8 +426,8 @@ export const FornecedoresProvider = ({ children }) => {
         }
     };
 
-    
-    const buscarFornecedoresSeach = async (searchText, adminId) => {
+
+    const buscarFornecedorSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];
 
         try {
@@ -190,35 +445,48 @@ export const FornecedoresProvider = ({ children }) => {
 
             return data;
         } catch (error) {
-            console.error("Erro ao buscar Fornecedores:", error.message || error);
+            console.error("Erro ao buscar fornecedor:", error.message || error);
             return [];
         }
     };
 
 
+
     return (
-        <FornecedoresContext.Provider value={{ 
-                cadastrarFornecedor, 
-                buscarFornecedoresPorAdmin,
-                loading, setLoading,
-                messege, setMessege,
-                closeModal, setCloseModal,
+        <FornecedoresContext.Provider
+            value={{
+                loading, messege, closeModal, setCloseModal,
                 fornecedores, setFornecedores,
                 caunterFornecedores, setCaunterFornecedores,
-                buscarFornecedoresSeach,
-                editarFornecedor,
-                deletarFornecedor,
-                name, setName,
-                phone, setPhone,
-                cpf, setCpf,
+                name, setName, phone, setPhone, cpf, setCpf,
                 city, setCity,
-                estadoFornecedor, setEstadoFornecedor,
+                cadastrarFornecedor, editarFornecedor, deletarFornecedor,
+                contarFornecedores, cadastrarCompra, atualizarStatusParaDebitos,
+                valorTotalDaCompra, setValorTotalDaCompra,
+                valorRestante, setValorRestante,
+                valorRecebido, setValorRecebido,
+                formaDEPagamento, setFormaDEPagamento,
+                tipoPagamento, setTipoPagamento,
+                valorDaEntrada, setValorDaEntrada,
+                qtParcelas, setQtParcelas,
+                tipoCobranca, setTipoCobranca,
+                itensCompra, setItensCompra,
+                parcelasItensCompra, setParcelasItensCompra,
+                modalCompras, setModalCompras,
+                buscarFornecedorSeach,
+                buscarFornecedoresPorAdmin,
                 idFornecedor, setIdFornecedor,
-            }}>
-        {children}
+                dataDeRecebimento, setDataDeRecebimento,
+                status_pagamento, setStatus_pagamento,
+                caunterCompras, setCaunterCompras,
+                estadoFornecedor, setEstadoFornecedor,
+                textBtn, setTextBtn,
+                messege,setMessege, 
+            }}
+        >
+            {children}
         </FornecedoresContext.Provider>
     );
 };
 
-// Hook para usar o contexto
 export const useFornecedores = () => useContext(FornecedoresContext);

@@ -2,46 +2,47 @@ import { supabase } from '../services/supabase';
 
 
 export const getResumoFinanceiro = async (adminid) => {
-    const now = new Date()
-    const mesAtual = now.getMonth() + 1
-    const anoAtual = now.getFullYear()
-    const lastDayOfMonth = new Date(anoAtual, mesAtual, 0).getDate()
+    const now = new Date();
+    const mesAtual = now.getMonth() + 1;
+    const anoAtual = now.getFullYear();
+    const lastDayOfMonth = new Date(anoAtual, mesAtual, 0).getDate();
 
-    // Buscar vendas do mês atual filtradas por adminid
+    // Buscar vendas do mês atual filtradas por adminid e que não estejam canceladas
     const { data: vendas, error: vendasError } = await supabase
         .from('vendas')
         .select('id, valor_total, created_at')
         .eq('adminid', adminid)
+        .neq('status', 'Cancelada') // <-- Aqui está o filtro novo
         .gte('created_at', `${anoAtual}-${mesAtual.toString().padStart(2, '0')}-01`)
-        .lte('created_at', `${anoAtual}-${mesAtual.toString().padStart(2, '0')}-${lastDayOfMonth.toString().padStart(2, '0')}`)
+        .lte('created_at', `${anoAtual}-${mesAtual.toString().padStart(2, '0')}-${lastDayOfMonth.toString().padStart(2, '0')}`);
 
-    if (vendasError) throw vendasError
+    if (vendasError) throw vendasError;
 
-    let totalVendasMes = 0
-    let totalParcelasNaoPagasMes = 0
+    let totalVendasMes = 0;
+    let totalParcelasNaoPagasMes = 0;
 
     for (const venda of vendas) {
-        totalVendasMes += venda.valor_total
+        totalVendasMes += venda.valor_total;
 
         const { data: parcelas, error: parcelasError } = await supabase
             .from('parcelas_venda')
             .select('valor_parcela, status')
             .eq('venda_id', venda.id)
-            .not('status', 'in', '(Paga,Cancelada)')
+            .not('status', 'in', '(Paga,Cancelada)'); // Considera apenas parcelas não pagas e não canceladas
 
-        if (parcelasError) throw parcelasError
+        if (parcelasError) throw parcelasError;
 
         for (const parcela of parcelas) {
-            totalParcelasNaoPagasMes += parcela.valor_parcela
+            totalParcelasNaoPagasMes += parcela.valor_parcela;
         }
     }
 
-    console.log('totalVendasMes', totalVendasMes)
-    console.log('totalParcelasNaoPagasMes', totalParcelasNaoPagasMes)
+    console.log('totalVendasMes', totalVendasMes);
+    console.log('totalParcelasNaoPagasMes', totalParcelasNaoPagasMes);
 
-    return totalVendasMes - totalParcelasNaoPagasMes
+    return totalVendasMes - totalParcelasNaoPagasMes;
+};
 
-}
 
 
 export const getParcelasAtrasadas = async (adminid) => {

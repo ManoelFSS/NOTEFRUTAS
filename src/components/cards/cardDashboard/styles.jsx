@@ -45,7 +45,7 @@ export const Container = styled.div`
 
         .list-valores {
             display: flex;
-            width: 70%;
+            width: auto;
             flex-direction: column;
             gap: 10px;
 

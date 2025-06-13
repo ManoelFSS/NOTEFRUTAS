@@ -42,6 +42,27 @@ export const ClientesProvider = ({ children }) => {
     const [textBtn, setTextBtn] = useState("Cancelar");
 
 
+    const contarVendas = async (adminId) => {
+        try {
+            const { count, error } = await supabase
+                .from("vendas")
+                .select("", { count: "exact", head: true })
+                .eq("adminid", adminId);
+
+            if (error) {
+                console.error("Erro ao contar vendas:", error.message);
+                return null; // ou `null`, ou lançar novamente se for o caso
+            }
+
+            console.log("Contagem de vendas:", count);
+            return count;
+        } catch (err) {
+            console.error("Erro inesperado ao contar vendas:", err.message);
+            return null; // ou lançar o erro, dependendo do que você preferir
+        }
+    };
+
+
      // Função para contar total de clientes de um admin
     const contarClientes = async (adminId) => {
         const { count, error } = await supabase
@@ -55,7 +76,6 @@ export const ClientesProvider = ({ children }) => {
     // Função para cadastrar cliente
     const cadastrarCliente = async (clienteData) => {
         setLoading(true);
-        console.log(clienteData);
 
         try {
             // Valida o objeto com Zod
@@ -238,6 +258,16 @@ export const ClientesProvider = ({ children }) => {
         setLoading(true);
 
         try {
+
+            const caunterVendas = await contarVendas(userId);
+            if(caunterVendas === null) return setMessege({
+                success: false,
+                title: "❌ Erro ao Cadastrar",
+                message: "Tente novamente em alguns instantes",
+            })
+
+            vendaData.contador_vendas = caunterVendas + 1;
+
             const validatedVenda = vendaSchema.parse(vendaData);
 
             if (itensVenda.length === 0) {
@@ -461,7 +491,8 @@ export const ClientesProvider = ({ children }) => {
                 tipoCobranca, setTipoCobranca,
                 parcelasItensVenda, setParcelasItensVenda,
                 atualizarStatusParaDebitos,
-                textBtn, setTextBtn
+                textBtn, setTextBtn,
+                contarVendas
             }}>
         {children}
         </ClientesContext.Provider>

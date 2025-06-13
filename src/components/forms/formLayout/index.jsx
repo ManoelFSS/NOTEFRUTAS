@@ -9,8 +9,15 @@ import { useDashboard } from "../../../context/DashboardContext"
 
 const FormLayout = ({ children, $height, state, $color }) => {
 
+    const { 
+        signInUser, 
+        registerUser, 
+        updateUserPassword,
+        selectForm, 
+        userId 
+    } = useAuthContext()
+
     const {setReloadDashboard, reloadDashboard} = useDashboard()
-    const { caunterVendas } = useVendas()
     const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category } = useProduct()
 
     const { 
@@ -19,23 +26,33 @@ const FormLayout = ({ children, $height, state, $color }) => {
             idClient, 
             estado, 
             editarCliente, 
-            valorRestante, 
+            valorRestante, //
             dataDeRecebimento, 
-            valorTotalDaVenda, 
-            formaDEPagamento, 
-            status_pagamento, 
-            valorRecebido, 
+            valorTotalDaVenda, //
+            formaDEPagamento, //
+            status_pagamento, //
+            valorRecebido, //
             name, phone, cpf, city, 
             cadastrarVenda,
-            tipoPagamento,
-            qtParcelas,
-            tipoCobranca,
+            tipoPagamento,//
+            qtParcelas,//
+            tipoCobranca,//
             itensVenda,
-            setTextBtn
+            setTextBtn,
+            caunterVendas,
+            contarVendas,
         } = useClientes()
 
-    const { cadastrarFornecedor, idFornecedor, editarFornecedor, estadoFornecedor, caunterFornecedores} = useFornecedores()
-    const { signInUser, registerUser, updateUserPassword, selectForm, userId } = useAuthContext()
+    const { 
+            cadastrarFornecedor, 
+            idFornecedor, 
+            editarFornecedor, 
+            estadoFornecedor, 
+            caunterFornecedores, 
+            cadastrarCompra, 
+            caunterCompras,
+            valorTotalDaCompra
+        } = useFornecedores()
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -126,7 +143,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             name: name || "",
             phone: phone || "",
             adminid: userId,
-            contador_vendas: caunterVendas + 1,
+            contador_vendas: "",
             status: status_pagamento || "",
             created_at: new Date(),
             forma_pagamento:formaDEPagamento || "",
@@ -134,6 +151,23 @@ const FormLayout = ({ children, $height, state, $color }) => {
             tipo_cobranca: tipoCobranca || "",
             valor_entrada: valorRecebido || 0,
             valor_total: valorTotalDaVenda || 0,
+            valor_restante:  formaDEPagamento === "A vista" ? 0 : valorRestante ,
+            qtd_parcelas: qtParcelas || 0,
+        };
+
+        const compra = {
+            fornecedor_id: idFornecedor,
+            name: name || "",
+            phone: phone || "",
+            adminid: userId,
+            contador_compras: "",
+            status: status_pagamento || "",
+            created_at: new Date(),
+            forma_pagamento:formaDEPagamento || "",
+            tipo_pagamento: tipoPagamento || "",
+            tipo_cobranca: tipoCobranca || "",
+            valor_entrada: valorRecebido || 0,
+            valor_total: valorTotalDaCompra || 0,
             valor_restante:  formaDEPagamento === "A vista" ? 0 : valorRestante ,
             qtd_parcelas: qtParcelas || 0,
         };
@@ -173,10 +207,13 @@ const FormLayout = ({ children, $height, state, $color }) => {
                 await editarProduto(editProduct, idProduct);
                 break; 
             case "cadastrar venda":
-                console.log(venda);
                 await cadastrarVenda(venda);
                 setReloadDashboard(!reloadDashboard);
                 break; 
+            case "cadastrar compra":
+                await cadastrarCompra(compra);
+                setReloadDashboard(!reloadDashboard);
+            break; 
             default:
                 break;
         }

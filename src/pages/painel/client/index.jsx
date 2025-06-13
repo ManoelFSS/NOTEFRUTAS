@@ -101,7 +101,6 @@ const Client = () => {
 
     useEffect(() => {
         const searchLength = valueSearch.split("").length;
-
         if(searchLength <= 0) {
             const hendlerGetcliente = async () => {
                 const clientes = await  buscarClientesPorAdmin(userId, itemsPorPage, paginacao);
@@ -277,7 +276,7 @@ const Client = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
+                            Nenhum cliente cadastrado !
                         </p>
                         )}
                     </>
@@ -379,7 +378,7 @@ const Client = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
+                            Nenhum cliente cadastrado !
                         </p>
                         )}
                     </section>

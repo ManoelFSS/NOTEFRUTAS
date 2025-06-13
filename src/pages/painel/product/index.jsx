@@ -234,7 +234,7 @@ const Product = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
+                            Nenhum Produto cadastrado !
                         </p>
                         )}
                     </>
@@ -300,7 +300,7 @@ const Product = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum Produto cadastrado!
+                            Nenhum Produto cadastrado !
                         </p>
                         )}
                     </section>

@@ -13,28 +13,12 @@ export const AuthProvider = ({ children }) => {
 
     const navigate = useNavigate();
     const [activeLink, setActiveLink] = useState("dashboard");
-
     const [user, setUser] = useState(null);
     const [authenticated, setAuthenticated] = useState(false);
     const [userId, setUserId] = useState(null);
     const [loading, setLoading] = useState(null);// loading do form
     const [messege, setMessege] = useState(null);// controle do componente messege
     const [selectForm, setSelectForm] = useState("login");
-
-
-    // const handlePasswordReset = async (email) => {
-    //     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    //         redirectTo: 'https://notefrutas.netlify.app/', // opcional: onde o usuário será redirecionado após clicar no link
-    //     });
-
-    //     if (error) {
-    //         console.error('Erro ao enviar e-mail de recuperação:', error.message);
-    //         return;
-    //     }
-
-    //     console.log('E-mail de recuperação enviado!');
-    // };
-
 
 useEffect(() => {
     const getSession = async () => {
@@ -225,30 +209,30 @@ useEffect(() => {
 
             return { success: true };
         } catch (error) {
-            console.error('Erro ao cadastrar:', error);
 
             if (error.status === 400 || error.message?.includes('already registered')) {
-            setTimeout(() => {
-                setMessege({
-                success: false,
-                title: '❌ Erro ao Cadastrar',
-                message: 'O e-mail já está em uso!\n\n Tente fazer login ou recuperar sua senha.',
-                });
-            }, 2000);
+                setTimeout(() => {
+                    setMessege({
+                        success: false,
+                        title: '❌ Erro ao Cadastrar',
+                        message: 'O e-mail já está em uso!\n\n Tente fazer login ou recuperar sua senha.',
+                    });
+                }, 2000);
             } else {
-            setTimeout(() => {
-                setMessege({
-                success: false,
-                title: '❌ Erro ao Cadastrar',
-                message: error.message || 'Erro desconhecido',
-                });
-            }, 2000);
+                setTimeout(() => {
+                    
+                    setMessege({
+                        success: false,
+                        title: '❌ Erro ao Cadastrar',
+                        message: error.errors[0]?.message || 'Erro desconhecido',
+                    });
+                }, 2000);
             }
 
             return { success: false };
         } finally {
             setTimeout(() => {
-            setLoading(false);
+                setLoading(false);
             }, 2000);
         }
     };

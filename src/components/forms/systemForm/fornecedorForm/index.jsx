@@ -109,7 +109,7 @@ const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
                             $typeText="text" 
                             $textId="name" 
                             $value={name} 
-                            $onchange={(e) => setName(e.target.value.trim())}
+                            $onchange={(e) => setName(e.target.value)}
                             $name="name" 
                             $placeholder="Digite o nome do Fornecedor" 
                             $autoComplete="current-name" 
@@ -122,7 +122,7 @@ const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
                             $typeText="text" 
                             $textId="cpf" 
                             $value={cpf} 
-                            $onchange={(e) => setCpf(e.target.value.trim())}
+                            $onchange={(e) => setCpf(e.target.value)}
                             $name="cpf" 
                             $placeholder="Ex: 12345678900" 
                             $autoComplete="current-number" 
@@ -147,7 +147,7 @@ const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
                             $typeText="text" 
                             $textId="city" 
                             $value={city} 
-                            $onchange={(e) => setCity(e.target.value.trim())}
+                            $onchange={(e) => setCity(e.target.value)}
                             $name="city" 
                             $placeholder="Ex: Juazeiro" 
                             $autoComplete="current-text" 

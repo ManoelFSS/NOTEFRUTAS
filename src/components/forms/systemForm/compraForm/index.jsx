@@ -12,11 +12,12 @@ import { FaWindowClose } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa6";
 // context
+import { useFornecedores } from "../../../../context/FornecedoresContext"
 import { useClientes } from "../../../../context/ClientesContext"
 import { useProduct } from "../../../../context/ProductContext"
 import { useAuthContext } from "../../../../context/AuthContext"
 
-const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
+const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
 
     const {userId} = useAuthContext();
     const {product, setProduct, buscarProductPorAdmin} = useProduct();
@@ -29,10 +30,21 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
     const {
         loading,
-        name, setName,
-        phone, setPhone,
-        cpf, setCpf,
-        city, setCity,
+        setValorTotalDaCompra,
+        parcelasItensCompra, setParcelasItensCompra,
+        estadoFornecedor, setEstadoFornecedor,
+        textBtn, setTextBtn, 
+        itensCompra, setItensCompra,
+        idFornecedor, setIdFornecedor
+    } = useFornecedores();
+
+    const { 
+        name, 
+        setName,
+        setPhone,
+        setCpf,
+        setCity,
+        //////
         idClient, setIdClient,
         estado, setEstado,
         formaDEPagamento, setFormaDEPagamento,
@@ -46,7 +58,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         tipoPagamento, setTipoPagamento,
         qtParcelas , setQtParcelas,
         tipoCobranca, setTipoCobranca,
-        parcelasItensVenda, setParcelasItensVenda
+        parcelasItensVenda, setParcelasItensVenda,
     } = useClientes();
 
 
@@ -86,17 +98,17 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
 
     function adicionarProduto(produto) {
-        const jaExiste = itensVenda.some(item => item.produtoId === produto.id);
+        const jaExiste = itensCompra.some(item => item.produtoId === produto.id);
         if (jaExiste) {
             alert("Produto já adicionado à venda!");
             return;
         }
 
-        setItensVenda(prev => [
+        setItensCompra(prev => [
             ...prev,
             {
                 produto_id: produto.id,
-                venda_id: null,
+                compra_id: null,
                 adminid: userId,
                 name: produto.name,
                 quantidade: "",
@@ -110,7 +122,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     }
 
     function removerProduto(produtoId) {
-        setItensVenda(prev => prev.filter(item => item.produto_id !== produtoId));
+        setItensCompra(prev => prev.filter(item => item.produto_id !== produtoId));
     }
 
     // Função para formatar valor para moeda brasileira
@@ -125,8 +137,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
     // Ex: useEffect para atualizar o valor restante sempre que mudar entrada ou itens
     useEffect(() => { 
-        const totalVenda = itensVenda.reduce((acc, item) => acc + (item.valor_total || 0), 0);
-        setValorTotalDaVenda(totalVenda);
+        const totalVenda = itensCompra.reduce((acc, item) => acc + (item.valor_total || 0), 0);
+        setValorTotalDaCompra(totalVenda);
 
         if (valorRecebido <= 0 && formaDEPagamento === "A prazo") {
             setSelectedTipyPayment("")
@@ -146,13 +158,13 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setTipoPagamento('')
         }
         console.log("Restante:", restante);
-    }, [valorDaEntrada, itensVenda]);////////////
+    }, [valorDaEntrada, itensCompra]);////////////
 
     useEffect(() => {
         if(valorRestante <= 0){
             setVisibleInputs(false)  
             setFormaDEPagamento("A vista")
-            setStatus_pagamento("Paga");
+            setStatus_pagamento("Pago");
             setQtParcelas(0);
             setTipoCobranca('');
         }  
@@ -161,8 +173,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
 
     useEffect(() => {
-        console.log(itensVenda)
-    }, [itensVenda])
+        console.log(itensCompra)
+    }, [itensCompra])
 
     useEffect(() => {
         const hendlerGetProduct = async () => {
@@ -179,65 +191,66 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setQtParcelas(1);
         }
     }, []);
+
     
     useEffect(() => {
-    function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
-        if (!dataInicial || !quantidadeParcelas || !valorTotal) {
-            console.error("Erro ao gerar parcelas: Dados insuficientes.");
-            return [];
-        }
-
-        const tipos = {
-            "Diário": 1,
-            "Semanal": 7,
-            "Quinzenal": 15,
-            "Mensal": 30,
-        };
-
-        const dataBase = new Date(dataInicial);
-        const parcelasGeradas = [];
-
-        const totalCentavos = Math.round(valorTotal * 100);
-        const valorBaseParcela = Math.floor(totalCentavos / quantidadeParcelas);
-        const restante = totalCentavos - (valorBaseParcela * quantidadeParcelas); // Centavos que sobram
-
-        for (let i = 0; i < quantidadeParcelas; i++) {
-            let dataParcela;
-
-            console.log( quantidadeParcelas);
-
-            if (quantidadeParcelas === 1) {
-                dataParcela = new Date(dataBase); // Única parcela = data original
-            } else {
-                const diasDeDiferenca = tipos[tipoCobranca];
-                if (!diasDeDiferenca) {
-                    console.error("Tipo de cobrança inválido.");
-                    return [];
-                }
-                dataParcela = new Date(dataBase);
-                dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
+        function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
+            if (!dataInicial || !quantidadeParcelas || !valorTotal) {
+                console.error("Erro ao gerar parcelas: Dados insuficientes.");
+                return [];
             }
 
-            const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+            const tipos = {
+                "Diário": 1,
+                "Semanal": 7,
+                "Quinzenal": 15,
+                "Mensal": 30,
+            };
 
-            parcelasGeradas.push({
-                venda_id: null,
-                adminid: userId,
-                cliente_id: idClient,
-                valor_parcela: valorFinalParcela / 100,
-                data_vencimento: dataParcela.toISOString().split("T")[0],
-                created_at: new Date(),
-                updated_at: new Date(),
-                status: "A vencer",
-            });
+            const dataBase = new Date(dataInicial);
+            const parcelasGeradas = [];
+
+            const totalCentavos = Math.round(valorTotal * 100);
+            const valorBaseParcela = Math.floor(totalCentavos / quantidadeParcelas);
+            const restante = totalCentavos - (valorBaseParcela * quantidadeParcelas); // Centavos que sobram
+
+            for (let i = 0; i < quantidadeParcelas; i++) {
+                let dataParcela;
+
+                console.log( quantidadeParcelas);
+
+                if (quantidadeParcelas === 1) {
+                    dataParcela = new Date(dataBase); // Única parcela = data original
+                } else {
+                    const diasDeDiferenca = tipos[tipoCobranca];
+                    if (!diasDeDiferenca) {
+                        console.error("Tipo de cobrança inválido.");
+                        return [];
+                    }
+                    dataParcela = new Date(dataBase);
+                    dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
+                }
+
+                const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+
+                parcelasGeradas.push({
+                    compra_id: null,
+                    adminid: userId,
+                    fornecedor_id:  idFornecedor,
+                    valor_parcela: valorFinalParcela / 100,
+                    data_vencimento: dataParcela.toISOString().split("T")[0],
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    status: "A vencer",
+                });
+            }
+
+            return parcelasGeradas;
         }
 
-        return parcelasGeradas;
-    }
-
-    const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
-    setParcelasItensVenda(resultado);
-}, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
+        const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
+        setParcelasItensCompra(resultado);
+    }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
 
 
     useEffect(() => {
@@ -258,28 +271,28 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     return (
         <Container>
             <div className="form-area">
-                <FormLayout state={estado} $color={$color}>
+                <FormLayout state={estadoFornecedor} $color={$color}>
                     <div className="close">
                         <FaWindowClose className="close-icon" 
                             onClick={() => {
-                                setModalVendas(false)    
+                                setModalCompras(false)    
                                 setBtnName("Cadastrar")
                                 setName("")
                                 setPhone("")
                                 setCpf("")
                                 setCity("")
-                                setEstado("Escolha o Estado")
-                                setItensVenda([])
+                                setEstadoFornecedor("Escolha o Estado")
+                                setItensCompra([])
                                 setFormaDEPagamento("A prazo")
                             }}
                         />
                     </div>
                     <section className="logo">
                         <FaCartPlus className="icon" />
-                        <Title $text="VENDA"  $cor={"var(  --color-text-primary )"}  />
+                        <Title $text="COMPRA"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
-                        <h5>Cliente</h5>
+                        <h5>Fornecedor</h5>
                         <p style={{textTransform: "capitalize", fontSize: "0.8rem", paddingBottom: "5px"}}>{name}</p>
                     </section>
                     <section className="box-products">
@@ -291,7 +304,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             <li>#</li>
                         </ul>
                         <section className="body">
-                            {itensVenda.map((item, index) => (
+                            {itensCompra.map((item, index) => (
                                 <ul key={index} className="body-list">
                                     <li>{item.name}</li>
                                     <li>
@@ -301,7 +314,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                             className="quant"
                                             onChange={e => {
                                                 const valorDigitado = e.target.value;
-                                                setItensVenda(prev => {
+                                                setItensCompra(prev => {
                                                     const copia = [...prev];
                                                     const novaQuantidade = valorDigitado === "" ? "" : Number(valorDigitado);
                                                     const itemAtual = copia[index];
@@ -329,7 +342,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 const entrada = e.target.value;
                                                 // Permite campo vazio
                                                 if (entrada === "") {
-                                                    setItensVenda((prev) => {
+                                                    setItensCompra((prev) => {
                                                         const copia = [...prev];
                                                         const itemAtual = copia[index];
                                                         itemAtual.valor_unitario = 0;
@@ -343,7 +356,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 const numeros = entrada.replace(/\D/g, "");
                                                 const valorNumerico = Number(numeros) / 100;
 
-                                                setItensVenda((prev) => {
+                                                setItensCompra((prev) => {
                                                     const copia = [...prev];
                                                     const itemAtual = copia[index];
                                                     itemAtual.valor_unitario = valorNumerico;
@@ -379,7 +392,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         <div className="total">
                             <p>Total</p> 
                             <span>
-                                {itensVenda
+                                {itensCompra
                                     .reduce((acc, item) => acc + (item.valor_total || 0), 0)
                                     .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                                 }
@@ -401,7 +414,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         setValorDaEntrada("")
                                         setVisibleInputs(false)
                                         setFormaDEPagamento("A vista")
-                                        setStatus_pagamento("Paga")
+                                        setStatus_pagamento("Pago")
                                         handleFormaDePagamentoClick("A vista")
                                         setDataDeRecebimento('')
                                         setQtParcelas(0)
@@ -573,9 +586,9 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     </section> 
                 }
             </div>
-            { messege && <Messege $buttonText="OK" $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege  $buttonText="OK" $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
         </Container>
     )
 }
 
-export default VendasForm 
+export default  CompraForm

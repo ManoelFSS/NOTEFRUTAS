@@ -81,7 +81,7 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
                     animationBegin={500}           // ⏱️ atraso de 1000ms (1 segundo)
                     animationDuration={1000} 
                 >
-                    {data.map((entry, index) => (
+                    {data?.map((entry, index) => (
                         <Cell key={index} fill={hendleColor(entry.name)} />
                     ))}
                 </Pie>

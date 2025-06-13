@@ -5,9 +5,9 @@ import { useAuthContext } from "./AuthContext";
 import { useClientes } from "./ClientesContext";
 
 
-const VendasContext = createContext();
+const BuysContext = createContext();
 
-export const VendasProvider = ({ children }) => {
+export const BuysProvider = ({ children }) => {
 
 
     const { idClient, atualizarStatusParaDebitos, setCaunterVendas, contarVendas } = useClientes();
@@ -183,7 +183,7 @@ export const VendasProvider = ({ children }) => {
 
 
     return (
-        <VendasContext.Provider value={{ 
+        <BuysContext.Provider value={{ 
                 buscarVendasPorAdmin,
                 loading, setLoading,
                 messege, setMessege,
@@ -199,9 +199,9 @@ export const VendasProvider = ({ children }) => {
                 contarVendasPendentesOuAtrasadas
             }}>
         {children}
-        </VendasContext.Provider>
+        </BuysContext.Provider>
     );
 };
 
 // Hook para usar o contexto
-export const useVendas = () => useContext(VendasContext);
+export const useBuys = () => useContext(BuysContext);

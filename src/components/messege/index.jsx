@@ -13,8 +13,8 @@ const Messege = ({$title, $text, $setMessege, button, $buttonText, setTextBtn, s
                     $text={$buttonText}
                     onClick={() => { 
                         $setMessege(null); 
-                        setTextBtn("Cancelar"); 
-                        setIdVenda(null)
+                        setTextBtn && setTextBtn("Cancelar"); 
+                        setIdVenda && setIdVenda(null)
                     }}
                 />
                 { button }

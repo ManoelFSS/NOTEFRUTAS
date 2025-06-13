@@ -2,6 +2,9 @@ import { useState, useEffect } from "react"
 import { Nav } from "./styles"
 // icons
 import { MdDashboardCustomize, MdGroupAdd, MdAdminPanelSettings } from "react-icons/md";
+import { HiShoppingCart } from "react-icons/hi2";
+import { FaCartArrowDown } from "react-icons/fa";
+
 import 
     { FaTruckFast, 
         FaProductHunt, 
@@ -60,6 +63,12 @@ const Menu = ({$setToogleMenu}) => {
                     <li className={activeLink === "/sales" || activeLink === "/sales/details" ? "active" : ""}>
                         <FaLayerGroup className="icon" />
                         Vendas
+                    </li>
+                </Link>
+                <Link className="link" to="/buys" onClick={() => $setToogleMenu(false)}>
+                    <li className={activeLink === "/buys" || activeLink === "/buys/details" ? "active" : ""}>
+                        <FaCartArrowDown  className="icon" />
+                        Compras
                     </li>
                 </Link>
                 <Link className="link" to="/finances" onClick={() => $setToogleMenu(false)}>

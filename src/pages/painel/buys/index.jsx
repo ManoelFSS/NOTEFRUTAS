@@ -33,8 +33,9 @@ import { useClientes } from "../../../context/ClientesContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 // rota aninhada
+;
 
-const Sales = () => {;
+const Buys = () => {;
 
     const { setIdClient } = useClientes();
 
@@ -69,7 +70,7 @@ const Sales = () => {;
 
     const dataHeader = [
         {icon: <IoBagHandleSharp className="icon" />},
-        { name: "Cliente", icon: <AiOutlineAlignRight  className="icon" /> },
+        { name: "Fornecedor", icon: <AiOutlineAlignRight  className="icon" /> },
         { name: "Telefone", icon: <BsFillTelephonePlusFill className="icon" /> },
         { name: "Data", icon: <HiMiniCalendarDateRange  className="icon" /> },
         { name: "Forma de Pagamento", icon: <FaCreditCard  className="icon" /> },
@@ -95,11 +96,12 @@ const Sales = () => {;
 
     useEffect(() => {
         if(totalPages > 1 ) return setPaginacao(1);
+        console.log(paginacao)  
+        console.log(totalPages)
     }, [mes, ano]);
 
     useEffect(() => {
         setDataNotFound(false);
-        console.log(paginacao)
         const hendlerGetProduct = async () => {
             const vendaData = await  buscarVendasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
             if(vendaData.length === 0) setTimeout(() => setDataNotFound(true), 2000);
@@ -107,6 +109,7 @@ const Sales = () => {;
         }
         hendlerGetProduct();    
     }, [closeModal, paginacao, deleteControl, mes, ano]);
+
 
     useEffect(() => {
         const searchLength = valueSearch.split("").length;
@@ -121,6 +124,8 @@ const Sales = () => {;
             hendlerGetVendas();
         }
     }, [valueSearch]);
+
+    
 
     const hendlerGetclienteSearch = async () => {
         setVendas([])
@@ -149,17 +154,18 @@ const Sales = () => {;
         setIdVenda(id);
         setCloseBtn(true);
     }
+        
 
 
     return (
         <Container>
             <section className="box-filter">
                 <BtnNavigate 
-                    $text="Cadastrar venda" 
+                    $text="Registrar uma Compra" 
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
-                        setSelectForm("cadastrar produto") 
+                        setSelectForm("cadastrar uma Compra") 
                     }}
                 />
                 <Select     
@@ -260,7 +266,7 @@ const Sales = () => {;
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhuma Venda resistrada !
+                            Nenhuma Compra cadastrada !
                         </p>
                         )}
                     </section>
@@ -284,4 +290,4 @@ const Sales = () => {;
     )
 }
 
-export default Sales
+export default Buys

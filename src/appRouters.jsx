@@ -5,6 +5,7 @@ import Client from "./pages/painel/client"
 import Suppliers from "./pages/painel/suppliers"
 import Product from "./pages/painel/product"
 import Sales from "./pages/painel/sales"
+import Buys  from "./pages/painel/buys"
 import VendasDetails from "./components/vendasDetails"
 // import Finances from "./pages/painel/finances"
 // import Reportes from "./pages/painel/reportes"
@@ -20,6 +21,7 @@ const AppRouters = ({$toogleMenu, $setToogleMenu}) => {
             <Route  path="/products" element={<Product $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/suppliers" element={<Suppliers $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             <Route  path="/sales" element={<Sales $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
+            <Route  path="/buys" element={<Buys $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />}/>
             {/* <Route path="/sales/details" element={<VendasDetails $toogleMenu={$toogleMenu} $setToogleMenu={$setToogleMenu} />} /> */}
 
         </Routes>

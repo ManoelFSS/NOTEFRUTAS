@@ -9,45 +9,51 @@ import FornecedorForm from "../../../components/forms/systemForm/fornecedorForm"
 import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import ClientCard from "../../../components/cards/clientCard";
+import CompaForm from "../../../components/forms/systemForm/compraForm";
 // icons
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus, FaCartPlus, FaInfoCircle  } from "react-icons/fa";
 import { LuSquareEqual, LuLayoutList } from "react-icons/lu";
 import { IoMdPerson } from "react-icons/io";
 import { PiUserListFill , PiHandTapFill  } from "react-icons/pi";
 import { BsCreditCard,  BsFillTelephonePlusFill } from "react-icons/bs";
 import { BiSolidCity } from "react-icons/bi";
 import { HiMiniStar } from "react-icons/hi2";
-import { FaEdit, FaInfoCircle, FaWhatsapp  } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { IoLogoWhatsapp } from "react-icons/io";
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
 import { useAuthContext } from "../../../context/AuthContext"
-import { useFornecedores } from "../../../context/FornecedoresContext"
+import { useFornecedores  } from "../../../context/FornecedoresContext"
+import  {useClientes} from "../../../context/ClientesContext"
+import { useProduct } from "../../../context/ProductContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 
-const Fornecedores = () => {
+const Suppliers = () => {
 
     const {
-        messege, 
-        setMessege, 
+        messege,setMessege, 
         closeModal, 
         setCloseModal, 
-        buscarFornecedoresPorAdmin, 
-        fornecedores, 
-        setFornecedores, 
-        caunterFornecedores,  
-        buscarFornecedoresSeach,
+        buscarFornecedorSeach,
+        buscarFornecedoresPorAdmin,
+        modalCompras, setModalCompras,
+        fornecedores, setFornecedores,
+        deletarFornecedor,
+        caunterFornecedores,
+        textBtn, setTextBtn,
+        setEstadoFornecedor,
+        idFornecedor, setIdFornecedor
+    } = useFornecedores();
+
+    const { 
         setName,
         setPhone,
         setCpf,
         setCity,
-        setEstadoFornecedor,
-        setIdFornecedor,
-        deletarFornecedor,
-    } = useFornecedores();
+    } = useClientes();
 
     const { setSelectForm, userId } = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
@@ -62,7 +68,7 @@ const Fornecedores = () => {
     
     const dataHeader = [
         {icon: <IoMdPerson className="icon" />},
-        { name: "Nome", icon: <PiUserListFill  className="icon" /> },
+        { name: "Fornecedor", icon: <PiUserListFill  className="icon" /> },
         { name: "CPF | CNPJ", icon: <BsCreditCard className="icon" /> },
         { name: "TEL", icon: <BsFillTelephonePlusFill className="icon" /> },
         { name: "Cidade", icon: <BiSolidCity className="icon" /> },
@@ -72,8 +78,8 @@ const Fornecedores = () => {
     ]
 
     const data = [
-        { category: "Nada a Pagar" },
-        { category: "Débitos a Pagar" },
+        { category: "Em Dias" },
+        { category: "Débitos Pendentes" },
     ];
 
     const img = Perfil;
@@ -81,35 +87,37 @@ const Fornecedores = () => {
     const [paginacao, setPaginacao] = useState(1);
 
     const itemsPorPage = 100;
-    const totalPages = Math.ceil(caunterFornecedores / itemsPorPage);
+    const totalPages = Math.ceil( caunterFornecedores / itemsPorPage);
 
     useEffect(() => {
-        const  hendlerGetFornecedores = async () => {
+        const hendlerGetFornecedor = async () => {
             const fornecedores = await  buscarFornecedoresPorAdmin(userId, itemsPorPage, paginacao);
             if(fornecedores.length === 0) setTimeout(() => setDataNotFound(true), 2000);
             setFornecedores(fornecedores)
         }
-        hendlerGetFornecedores();
+        hendlerGetFornecedor();
         
     }, [closeModal, paginacao, deleteControl]);
 
     useEffect(() => {
         const searchLength = valueSearch.split("").length;
+        console.log("searchLength")
 
         if(searchLength <= 0) {
-            const  hendlerGetFornecedores = async () => {
+            const hendlerGetFornecedor = async () => {
                 const fornecedores = await  buscarFornecedoresPorAdmin(userId, itemsPorPage, paginacao);
                 if(fornecedores.length === 0) setTimeout(() => setDataNotFound(true), 2000);
                 setFornecedores(fornecedores)
             }
-            hendlerGetFornecedores();
+            hendlerGetFornecedor();
         }
     }, [valueSearch]);
 
-    const hendlerGetFornecedorSearch = async () => {
-        const fornecedorSeach = await  buscarFornecedoresSeach(valueSearch, userId);
+    const hendlerGetclienteSearch = async () => {
+        const fornecedorSeach = await   buscarFornecedorSeach(valueSearch, userId);
         if(fornecedorSeach.length === 0) setTimeout(() => setDataNotFound(true), 2000);
         setFornecedores(fornecedorSeach)
+        console.log(fornecedorSeach)
     }
 
     useEffect(() => {
@@ -120,14 +128,14 @@ const Fornecedores = () => {
             setDeleteControl(!deleteControl)
             setMessege(null);
             setConfirmDelete(false);
-            setCloseBtn(false);
         }
         deletaItem();
         console.log("confirmDelete", confirmDelete);
+        setTextBtn("Cancelar");
     }, [confirmDelete]);
 
-    const hendledeliteFornecedor = (id) => {
-        setMessege({success: true, title: "Tem certeza que deseja deletar esse Fornecedor ?", message: "Atenção ao deletar o Fornecedor ele sera removido permanentemente e informações relacionadas ao mesmo"});
+    const hendledeliteCliente = (id) => {
+        setMessege({success: true, title: "Tem certeza que deseja deletar esse Fornecedor ?", message: "Atenção ao deletar o fornecedor, ele sera removido permanentemente e informações relacionadas ao mesmo."});
         setIdFornecedorItem(id);
         setCloseBtn(true);
     }
@@ -140,7 +148,8 @@ const Fornecedores = () => {
                     icon={<FaUserPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
-                        setSelectForm("cadastrar fornecedor") 
+                        setSelectForm("cadastrar fornecedor")
+                        setCloseBtn(false); 
                     }}
                 />
                 <div className="box-icon">
@@ -164,7 +173,7 @@ const Fornecedores = () => {
                     setValueSearch={setValueSearch}
                     $height={"35px"}
                     $width={"210px"}
-                    onClick={hendlerGetFornecedorSearch}
+                    onClick={hendlerGetclienteSearch}
                 />
                 <Pagination 
                     $totalPages={totalPages} 
@@ -217,6 +226,25 @@ const Fornecedores = () => {
                                         ),
                                     },
                                     {
+                                        icon: <FaCartPlus 
+                                                className="icon" 
+                                                style={{ color: "rgb(83, 83, 83)" }} 
+                                                onClick={() => {
+                                                    setModalCompras(true)
+                                                    setName(item.name)
+                                                    setCpf(item.cpf)
+                                                    setCity(item.city)
+                                                    setEstadoFornecedor(item.state)
+                                                    setPhone(item.phone)
+                                                    setIdFornecedorItem(item.id)
+                                                    setIdFornecedor(item.id)
+                                                    setBtnName("Realizar Compra");
+                                                    setSelectForm("cadastrar compra")
+                                                    setTextBtn("OK")
+                                                }}
+                                            />
+                                    },
+                                    {
                                         icon: <FaEdit 
                                                 className="icon" 
                                                 style={{ color: "rgb(14, 115, 143)" }} 
@@ -225,11 +253,12 @@ const Fornecedores = () => {
                                                     setName(item.name)
                                                     setCpf(item.cpf)
                                                     setCity(item.city)
-                                                    setEstadoFornecedor(item.state)
                                                     setPhone(item.phone)
+                                                    setIdFornecedorItem(item.id)
                                                     setIdFornecedor(item.id)
                                                     setBtnName("Editar Fornecedor");
                                                     setSelectForm("editar fornecedor")
+                                                    setEstadoFornecedor(item.state)
                                                 }}
                                             />,
                                     },
@@ -237,7 +266,10 @@ const Fornecedores = () => {
                                         icon: <MdDeleteForever 
                                                 className="icon" 
                                                 style={{ color: "rgb(224, 2, 2)" }} 
-                                                onClick={() => hendledeliteFornecedor(item.id)}    
+                                                onClick={() =>{ 
+                                                    hendledeliteCliente(item.id)
+                                                    setTextBtn("Cancelar")
+                                                }}    
                                             />,
                                     },
                                 ]}
@@ -248,7 +280,7 @@ const Fornecedores = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum cliente cadastrado!
+                            Nenhum Fornecedor cadastrado!
                         </p>
                         )}
                     </>
@@ -278,47 +310,73 @@ const Fornecedores = () => {
                             })
                             .map((item, index) => (
                                 <ul className="body-list" key={index}>
-                                    <li><img src={img} alt="avatar" /></li>
-                                    <li>{item.name}</li>
-                                    <li style={{ fontWeight: "bold", color: item.cpf === "Não informado" ? "red" : "black" }}>{item.cpf}</li>
-                                    <li>{item.phone}</li>
-                                    <li>{item.city}</li>
-                                    <li>{item.state}</li>
-                                    <li>
-                                        <span style={{ backgroundColor: item.status === "Nada a Pagar" ? "rgb(78, 138, 98)" : "rgb(211, 5, 5)" }}>
-                                            {item.status}
-                                        </span>
-                                    </li>
-                                    <li className="icons">
-                                        <IoLogoWhatsapp
+                                <li><img src={img} alt="avatar" /></li>
+                                <li>{item.name}</li>
+                                <li>{item.cpf}</li>
+                                <li>{item.phone}</li>
+                                <li>{item.city}</li>
+                                <li>{item.state}</li>
+                                <li>
+                                    <span style={{backgroundColor: item.status === "Nada a Pagar" ?  "rgb(78, 138, 98)" : "rgb(211, 5, 5)" }}>
+                                        {item.status}
+                                    </span>
+                                </li>
+                                <li className="icons">
+                                    <IoLogoWhatsapp
                                         className="icon-whatsapp"
                                         onClick={() =>
                                             window.open(
                                             `https://api.whatsapp.com/send?phone=55${item.phone.replace(/[^\d]/g, '')}`
                                             )
                                         }
-                                        />
-                                        <FaEdit 
-                                            className="icon" 
-                                            style={{ color: "rgb(14, 115, 143)" }} 
-                                            onClick={() => {
-                                                setCloseModal(true)
-                                                setName(item.name)
-                                                setCpf(item.cpf)
-                                                setCity(item.city)
-                                                setEstadoFornecedor(item.state)
-                                                setPhone(item.phone)
-                                                setIdFornecedor(item.id)
-                                                setBtnName("Editar Fornecedor");
-                                                setSelectForm("editar fornecedor")
-                                            }}
-                                        />
-                                        <MdDeleteForever 
-                                            className="icon" 
-                                            style={{ color: "rgb(224, 2, 2)" }} 
-                                            onClick={() => hendledeliteFornecedor(item.id)}
-                                        />
-                                    </li>
+                                    />
+                                    <FaCartPlus 
+                                        className="icon" 
+                                        style={{ color: "rgb(83, 83, 83)" }} 
+                                        onClick={() => {
+                                            setModalCompras(true)
+                                            setName(item.name)
+                                            setCpf(item.cpf)
+                                            setCity(item.city)
+                                            setEstadoFornecedor(item.state)
+                                            setPhone(item.phone)
+                                            setIdFornecedorItem(item.id)
+                                            setIdFornecedor(item.id)
+                                            setBtnName("Realizar Compra");
+                                            setSelectForm("cadastrar compra")
+                                            setTextBtn("OK")
+                                        }}
+                                    />
+                                    {/* <FaInfoCircle
+                                        className="icon" 
+                                        style={{ color: "rgb(255, 162, 0)" }} 
+                                        onClick={() => hendledeliteCliente(item.id)}
+                                    /> */}
+                                    <FaEdit 
+                                        className="icon" 
+                                        style={{ color: "rgb(14, 115, 143)" }} 
+                                        onClick={() => {
+                                            setCloseModal(true)
+                                            setName(item.name)
+                                            setCpf(item.cpf)
+                                            setCity(item.city)
+                                            setPhone(item.phone)
+                                            setIdFornecedorItem(item.id)
+                                            setIdFornecedor(item.id)
+                                            setEstadoFornecedor(item.state)
+                                            setBtnName("Editar Fornecedor");
+                                            setSelectForm("editar fornecedor")
+                                        }}
+                                    />
+                                    <MdDeleteForever 
+                                        className="icon" 
+                                        style={{ color: "rgb(224, 2, 2)" }} 
+                                        onClick={() =>{ 
+                                            hendledeliteCliente(item.id)
+                                            setTextBtn("Cancelar")
+                                        }}
+                                    />
+                                </li>
                                 </ul>
                             ))}
                         </div>
@@ -326,20 +384,19 @@ const Fornecedores = () => {
                         <div style={{ margin: "auto" }}><Loading /></div>
                         ) : (
                         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "auto" }}>
-                            Nenhum fornecedor cadastrado!
+                            Nenhum Fornecedor cadastrado!
                         </p>
                         )}
                     </section>
                     )
                 }
                 </ContainerTable>
-
-            {closeModal && <FornecedorForm $color={"#fff"}  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
-            { messege && <Messege $buttonText="Cancelar"    button={closeBtn && <BtnNavigate $text="Deletar " onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+                { closeModal && <FornecedorForm  $color="#fff"  setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName}  />}
+            { modalCompras  && <CompaForm  $color="#fff"  setModalCompras={setModalCompras} btnName={btnName} setBtnName={setBtnName}  />}
+            { messege && <Messege $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Deletar" onClick={() => setConfirmDelete(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
 
         </Container>
     )
 }
 
-export default Fornecedores
-
+export default Suppliers

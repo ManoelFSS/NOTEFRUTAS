@@ -25,11 +25,11 @@ export const Container = styled.section`
         align-items: center;
         gap: 15px;
         width: 100%;
-        background-color: #fff;
+        background-color: #f2f2f2f2;
         padding: 10px;
-        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.23);
         border-radius: 4px;
-        
+
         .box-icon {
             display: flex;
             margin-left: 10px;
@@ -40,6 +40,7 @@ export const Container = styled.section`
                 font-size: 1.7rem;
                 trasition: color 0.3s ease;
                 box-shadow: 1px 0.5px 5px rgba(0, 0, 0, 0.4);
+                background-color:rgb(255, 255, 255);
                 padding: 4px;
                 border-radius: 4px;
                 
@@ -69,7 +70,7 @@ export const ContainerTable = styled.section`
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 0px;
         width: 100%;
         padding: 5px;
         overflow: auto;
@@ -143,14 +144,13 @@ export const ContainerTable = styled.section`
                     color: var( --color-text-secondary );
                     box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
                     
-                    
                     .icon  {
-                        width: 18px;
-                        height: 18px;
+                        width: 20px;
+                        height: 20px;
                     }
                 }
                 
-                li:nth-child(1) {
+                li:nth-child(1) {  /////////////////////////////////////////
                     width: 50px;
                     justify-content: center;
                 }
@@ -160,27 +160,47 @@ export const ContainerTable = styled.section`
                 }
                 
                 li:nth-child(3) {
-                    width: 160px;
+                    width: 140px;
+                    .icon{
+                        width: 18px;
+                        height: 18px;
+                    }
                 }
 
                 li:nth-child(4){
-                    width: 150px;
+                    width: 100px;
+                }
+
+                li:nth-child(5) {
+                    width: 130px;
+                    text-align: center;
+
+                    .icon  {
+                        width: 30px;
+                        height: 30px;
+                    }
                 }
 
                 li:nth-child(6){
-                    width: 180px;
+                    width: 130px;
                 }
 
                 li:nth-child(7){
-                    width: 180px;
+                    width: 130px;
+                    text-align: center;
+
+                    .icon  {
+                        width: 25px;
+                        height: 25px;
+                    }
                 }
 
                 li:nth-child(8){
-                    width: 180px;
+                    width: 130px;
                 }
 
-                li:nth-child(5), li:nth-child(9) {
-                    width: 120px;
+                li:nth-child(9) {
+                    width: 150px;
                 }
                 
             }
@@ -191,7 +211,7 @@ export const ContainerTable = styled.section`
             align-items: center;
             justify-content: ;
             flex-direction: column;
-            gap: 10px;
+            gap: 16px;
             list-style: none;
             width: 100%;
             padding: 10px 0;
@@ -199,7 +219,7 @@ export const ContainerTable = styled.section`
             height: calc(100vh - 192px);
             
             &::-webkit-scrollbar {
-                width: 5px;
+                width: 6px;
             }
             
             &::-webkit-scrollbar-track {
@@ -219,17 +239,18 @@ export const ContainerTable = styled.section`
                 width: 99%;
                 background-color: #f2f2f2f2;     
                 border-radius: 6px;    
-                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.22);
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.19);
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(175, 188, 179, 0.29);
+                    background-color:rgba(175, 175, 175, 0.32);
                 }
 
                 li {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    padding: 0 10px;
                     font-weight: 500;
                     font-size: 0.8rem;
                     color: #000;
@@ -243,9 +264,9 @@ export const ContainerTable = styled.section`
                     padding: 0;
                     
                     img {
-                        width: 35px;
-                        height: 35px;
-                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        border-radius:50%;
                         background-color: #fff;
                     }
                 }
@@ -255,66 +276,93 @@ export const ContainerTable = styled.section`
                 }
                 
                 li:nth-child(3) {
-                    width: 160px;
+                    display: flex;
+                    gap: 10px;
+                    width: 140px;
+                    font-weight: 500;
+                    font-size: 0.8rem;
+                    
+                    span {
+                        font-weight: 500;
+                        font-size: 0.8rem;
+                    }
                 }
                 
                 li:nth-child(4) {
                     display: flex;
                     gap: 10px;
-                    width: 150px;
+                    width: 100px;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                }
+                
+                li:nth-child(5) {
+                    width: 130px;
+                    font-weight: 500;
+                    font-size: 1rem;
                 }
 
                 li:nth-child(6){
-                    width: 180px;
-                }
-                
-                li:nth-child(5), li:nth-child(9) {
-                    width: 120px;
+                    width: 130px;
+                    font-weight: 500;
+                    font-size: 0.9rem;
                 }
 
                 li:nth-child(7){
+                    width: 130px;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                }
+
+                li:nth-child(8){
                     display: flex;
                     justify-content: center;
-                    width: 180px;
+                    align-items: center;
+                    width: 130px;
+                    font-weight: 500;
+                    font-size: 0.9rem;
                     
                     span {
+                        color: #ffffff;
+                        width: 100px;
                         text-align: center;
-                        width: 160px;
-                        font-weight: 600;
-                        font-size: 1rem;
-                        color: #FFF;
-                        padding: 6px 10px;
+                        padding: 8px 10px;
                         border-radius: 4px;
                         box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
                     }
                 }
+
+                li:nth-child(9) {
+                    display: flex;
+                    width: 140px;
+
+                    span {    
+                        font-weight: 900;
+                        font-size: 1rem;
+                    }
+                }
                 
                 .icons {
-                    width: 180px;
+                    width: 170px;
                     justify-content: center;
                     gap: 10px;
                     
                     .icon {
-                        width: 25px;
-                        height: 25px;
+                        font-size: 1.5rem;
                         cursor: pointer;
                         trasition: color 0.3s ease;
+                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
+                        background-color: #fff;
                         padding: 2px;
                         border-radius: 4px;
-                        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-                        background-color:rgb(255, 255, 255);
                         
                         &:hover {
                             transform: scale(1.1);
-                            padding: 2px;
-                            border-radius: 4px;
-                            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
                         }
                     }
                     
                     .icon-whatsapp {
-                        width: 25px;
-                        height: 25px;
+                        font-size: 1.5rem;
                         cursor: pointer;
                         trasition: color 0.3s ease;
                         padding: 2px;
