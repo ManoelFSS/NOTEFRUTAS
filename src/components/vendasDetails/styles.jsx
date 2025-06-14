@@ -181,7 +181,6 @@ export const Container_datails = styled.div`
                         text-align: center;
                         font-size: 0.7rem;
                         font-weight: 600;
-                        padding: 5px 10px 10px;
                     }
                 }
 
@@ -216,14 +215,12 @@ export const Container_datails = styled.div`
                 list-style: none;
 
                 .status {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     font-size: 0.7rem;
-                    font-weight: 800;
-                    color: #fff;
-                    height: 18px;
+                }
 
+                .cancel-icon {
+                    color: red;
+                    font-size: 1rem;
                 }
 
                 .checkbox {
@@ -237,19 +234,16 @@ export const Container_datails = styled.div`
 
                 li {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                     font-weight: 600;
                     color: #000;
-                    border-radius: 4px;
-
+                    height: 26px;
 
                     p {
                         width: 100%;
                         text-align: center;
                         font-size: 0.6rem;
                         font-weight: 500;
-                        padding: 5px 6px;
                     }
 
                     span {
@@ -257,7 +251,6 @@ export const Container_datails = styled.div`
                         text-align: center;
                         font-size: 0.7rem;
                         font-weight: 600;
-                        padding: 5px 10px 10px;
                     }
                 }
 
@@ -295,7 +288,8 @@ export const Container_datails = styled.div`
                 align-items: flex-end;
                 flex-direction: column;
                 padding: 5px 5px 0;
-                font-size: 0.7rem;;
+                font-size: 0.7rem;
+                font-weight: 600;
 
                 .title {
                     font-weight: 900;
@@ -309,7 +303,6 @@ export const Container_datails = styled.div`
                     width: 100%;
                     justify-content: space-between;
                     align-items: center;
-                    border:solid 1px rgba(0, 126, 42, 0);
 
                     span {
                         font-size: 1rem;

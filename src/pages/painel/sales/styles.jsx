@@ -23,39 +23,57 @@ export const Container = styled.section`
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        justify-content: space-between;
         gap: 15px;
         width: 100%;
         background-color: #f2f2f2f2;
         padding: 10px;
-        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.23);
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
         border-radius: 4px;
 
-        .box-icon {
+        .title {
             display: flex;
-            margin-left: 10px;
-            gap: 15px;
+            align-items: center;
+            gap: 10px;
             
-            .icon-square, .icon-list {
-                cursor: pointer;
-                font-size: 1.7rem;
-                trasition: color 0.3s ease;
-                box-shadow: 1px 0.5px 5px rgba(0, 0, 0, 0.4);
-                background-color:rgb(255, 255, 255);
-                padding: 4px;
-                border-radius: 4px;
-                
-                &:hover {
-                    color: var( --color-icon-hover );
-                    transform: scale(1.1);
-                }
-            }
-            
-            .ative-icon  {
-                color: var( --color-icon-hover );
+            .icon {
+                font-size: 2.2rem;
+                color: #007E2A;
             }
         }
-        
-        
+
+        .filter {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            background-color: #f2f2f2f2;
+
+            .box-icon {
+                display: flex;
+                margin-left: 10px;
+                gap: 15px;
+                
+                .icon-square, .icon-list {
+                    cursor: pointer;
+                    font-size: 1.7rem;
+                    trasition: color 0.3s ease;
+                    box-shadow: 1px 0.5px 5px rgba(0, 0, 0, 0.4);
+                    background-color:rgb(255, 255, 255);
+                    padding: 4px;
+                    border-radius: 4px;
+                    
+                    &:hover {
+                        color: var( --color-icon-hover );
+                        transform: scale(1.1);
+                    }
+                }
+                
+                .ative-icon  {
+                    color: var( --color-icon-hover );
+                }
+            }
+        }
     }
 `
 
@@ -95,11 +113,11 @@ export const ContainerTable = styled.section`
         align-items: center;
         width: 100%;
         min-width: 1140px;
-        height: calc(100vh - 130px);
+        // height: calc(100vh - 130px);
 
-        @media (max-width: 1065px) {
-            height: calc(100vh - 170px);
-        }
+        // @media (max-width: 1065px) {
+        //     height: calc(100vh - 170px);
+        // }
 
         // @media (max-width: 605px) {
         //     height: calc(100vh - 213px);

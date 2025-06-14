@@ -34,7 +34,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
     const endIndex = startIndex + itemsPerPage;
 
     // fiter e mimite 12 items
-    const filteredItems = vendas.filter(item => select !== "Todos" ? item.category === select : item)
+    const filteredItems = vendas.filter(item => select !== "Todas" ? item.category === select : item)
     const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
     const labels = filteredItems.slice(startIndex, endIndex).map(item => item.name);
 
@@ -217,7 +217,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                     </div>
                 </div>
             </div>
-            <div className="chart-main" style={{ height:  "285px"}}>
+            <div className="chart-main" style={{ height:  "200px"}}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

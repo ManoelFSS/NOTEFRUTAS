@@ -10,6 +10,7 @@ import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import MonthYearSelector from "../../../components/MonthYearSelector";
 import VendasDetails from "../../../components/vendasDetails";
+import Title from "../../../components/title";
 // icons
 import { FaUserPlus} from "react-icons/fa";
 import {  PiHandTapFill  } from "react-icons/pi";
@@ -24,6 +25,8 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { TbCancel } from "react-icons/tb";
 import { HiOutlineInformationCircle } from 'react-icons/hi';
+import { IoMdPerson } from "react-icons/io";
+
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
@@ -67,7 +70,7 @@ const Sales = () => {;
     };
 
     const dataHeader = [
-        {icon: <IoBagHandleSharp className="icon" />},
+        {icon: <IoMdPerson className="icon" />},
         { name: "Cliente", icon: <AiOutlineAlignRight  className="icon" /> },
         { name: "Telefone", icon: <BsFillTelephonePlusFill className="icon" /> },
         { name: "Data", icon: <HiMiniCalendarDateRange  className="icon" /> },
@@ -152,34 +155,33 @@ const Sales = () => {;
     return (
         <Container>
             <section className="box-filter">
-                <BtnNavigate 
-                    $text="Cadastrar Venda" 
-                    icon={<FaUserPlus className="icon" />} 
-                    onClick={() => {
-                        setCloseModal(true)
-                        setSelectForm("cadastrar produto") 
-                    }}
-                />
-                <Select     
-                    select={select} 
-                    setSelect={setSelect}
-                    data={data} 
-                    $width={"130px"}
-                />
-                <Search 
-                    valueSearch={valueSearch}
-                    setValueSearch={setValueSearch}
-                    $height={"35px"}
-                    $width={"200px"}
-                    onClick={hendlerGetclienteSearch}
-                />
-                <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
-
-                {totalPages > 1 && <Pagination 
-                    $totalPages={totalPages} 
-                    $paginacao={paginacao} 
-                    $setPaginacao={setPaginacao}
-                />}
+                <div className="title">
+                    <IoBagHandleSharp className="icon" />
+                    <Title $text="Vendas" $fontSize={"1.5rem"}  $cor={"var(  --color-text-primary )"} />
+                </div>
+                <div className="filter">
+                    
+                    <Select     
+                        select={select} 
+                        setSelect={setSelect}
+                        data={data} 
+                        $width={"130px"}
+                    />
+                    
+                    <Search 
+                        valueSearch={valueSearch}
+                        setValueSearch={setValueSearch}
+                        $height={"35px"}
+                        $width={"200px"}
+                        onClick={hendlerGetclienteSearch}
+                    />
+                    <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
+                    {totalPages > 1 && <Pagination 
+                        $totalPages={totalPages} 
+                        $paginacao={paginacao} 
+                        $setPaginacao={setPaginacao}
+                    />}
+                </div>
             </section>
             <ContainerTable>
                 {
@@ -204,7 +206,7 @@ const Sales = () => {;
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.status === select && contemTermo;
+                                if (select !== "Todas") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map((item, index) => (

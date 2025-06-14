@@ -94,23 +94,25 @@ export const ContainerTable = styled.section`
         align-items: center;
         width: 100%;
         min-width: 1140px;
-        height: calc(100vh - 130px);
+        // height: calc(100vh - 130px);
+        // border: 2px solid rgb(178, 15, 15);
 
-        @media (max-width: 1065px) {
-            height: calc(100vh - 170px);
-        }
 
-        @media (max-width: 605px) {
-            height: calc(100vh - 213px);
-        }
+        // @media (max-width: 1065px) {
+        //     height: calc(100vh - 170px);
+        // }
 
-        @media (max-width: 433px) {
-            height: calc(100vh - 258px);
-        }
+        // @media (max-width: 605px) {
+        //     height: calc(100vh - 213px);
+        // }
 
-        @media (max-width: 309px) {
-            height: calc(100vh - 299px);
-        }
+        // @media (max-width: 433px) {
+        //     height: calc(100vh - 258px);
+        // }
+
+        // @media (max-width: 309px) {
+        //     height: calc(100vh - 299px);
+        // }
         
         .header {
             display: flex;

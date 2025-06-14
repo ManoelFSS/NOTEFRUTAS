@@ -12,7 +12,7 @@ export const Container_header = styled.div`
     border-bottom: 4px solid  #007E2A;
     background-color: var( --color-bg-primary );
     right: 0;
-    z-index: 99;
+    z-index: 999999999999;
     gap: 20px;
 
     @media (min-width:  1910px) {

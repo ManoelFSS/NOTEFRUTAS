@@ -40,18 +40,21 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
                 data: vendaAnterior,
                 backgroundColor: 'rgba(0, 72, 255, 0)',  // invisível
                 minBarLength: 0,
+                // barThickness: 10,
             },
             {
                 label: 'Vendas do mês anterior',
                 data: vendaAnterior,
                 backgroundColor: 'rgb(91, 113, 114)',
                 minBarLength: 0,
+                // barThickness: 10,
             },
             {
                 label: 'Vendas do mês atual',
                 data: vendaAtual,
                 backgroundColor: ' #00A91F',
                 minBarLength: 0,
+                // barThickness: 10,
             },
         ],
     };
@@ -152,7 +155,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
                     ))}
                 </div>
             </div>
-            <div className="chart-main" style={{ height: "140px" }}>
+            <div className="chart-main" style={{ height: "210px" }}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

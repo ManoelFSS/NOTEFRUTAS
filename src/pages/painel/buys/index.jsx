@@ -10,6 +10,7 @@ import Messege from "../../../components/messege";
 import Loading from "../../../components/loading";
 import MonthYearSelector from "../../../components/MonthYearSelector";
 import CompraDetails from "../../../components/compraDetails";
+import Title from "../../../components/title";
 // icons
 import { FaUserPlus} from "react-icons/fa";
 import {  PiHandTapFill  } from "react-icons/pi";
@@ -24,6 +25,12 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { TbCancel } from "react-icons/tb";
 import { HiOutlineInformationCircle } from 'react-icons/hi';
+import { HiMiniShoppingCart } from "react-icons/hi2";
+import { GiShoppingCart } from "react-icons/gi";
+import { IoMdPerson } from "react-icons/io";
+
+
+
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
@@ -69,7 +76,7 @@ const Buys = () => {;
     };
 
     const dataHeader = [
-        {icon: <IoBagHandleSharp className="icon" />},
+        {icon: <IoMdPerson className="icon" />},
         { name: "Fornecedor", icon: <AiOutlineAlignRight  className="icon" /> },
         { name: "Telefone", icon: <BsFillTelephonePlusFill className="icon" /> },
         { name: "Data", icon: <HiMiniCalendarDateRange  className="icon" /> },
@@ -158,34 +165,32 @@ const Buys = () => {;
     return (
         <Container>
             <section className="box-filter">
-                <BtnNavigate 
-                    $text="Registrar uma Compra" 
-                    icon={<FaUserPlus className="icon" />} 
-                    onClick={() => {
-                        setCloseModal(true)
-                        setSelectForm("cadastrar uma Compra") 
-                    }}
-                />
-                <Select     
-                    select={select} 
-                    setSelect={setSelect}
-                    data={data} 
-                    $width={"130px"}
-                />
-                <Search 
-                    valueSearch={valueSearch}
-                    setValueSearch={setValueSearch}
-                    $height={"35px"}
-                    $width={"200px"}
-                    onClick={hendlerGetCompraSearch}
-                />
-                <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
+                <div className="title">
+                    <GiShoppingCart className="icon" />
+                    <Title $text="Compras" $fontSize={"1.5rem"}  $cor={"var(  --color-text-primary )"} />
+                </div>
+                <div className="filter">
+                    <Select     
+                        select={select} 
+                        setSelect={setSelect}
+                        data={data} 
+                        $width={"130px"}
+                    />
+                    <Search 
+                        valueSearch={valueSearch}
+                        setValueSearch={setValueSearch}
+                        $height={"35px"}
+                        $width={"200px"}
+                        onClick={hendlerGetCompraSearch}
+                    />
+                    <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
 
-                {totalPages > 1 && <Pagination 
-                    $totalPages={totalPages} 
-                    $paginacao={paginacao} 
-                    $setPaginacao={setPaginacao}
-                />}
+                    {totalPages > 1 && <Pagination 
+                        $totalPages={totalPages} 
+                        $paginacao={paginacao} 
+                        $setPaginacao={setPaginacao}
+                    />}
+                </div>
             </section>
             <ContainerTable>
                 {
@@ -210,7 +215,7 @@ const Buys = () => {;
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.status === select && contemTermo;
+                                if (select !== "Todas") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map((item, index) => (

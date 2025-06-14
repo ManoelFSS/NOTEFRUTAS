@@ -71,12 +71,12 @@ const Menu = ({$setToogleMenu}) => {
                         Compras
                     </li>
                 </Link>
-                <Link className="link" to="/finances" onClick={() => $setToogleMenu(false)}>
+                {/* <Link className="link" to="/finances" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/finances" ? "active" : ""}>
                         <FaMoneyBillTransfer className="icon" />
                         Finanças
                     </li>
-                </Link>
+                </Link> */}
                 <Link  className="link" to="/reports" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/reports" ? "active" : ""}>
                         <FaSquarePollVertical className="icon" />

@@ -17,16 +17,15 @@ export const Container = styled.div`
     }
 
     .content {
+        display: flex;
         width: 100%;
-        height: 100vh;
-        overflow: hidden;
         
         .main {
             display: flex;
-            height: calc( 100vh - 45px );
+            width: 100%;
+            // height: calc( 100vh - 45px );
             transition: padding 0.3s ease;
             margin-top: 45px;
-            width: 100%;
             background-color:rgb(255, 255, 255);
             overflow: auto;
             padding: ${props => props.$toogleMenu ? "0px 0px 0px 190px" : "0px 0px 0px 50px" };

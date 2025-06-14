@@ -53,7 +53,7 @@ const Client = () => {
         textBtn, setTextBtn
     } = useClientes();
 
-    const { setSelectForm, userId } = useAuthContext();
+    const {setSelectForm, userId } = useAuthContext();
     const [valueSearch, setValueSearch] = useState('');
     const [dataNotFound, setDataNotFound] = useState(false);
     const [cardList, setCardList] = useState(false);

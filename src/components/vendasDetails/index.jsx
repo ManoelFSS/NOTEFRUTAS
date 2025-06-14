@@ -3,6 +3,8 @@ import { Container_datails } from "./styles"
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { FaFileDownload  } from "react-icons/fa";
+import { FcCancel } from "react-icons/fc";
+
 // components
 import Loading from "../loading";
 import Messege from "../messege";
@@ -212,24 +214,27 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                     </ul>
                     {vendaFilter?.parcelas_venda?.length > 0 && 
                         vendaFilter?.parcelas_venda?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
-                        <ul className="payment-list" key={index} >
+                        <ul className="payment-list" key={index}  style={{ 
+                                backgroundColor: parcela?.status === "A vencer" ? "rgba(255, 230, 0, 0.06)" : parcela?.status === "Hoje" ? "rgba(5, 34, 122, 0.11) " : parcela?.status === "Paga" ? "rgba(23, 170, 7, 0.11)" : parcela?.status === "Atrasada" ? "rgba(255, 0, 204, 0.09)" : "rgba(232, 8, 8, 0.09)" }} >
                             <li>
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p className="status" style={{ color: parcela?.status === "Paga" ? "rgb(12, 103, 4)" :parcela?.status === "A vencer" ? "rgb(0, 0, 0)" :parcela?.status === "Hoje" ? "rgb(5, 34, 122) " : "rgb(232, 8, 8)" }}>{parcela?.status}</p>
+                                <p className="status">{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "60px", paddingLeft: "30px" }}>
-                                    <input 
-                                        className="checkbox"
-                                        type="checkbox" 
-                                        checked={parcela?.status === "Paga"}
-                                        onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
-                                    />
+                                    {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
+                                        <input 
+                                            className="checkbox"
+                                            type="checkbox" 
+                                            checked={parcela?.status === "Paga"}
+                                            onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
+                                        />
+                                    }
                                 </p>
                             </li>
                         </ul>

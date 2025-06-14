@@ -93,81 +93,99 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
             </section>
             
             <section className="charts-container">
-                <section className="charts">
-                    <section className="charts-x">
-                        <TopProductsChart 
-                            title="Produtos" 
-                            text="Mais vendidos no Mês"
-                            icon={<FaChartSimple className="icon" />}
-                        >
-                            <BarChart_x 
-                                data={dados.produtos}
-                            />
-                        </TopProductsChart>
-
-                        <TopProductsChart 
-                            title="Clientes" 
-                            text="Que mais Compraram no Mês"
-                            icon={<FaChartSimple className="icon" />}
-                        >
-                            <BarChart_x 
-                                data={dados.clientesMais}
-                            />
-                        </TopProductsChart>
-                    </section>
-
+                <section className="charts-x">
                     <TopProductsChart 
-                        title="Vendas" 
-                        text="do Mês"
-                        icon={<FaCartArrowDown  className="icon" />}
-                        width="250px"
-                        height="350px"
+                        title="Produtos" 
+                        text="Mais vendidos no Mês"
+                        icon={<FaChartSimple className="icon" />}
                     >
-                        <ChartPizza 
-                            data={dados.vendas} 
-                            pizzHeight={140}
-                            pizzWidth={220}
-                            innerRadius={20}
-                            outerRadius={50}
+                        <BarChart_x 
+                            data={dados.produtos}
                         />
                     </TopProductsChart>
-
+                    
                     <TopProductsChart 
                         title="Clientes" 
-                        text="Total cadastrados"
-                        icon={<BsFillPersonLinesFill   className="icon" />}
-                        width="250px"
-                        height="350px"
+                        text="Que mais Compraram no Mês"
+                        icon={<FaChartSimple className="icon" />}
                     >
-                        <ChartPizza 
-                            data={dados.clientes} 
-                            pizzHeight={180}
-                            pizzWidth={220}
-                            innerRadius={30}
-                            outerRadius={60}
-                        />
-                    </TopProductsChart>
-
-                    <TopProductsChart 
-                        title="Fornecedores" 
-                        text="Total cadastrados"
-                        icon={<FaHandshake   className="icon" />}
-                        width="250px"
-                        height="350px"
-                    >
-                        <ChartPizza 
-                            data={dados.fornecedores} 
-                            pizzHeight={180}
-                            pizzWidth={220}
-                            innerRadius={30}
-                            outerRadius={60}
+                        <BarChart_x 
+                            data={dados.clientesMais}
                         />
                     </TopProductsChart>
                 </section>
-                <section className="chart-stock">
+
+                <TopProductsChart 
+                    title="Vendas" 
+                    text="do Mês"
+                    icon={<FaCartArrowDown  className="icon" />}
+                    width="250px"
+                    height="350px"
+                >
+                    <ChartPizza 
+                        data={dados.vendas} 
+                        pizzHeight={140}
+                        pizzWidth={220}
+                        innerRadius={20}
+                        outerRadius={50}
+                    />
+                </TopProductsChart>
+
+                <TopProductsChart 
+                    title="Vendas" 
+                    text="do Mês"
+                    icon={<FaCartArrowDown  className="icon" />}
+                    width="250px"
+                    height="350px"
+                >
+                    <ChartPizza 
+                        data={dados.vendas} 
+                        pizzHeight={140}
+                        pizzWidth={220}
+                        innerRadius={20}
+                        outerRadius={50}
+                    />
+                </TopProductsChart>
+
+                <TopProductsChart 
+                    title="Clientes" 
+                    text="Total cadastrados"
+                    icon={<BsFillPersonLinesFill   className="icon" />}
+                    width="250px"
+                    height="350px"
+                >
+                    <ChartPizza 
+                        data={dados.clientes} 
+                        pizzHeight={180}
+                        pizzWidth={220}
+                        innerRadius={30}
+                        outerRadius={60}
+                    />
+                </TopProductsChart>
+
+                <TopProductsChart 
+                    title="Fornecedores" 
+                    text="Total cadastrados"
+                    icon={<FaHandshake   className="icon" />}
+                    width="250px"
+                    height="350px"
+                >
+                    <ChartPizza 
+                        data={dados.fornecedores} 
+                        pizzHeight={180}
+                        pizzWidth={220}
+                        innerRadius={30}
+                        outerRadius={60}
+                    />
+                </TopProductsChart>
+            </section>
+
+            <section className="charts-container-vendas">
+                <section className="chart-vendas">
                     <VendasChart vendas={comparativoVendas}  />
                 </section>
-            </section>
+            </section>   
+            
             <section className="charts-container-vendas">
                 <section className="chart-vendas"> 
                     <StockProductChart vendas={comparativoProduto} />

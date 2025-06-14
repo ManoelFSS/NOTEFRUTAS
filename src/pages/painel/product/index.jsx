@@ -20,6 +20,10 @@ import {  MdCategory } from "react-icons/md";
 import { GrMoney } from "react-icons/gr";
 import { AiOutlineAlignRight } from "react-icons/ai";
 import { IoBagHandleSharp } from "react-icons/io5";
+import { GrProductHunt } from "react-icons/gr";
+import { FaPlus } from "react-icons/fa";
+
+
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
@@ -141,8 +145,8 @@ const Product = () => {
         <Container>
             <section className="box-filter">
                 <BtnNavigate 
-                    $text="cadastrar produto" 
-                    icon={<FaUserPlus className="icon" />} 
+                    $text="Cadastrar Produtos" 
+                    icon={<FaPlus className="icon" />} 
                     onClick={() => {
                         setCloseModal(true)
                         setSelectForm("cadastrar produto") 

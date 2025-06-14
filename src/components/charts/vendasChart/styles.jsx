@@ -3,13 +3,12 @@ import styled from "styled-components";
 export const Container = styled.div`
     background-color: #fff;
     border-radius: 8px;
-    width: 1000px;
     border: solid 2px #ccc;
 
     @media (max-width: 1068px) {
         width: 1000px;
     }
-
+ 
     .chart-header {
         display: flex;
         flex-wrap: wrap;
@@ -58,7 +57,7 @@ export const Container = styled.div`
 
     .chart-main {
         display: flex;
-        height: 145px;
+        height: 200px;
         justify-content: center;
         width: 100%;
         padding: 10px 10px 0px;

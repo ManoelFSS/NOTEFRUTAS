@@ -43,7 +43,7 @@ const Select = ({data, setSelect, select,  $width, $ocult, setState,}) => {
                 className="select_list"
                 style={{width: $width, height: select_heigth}}
             >
-                { !$ocult && <li onClick={(e) => {setSelect(e.target.innerHTML); setselect_heigth("0px"); }}>Todos</li>}
+                { !$ocult && <li onClick={(e) => {setSelect(e.target.innerHTML); setselect_heigth("0px"); }}>Todas</li>}
                 {[...new Set(data.map(item => item.category))].map((category, index) => (
                     <li 
                         style={{ backgroundColor: select === category && "#f2f2f2" }}
