@@ -6,8 +6,6 @@
 }
 
 :root {
-
-
   --color-primary: #007e2a;
   --color-secondary: #302F2F;
 
@@ -45,15 +43,15 @@
 
 }
 
-body {
+/* body {
   min-height: 100vh;
 }
 
 body::-webkit-scrollbar {
   width: 5px;
-  background-color: var( --color-bg-primary );
+  background-color: #363434;
 }
 
 body::-webkit-scrollbar-thumb {
   background-color: var( --color-bg-primary-element );
-}
+} */

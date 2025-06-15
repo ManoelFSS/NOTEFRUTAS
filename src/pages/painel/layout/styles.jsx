@@ -23,25 +23,10 @@ export const Container = styled.div`
         .main {
             display: flex;
             width: 100%;
-            // height: calc( 100vh - 45px );
             transition: padding 0.3s ease;
             margin-top: 45px;
             background-color:rgb(255, 255, 255);
-            overflow: auto;
             padding: ${props => props.$toogleMenu ? "0px 0px 0px 190px" : "0px 0px 0px 50px" };
-
-            &::-webkit-scrollbar {
-                width: 8px;
-                height: 3px;
-            }
-            
-            &::-webkit-scrollbar-track {
-                background:rgba(241, 241, 241, 0);
-            }
-            
-            &::-webkit-scrollbar-thumb {
-                background: #FF9D00;
-            }
         }
 
         footer {

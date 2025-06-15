@@ -4,6 +4,9 @@ export const Container = styled.div`
     background-color: #fff;
     border-radius: 8px;
     border: solid 2px #ccc;
+    padding: 10px;
+    margin-top: 10px;
+
 
     @media (max-width: 1068px) {
         width: 1000px;

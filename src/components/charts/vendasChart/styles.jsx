@@ -4,11 +4,12 @@ export const Container = styled.div`
     background-color: #fff;
     border-radius: 8px;
     border: solid 2px #ccc;
+    padding: 10px;
 
     @media (max-width: 1068px) {
         width: 1000px;
     }
- 
+    
     .chart-header {
         display: flex;
         flex-wrap: wrap;
@@ -16,14 +17,14 @@ export const Container = styled.div`
         align-items: center;
         padding: 8px 20px;
         gap: 10px;
-
+        
         h3 {
             font-size: 1rem;
             font-weight: 900;
             color: #000;
             text-align: center;
         }
-
+        
         .custom-legend {
             display: flex;
             align-items: center;
@@ -57,14 +58,9 @@ export const Container = styled.div`
 
     .chart-main {
         display: flex;
-        height: 200px;
         justify-content: center;
         width: 100%;
-        padding: 10px 10px 0px;
-
-        @media (max-width: 1320px) {
-            height: 200px;
-        }
+        padding: 10px;
     }
 
 `

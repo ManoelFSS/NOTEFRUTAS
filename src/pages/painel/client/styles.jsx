@@ -60,7 +60,6 @@ export const Container = styled.section`
 
 export const ContainerTable = styled.section`
     display: flex;
-    margin-top: 10px;
     width: 100%;
     height: calc(100vh - 130px);
     overflow: auto;

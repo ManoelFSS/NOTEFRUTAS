@@ -60,7 +60,7 @@ export const Container = styled.section`
 
 export const ContainerTable = styled.section`
     display: flex;
-    margin-top: 10px;
+    // margin-top: 10px;
     width: 100%;
     height: calc(100vh - 130px);
     overflow: auto;
@@ -91,7 +91,6 @@ export const ContainerTable = styled.section`
     .table {
         display: flex;
         flex-direction: column;
-        align-items: center;
         width: 100%;
         min-width: 1140px;
         // height: calc(100vh - 130px);
@@ -197,7 +196,7 @@ export const ContainerTable = styled.section`
             width: 100%;
             padding: 10px 0;
             overflow: auto;
-            height: calc(100vh - 192px);
+            height: calc(100vh - 200px);
             
             &::-webkit-scrollbar {
                 width: 5px;

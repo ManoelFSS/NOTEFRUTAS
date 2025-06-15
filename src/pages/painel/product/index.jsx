@@ -192,7 +192,7 @@ const Product = () => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.category === select && contemTermo;
+                                if (select !== "Todas") return item.category === select && contemTermo;
                                 return contemTermo;
                             })
                             .map(item => (
@@ -260,7 +260,7 @@ const Product = () => {
                                 const search = valueSearch.toLowerCase();
                                 const nomeInclui = item.name?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui
-                                if (select !== "Todos") return item.category === select && contemTermo;
+                                if (select !== "Todas") return item.category === select && contemTermo;
                                 return contemTermo;
                             })
                             .map((item, index) => (

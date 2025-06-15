@@ -193,7 +193,7 @@ const Client = () => {
                                 const telefoneInclui = item.phone?.replace(/[^\d]/g, "").includes(search);
                                 const cityInclui = item.city?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui || cpfInclui || telefoneInclui || cityInclui;
-                                if (select !== "Todos") return item.status === select && contemTermo;
+                                if (select !== "Todas") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map(item => (
@@ -301,7 +301,7 @@ const Client = () => {
                                 const telefoneInclui = item.phone?.replace(/[^\d]/g, "").includes(search);
                                 const cityInclui = item.city?.toLowerCase().includes(search);
                                 const contemTermo = nomeInclui || cpfInclui || telefoneInclui || cityInclui;
-                                if (select !== "Todos") return item.status === select && contemTermo;
+                                if (select !== "Todas") return item.status === select && contemTermo;
                                 return contemTermo;
                             })
                             .map((item, index) => (

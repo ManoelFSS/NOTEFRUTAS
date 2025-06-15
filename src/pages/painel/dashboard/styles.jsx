@@ -1,20 +1,31 @@
 import styled from "styled-components";
 
 export const Container_dashboard = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
     width: 100%;
-    padding: 10px 0px ;
-    background-color:rgb(244, 243, 243);
+    padding: 15px 0px ;
+    background-color:rgb(255, 255, 255);
+    height: calc(100vh - 45px);
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 3px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background:rgba(241, 241, 241, 0);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #FF9D00;
+    }
 
     .cards {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
-        gap: 10px;
+        gap: 15px;
         padding: 0 10px;
     }
 
@@ -24,12 +35,13 @@ export const Container_dashboard = styled.div`
         justify-content: center;
         width: 100%;
         gap: 15px;
+        padding: 15px;
         
         .charts-x {
             display: flex;
             align-items: center;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
             
             @media (max-width: 500px) {
                 width: 100%;
