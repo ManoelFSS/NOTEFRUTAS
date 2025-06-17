@@ -305,8 +305,8 @@ export const Container_datails = styled.div`
                 align-items: flex-end;
                 flex-direction: column;
                 padding: 5px 5px 0;
-                font-size: 0.7rem;
-                font-weight: 600;
+                font-size: 0.8rem;
+                font-weight: 700;
 
                 .title {
                     font-weight: 900;
