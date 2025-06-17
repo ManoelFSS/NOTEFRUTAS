@@ -152,7 +152,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             <h4>CPF | CNPJ</h4>
                             <p>{vendaFilter?.cpf || "Não informado"}</p>
                         </div>
-                        <div style={{paddingLeft: "30px"}}>
+                        <div style={{paddingLeft: "60px"}}>
                             <h4>Valor total</h4>
                             <p style={{ color: "green", fontSize: "0.9rem", fontWeight: "bold" }}>{vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             <h4>Valor da entrada</h4>
