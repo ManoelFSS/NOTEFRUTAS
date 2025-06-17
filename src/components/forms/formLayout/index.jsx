@@ -7,7 +7,7 @@ import { useFornecedores } from "../../../context/FornecedoresContext"
 import { useVendas } from "../../../context/VendasContext"
 import { useDashboard } from "../../../context/DashboardContext"
 
-const FormLayout = ({ children, $height, state, $color }) => {
+const FormLayout = ({event, children, $height, state, $color }) => {
 
     const { 
         signInUser, 
@@ -58,6 +58,8 @@ const FormLayout = ({ children, $height, state, $color }) => {
         event.preventDefault();
 
         const getEmail = localStorage.getItem("email");
+        // const tipoVenda = event?.target["type-venda"].value;
+
 
         const userAdm = {
             name: event.target.name?.value || "",
@@ -124,6 +126,7 @@ const FormLayout = ({ children, $height, state, $color }) => {
             name: event.target.name?.value || "",
             description: event.target.description?.value || "",
             category: category || "",
+            // Type_sales: tipoVenda || "",
             stock: event.target.stock?.value || 0,
             createdat: new Date(),
             status: "Indesponivel",

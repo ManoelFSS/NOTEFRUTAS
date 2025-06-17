@@ -13,7 +13,6 @@ import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
-import BtnNavigate from "../../../btns/btnNavigate"
 
 const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
@@ -27,7 +26,8 @@ const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
         setDescription, 
         name, 
         setName,
-        setState
+        setState,
+        tipoDeVenda, setTipoDeVenda
     } = useProduct();
 
     const [select, setSelect] = useState(category);
@@ -129,6 +129,24 @@ const data = [
                             $ocult={true}
                             setState={setCategory}
                         />
+                    </section>
+                    <section className="box">
+                        <LabelComponent $text=" Vender por " />
+                        <div className="tipo-venda">
+                            <input type="radio" 
+                                value={"kg"}
+                                name="type-venda"
+                            />
+                            <label>Kg</label>
+                        </div>
+                        <div  className="tipo-venda">
+                            <input type="radio" 
+                                name="type-venda"
+                                value={"unidade"}
+                                required
+                            />
+                            <label>Unidade</label>
+                        </div>
                     </section>
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}

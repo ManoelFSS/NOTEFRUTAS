@@ -167,22 +167,22 @@ export const ContainerTable = styled.section`
                     width: 240px;
                 }
 
+                li:nth-child(5){
+                    text-align: center;
+                    width: 150px;
+                }
+
                 li:nth-child(6){
                     width: 150px;
                 }
 
                 li:nth-child(7){
-                    width: 150px;
+                    width: 150px
                 }
 
                 li:nth-child(8){
                     width: 160px;
-                }
-
-                li:nth-child(5), li:nth-child(9) {
-                    width: 120px;
-                }
-                
+                } 
             }
         }
 
@@ -272,11 +272,23 @@ export const ContainerTable = styled.section`
                     width: 240px;
                 }
 
+                li:nth-child(5) {
+                    width: 150px;
+                }
+
                 li:nth-child(6){
                     display: flex;
                     justify-content: center;
                     width: 150px;
-                    
+                }
+                
+
+                li:nth-child(7){
+                    width: 150px;
+                    display: flex;
+                    justify-content: center;
+                    width: 150px;
+
                     span {
                         text-align: center;
                         width: 130px;
@@ -289,20 +301,8 @@ export const ContainerTable = styled.section`
                     }
                 }
                 
-                li:nth-child(5), li:nth-child(9) {
-                    width: 120px;
-                    span {    
-                        font-weight: 900;
-                        font-size: 1rem;
-                    }
-                }
-
-                li:nth-child(7){
-                    width: 145px;
-                }
-                
                 .icons {
-                    width: 160px;
+                    width: 150px;
                     justify-content: center;
                     gap: 14px;
                     

@@ -24,6 +24,17 @@ export const Container = styled.div`
         margin: auto;
         animation-name: animatop;
         animation-duration: 0.4s;
+
+        .tipo-venda {
+            display: flex;
+            gap: 20px;
+            padding: 2px 0px;
+
+            label {
+                font-size: 1rem;
+                font-weight: 600;
+            }
+        }
     }
 
     @keyframes animatop {

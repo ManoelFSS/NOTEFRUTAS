@@ -66,6 +66,7 @@ const Product = () => {
         { name: "Nome", icon: <AiOutlineAlignRight  className="icon" /> },
         { name: "Estoque", icon: <GrMoney className="icon" /> },
         { name: "Descrição", icon: <LuLayoutList className="icon" /> },
+        { name: "Tipo de Venda", icon: <MdCategory  className="icon" /> },
         { name: "Categoria", icon: <MdCategory  className="icon" /> },
         { name: "Status", icon: <HiMiniStar className="icon" /> },
         {name: "Ação", icon: <PiHandTapFill className="icon" />}
@@ -269,6 +270,7 @@ const Product = () => {
                                 <li>{item.name}</li>
                                 <li style={{ color: item.stock === 0 ? "rgb(211, 5, 5)" : "rgb(78, 138, 98)" }}>{item.stock} <span>Itens</span></li>
                                 <li>{item.description}</li>
+                                <li>{item.Type_sales}</li>
                                 <li>{item.category}</li>
                                 <li>
                                     <span style={{ backgroundColor: item.status === "Disponivel" ? "rgb(78, 138, 98)" :  "rgb(211, 5, 5)" }}>

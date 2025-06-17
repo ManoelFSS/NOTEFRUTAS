@@ -279,7 +279,7 @@ export const Container = styled.div`
             }
 
             li:nth-child(2) {
-                width: 50px;
+                width: 100px;
             }
 
             li:nth-child(3) {
@@ -342,7 +342,10 @@ export const Container = styled.div`
                 }
 
                 li:nth-child(2) {
-                    width: 45px;
+                    display: flex;
+                    gap: 5px;
+                    padding-right:  10px;
+                    width: 100px;
 
                     input {
                         width: 100%;

@@ -123,6 +123,8 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         link.click();
     };
 
+    console.log(vendaFilter);
+
     return (
         <Container_datails>
             <section ref={divRef} className="datails-container">
@@ -165,10 +167,10 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             <p>Produto</p>
                         </li>
                         <li>
-                            <p>Qnt</p>
+                            <span>Tipo Unid</span>
                         </li>
                         <li>
-                            <p>Val Unt</p>
+                            <p>Valor</p>
                         </li>
                         <li>
                             <p>Val Total</p>
@@ -181,7 +183,14 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p>{produto?.name}</p>
                             </li>
                             <li>
-                                <p>{produto?.quantidade}</p>
+                                <p>
+                                    {
+                                        produto?.Type_sales?.toLowerCase() === "kg"
+                                        ? Number(produto?.quantidade) / 1000
+                                        : produto?.quantidade
+                                    }
+                                </p>
+                                <span>{produto?.Type_sales === "unidade" ? "qt" : "kg"}</span>
                             </li>
                             <li>
                                 <p>{produto?.valor_unitario?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
@@ -192,7 +201,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                         </ul>
                     )}
                     <div className="payment-total">
-                        <p>Total: {vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        <p>Valor total: {vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                     </div>
                 </div>
 
@@ -200,13 +209,13 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                     <h5>Parcelas</h5>
                     <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
                         <li>
-                            <p>Data venc</p>
-                        </li>
-                        <li>
-                            <p>status</p>
+                            <p>Data Venc</p>
                         </li>
                         <li>
                             <p style={{ width: "70px" }}>Valor</p>
+                        </li>
+                        <li>
+                            <p>Status</p>
                         </li>
                         <li>
                             <p style={{ width: "60px", paddingLeft: "25px" }}>Ação</p>
@@ -220,10 +229,10 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
                             <li>
-                                <p className="status">{parcela?.status}</p>
+                                <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
-                                <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                <p className="status">{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "60px", paddingLeft: "30px" }}>

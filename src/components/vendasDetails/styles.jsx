@@ -186,25 +186,31 @@ export const Container_datails = styled.div`
 
                 li:nth-child(1){
                     p {
-                        width:80px;
+                        width:90px;
                     }
                 }
 
                 li:nth-child(2){
-                    p {
-                        width:70px;
+                    display: flex;
+                    flex-direction: row;
+                    width: 70px;
+
+                    span {
+                        font-size: 0.7rem;
+                        color: #ffffff;
+                        padding: 0;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:60px;
+                        width:90px;
                     }
                 }
 
                 li:nth-child(4){
                     p {
-                        width: 88px;
+                        width: 90px;
                     }
                 }
             }
@@ -213,6 +219,7 @@ export const Container_datails = styled.div`
                 display: flex;
                 width: 100%;
                 list-style: none;
+                background-color: #f2f2f2f2;
 
                 .status {
                     font-size: 0.7rem;
@@ -256,31 +263,41 @@ export const Container_datails = styled.div`
 
                 li:nth-child(1){
                     p {
-                        width:80px;
+                        width:90px;
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(2){
+                    display: flex;
+                    width: 70px;
+
                     p {
-                        width:70px;
+                        font-size: 0.8rem;
+                    }
+
+                    span {
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:60px;
+                        width:90px;
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(4){
                     p {
-                        width: 88px;
+                        width: 90px;
+                        font-size: 0.8rem;
                     }
                 }
             }
 
             .payment-list:nth-child(even) {
-                background-color: #f2f2f2f2;
+                background-color:rgba(225, 225, 225, 0.95);
             };
 
             .payment-total {

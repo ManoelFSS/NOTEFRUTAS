@@ -103,6 +103,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                 valor_unitario: "",
                 valor_total: "",
                 created_at: new Date(),
+                Type_sales: produto.Type_sales,
             }
         ]);
         setModalProduct(false)
@@ -285,8 +286,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     <section className="box-products">
                         <ul className="header-list">
                             <li>Produto</li>
-                            <li>Qnt</li>
-                            <li>Val Unt</li>
+                            <li>Qnt | kg</li>
+                            <li>Valor</li>
                             <li>Val Total</li>
                             <li>#</li>
                         </ul>
@@ -294,66 +295,171 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                             {itensVenda.map((item, index) => (
                                 <ul key={index} className="body-list">
                                     <li>{item.name}</li>
-                                    <li>
-                                        <input 
-                                            type="number"
-                                            value={item.quantidade}
-                                            className="quant"
-                                            onChange={e => {
-                                                const valorDigitado = e.target.value;
-                                                setItensVenda(prev => {
-                                                    const copia = [...prev];
-                                                    const novaQuantidade = valorDigitado === "" ? "" : Number(valorDigitado);
-                                                    const itemAtual = copia[index];
-                                                    itemAtual.quantidade = novaQuantidade;
-                                                    itemAtual.valor_total = novaQuantidade * (itemAtual.valor_unitario || 0);
-                                                    return copia;
-                                                });
-                                            }}
-                                            required
-                                        />
-                                    </li>
+                                    { item.Type_sales === "kg" ? (
+                                        
+                                        <li>
+                                            <input
+                                                type="text"
+                                                value={item.quantidade === "0.000" ? "" : item.quantidade}
+                                                className="quant"
+                                                onChange={(e) => {
+                                                    const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
 
-                                    <li>
-                                        <input
-                                            type="text"
-                                            value={
-                                                item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
-                                                ? Number(item.valor_unitario).toLocaleString("pt-BR", {
-                                                    minimumFractionDigits: 2,
-                                                    maximumFractionDigits: 2,
-                                                    })
-                                                : ""
-                                            }
-                                            onChange={(e) => {
-                                                const entrada = e.target.value;
-                                                // Permite campo vazio
-                                                if (entrada === "") {
+                                                    if (entrada === "") {
+                                                        setItensVenda((prev) => {
+                                                            const copia = [...prev];
+                                                            const itemAtual = copia[index];
+                                                            itemAtual.quantidade = ""; // deixa vazio
+                                                            itemAtual.valor_total = 0;
+                                                            return copia;
+                                                        });
+                                                        return;
+                                                    }
+
+                                                    const numero = Number(entrada);
+
+                                                    // Converte para kg
+                                                    let quantidadeKG = numero / 1000;
+                                                    quantidadeKG = Math.floor(quantidadeKG * 1000) / 1000;
+
+                                                    // Formata para exibição
+                                                    let quantidadeFormatada = "";
+
+                                                    if (numero < 1000) {
+                                                        const gramas = numero.toString().padStart(3, "0");
+                                                        quantidadeFormatada = `0.${gramas}`;
+                                                    } else {
+                                                        quantidadeFormatada = (numero / 1000).toFixed(3);
+                                                    }
+
                                                     setItensVenda((prev) => {
                                                         const copia = [...prev];
                                                         const itemAtual = copia[index];
-                                                        itemAtual.valor_unitario = 0;
-                                                        itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
+
+                                                        itemAtual.quantidade = quantidadeFormatada;
+
+                                                        const valorUnitario = Number(itemAtual.valor_unitario) || 0;
+                                                        itemAtual.valor_total = quantidadeKG * valorUnitario;
+
                                                         return copia;
                                                     });
-                                                    return;
+                                                }}
+                                                required
+                                            />
+                                            Kg
+                                        </li>
+
+                                        ) : (
+                                        <li>
+                                            <input 
+                                                type="number"
+                                                value={item.quantidade}
+                                                className="quant"
+                                                onChange={e => {
+                                                    const valorDigitado = e.target.value;
+                                                    setItensVenda(prev => {
+                                                        const copia = [...prev];
+                                                        const novaQuantidade = valorDigitado === "" ? "" : Number(valorDigitado);
+                                                        const itemAtual = copia[index];
+                                                        itemAtual.quantidade = novaQuantidade;
+                                                        itemAtual.valor_total = novaQuantidade * (itemAtual.valor_unitario || 0);
+                                                        return copia;
+                                                    });
+                                                }}
+                                                required
+                                            />
+                                            QT
+                                        </li>
+                                        )
+                                    }
+
+                                    { item.Type_sales === "kg" ? (
+                                        <li>
+                                            <input
+                                                type="text"
+                                                value={
+                                                item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
+                                                    ? Number(item.valor_unitario).toLocaleString("pt-BR", {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                    })
+                                                    : ""
                                                 }
+                                                onChange={(e) => {
+                                                    const entrada = e.target.value;
 
-                                                // Remove tudo que não for número
-                                                const numeros = entrada.replace(/\D/g, "");
-                                                const valorNumerico = Number(numeros) / 100;
+                                                    if (entrada === "") {
+                                                            setItensVenda((prev) => {
+                                                            const copia = [...prev];
+                                                            const itemAtual = copia[index];
+                                                            itemAtual.valor_unitario = 0;
+                                                            itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
+                                                            return copia;
+                                                        });
+                                                        return;
+                                                    }
 
-                                                setItensVenda((prev) => {
-                                                    const copia = [...prev];
-                                                    const itemAtual = copia[index];
-                                                    itemAtual.valor_unitario = valorNumerico;
-                                                    itemAtual.valor_total = (itemAtual.quantidade || 0) * valorNumerico;
-                                                    return copia;
-                                                });
-                                            }}
-                                            required
-                                        />
-                                    </li>
+                                                    const numeros = entrada.replace(/\D/g, "");
+                                                    const valorNumerico = Number(numeros) / 100;
+
+                                                    setItensVenda((prev) => {
+                                                        const copia = [...prev];
+                                                        const itemAtual = copia[index];
+                                                        itemAtual.valor_unitario = valorNumerico;
+
+                                                        itemAtual.valor_total =
+                                                            (Number(itemAtual.quantidade) || 0) * valorNumerico;
+
+                                                        return copia;
+                                                    });
+                                                                                                    }}
+                                                required
+                                            />
+                                        </li>
+
+                                        ) : (
+                                            <li>
+                                                <input
+                                                    type="text"
+                                                    value={
+                                                        item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
+                                                        ? Number(item.valor_unitario).toLocaleString("pt-BR", {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2,
+                                                            })
+                                                        : ""
+                                                    }
+                                                    onChange={(e) => {
+                                                        const entrada = e.target.value;
+                                                        // Permite campo vazio
+                                                        if (entrada === "") {
+                                                            setItensVenda((prev) => {
+                                                                const copia = [...prev];
+                                                                const itemAtual = copia[index];
+                                                                itemAtual.valor_unitario = 0;
+                                                                itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
+                                                                return copia;
+                                                            });
+                                                            return;
+                                                        }
+
+                                                        // Remove tudo que não for número
+                                                        const numeros = entrada.replace(/\D/g, "");
+                                                        const valorNumerico = Number(numeros) / 100;
+
+                                                        setItensVenda((prev) => {
+                                                            const copia = [...prev];
+                                                            const itemAtual = copia[index];
+                                                            itemAtual.valor_unitario = valorNumerico;
+                                                            itemAtual.valor_total = (itemAtual.quantidade || 0) * valorNumerico;
+                                                            return copia;
+                                                        });
+                                                    }}
+                                                    required
+                                                />
+                                            </li>
+                                        )
+                                    }
 
                                     <li className="total-item">
                                         {(item.quantidade * item.valor_unitario).toLocaleString("pt-BR", {
@@ -457,8 +563,32 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     {valorRestante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                 </p>
                             </div>
-
                         </div>
+
+                        { valorDaEntrada > 0 &&
+                            <div className="payment-area" style={{ paddingBottom: "4px" }}>
+                                <h6>Tipo de Pagamento</h6>
+                                <div className="radio-area tipo-pagamento">
+                                    {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
+                                    <div key={tipo}>
+                                        <input 
+                                            type="radio" 
+                                            name="tipo-pagamento"
+                                            value={tipo}
+                                            checked={selectedTipyPayment === tipo}
+                                            onClick={() => {
+                                                setTipoPagamento(tipo);
+                                                handleClick(tipo);
+                                            }}
+                                            readOnly 
+                                        />
+                                        <label key={tipo}>{tipo}</label>
+                                    </div>
+                                    ))}
+                                </div>
+                            </div>
+                        }
+
                         <div className="date">
                             <div className="date-area">
                                 <label htmlFor="">Data da Recebimento</label>
@@ -519,27 +649,29 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         </>
                     }
 
-                    <div className="payment-area" style={{ paddingBottom: "4px" }}>
-                        <h6>Tipo de Pagamento</h6>
-                        <div className="radio-area tipo-pagamento">
-                            {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
-                            <div key={tipo}>
-                                <input 
-                                    type="radio" 
-                                    name="tipo-pagamento"
-                                    value={tipo}
-                                    checked={selectedTipyPayment === tipo}
-                                    onClick={() => {
-                                        setTipoPagamento(tipo);
-                                        handleClick(tipo);
-                                    }}
-                                    readOnly 
-                                />
-                                <label key={tipo}>{tipo}</label>
+                    { formaDEPagamento === "A vista" &&
+                        <div className="payment-area" style={{ paddingBottom: "4px" }}>
+                            <h6>Tipo de Pagamento</h6>
+                            <div className="radio-area tipo-pagamento">
+                                {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
+                                <div key={tipo}>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-pagamento"
+                                        value={tipo}
+                                        checked={selectedTipyPayment === tipo}
+                                        onClick={() => {
+                                            setTipoPagamento(tipo);
+                                            handleClick(tipo);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label key={tipo}>{tipo}</label>
+                                </div>
+                                ))}
                             </div>
-                            ))}
                         </div>
-                    </div>
+                    }
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
                 </FormLayout>

@@ -267,6 +267,7 @@ export const ClientesProvider = ({ children }) => {
             })
 
             vendaData.contador_vendas = caunterVendas + 1;
+            console.log(vendaData);
 
             const validatedVenda = vendaSchema.parse(vendaData);
 
@@ -278,6 +279,8 @@ export const ClientesProvider = ({ children }) => {
                 });
                 return;
             }
+
+            console.log(itensVenda);
 
             if (validatedVenda.valor_entrada > 0 || validatedVenda.forma_pagamento === "A vista") {
                 if (!validatedVenda.tipo_pagamento) {
@@ -301,11 +304,24 @@ export const ClientesProvider = ({ children }) => {
             const vendaId = vendaInserida?.[0]?.id;
             console.log("Venda cadastrada com ID:", vendaId);
 
-            // 2. Inserir os itens da venda usando o venda_id
-            const itensComVendaId = itensVenda.map((item) => ({
-                ...item,
-                venda_id: vendaId
-            }));
+            // 2. Inserir os itens da venda usando o venda_id e corrigindo a quantidade
+            const itensComVendaId = itensVenda.map((item) => {
+                let quantidadeCorrigida;
+
+                if (item.Type_sales === "kg") {
+                    // Transforma "10.000" → 10000 (gramas)
+                    quantidadeCorrigida = parseInt(item.quantidade.replace(".", ""), 10);
+                } else {
+                    // Garante que unidade esteja como número
+                    quantidadeCorrigida = Number(item.quantidade);
+                }
+
+                return {
+                    ...item,
+                    venda_id: vendaId,
+                    quantidade: quantidadeCorrigida, // usa a quantidade corrigida
+                };
+            });
 
             const { error: itensErro } = await supabase
                 .from("itens_venda")

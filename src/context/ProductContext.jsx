@@ -21,6 +21,7 @@ export const ProductProvider = ({ children }) => {
     const [category, setCategory] = useState('Escolha uma categoria');// controle do campo category
     const [idProduct, setIdProduct] = useState('');// controle do campo idProduct
     const[ state, setState] = useState('');// controle do campo state
+    const [tipoDeVenda, setTipoDeVenda] = useState('');// controle do campo adminId
 
     const [images, setImages] = useState([]);// controle do campo images
 
