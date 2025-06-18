@@ -91,7 +91,6 @@ export const ContainerTable = styled.section`
         width: 100%;
         padding: 5px;
         overflow: auto;
-        height: calc(100vh - 134px);
         
         &::-webkit-scrollbar {
             width: 3px;

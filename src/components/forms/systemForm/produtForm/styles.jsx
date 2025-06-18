@@ -37,8 +37,12 @@ export const Container = styled.div`
 
             .tipo-venda {
                 display: flex;
-                gap: 6px;
+                gap: 4px;
                 padding: 2px 0px;
+
+                input {
+                    cursor: pointer;
+                }
 
                 label {
                     font-size: 0.8rem;
