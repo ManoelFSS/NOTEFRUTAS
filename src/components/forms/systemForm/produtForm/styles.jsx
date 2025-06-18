@@ -25,14 +25,25 @@ export const Container = styled.div`
         animation-name: animatop;
         animation-duration: 0.4s;
 
-        .tipo-venda {
+        .tipo-venda-area {
             display: flex;
+            height: 35px;
+            align-items: center;
+            justify-content: space-between;
             gap: 20px;
-            padding: 2px 0px;
+            border-radius: 5px;
+            padding: 5px 10px;
+            box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.29);
 
-            label {
-                font-size: 1rem;
-                font-weight: 600;
+            .tipo-venda {
+                display: flex;
+                gap: 6px;
+                padding: 2px 0px;
+
+                label {
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                }
             }
         }
     }

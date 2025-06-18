@@ -131,22 +131,40 @@ const data = [
                         />
                     </section>
                     <section className="box">
-                        <LabelComponent $text=" Vender por " />
-                        <div className="tipo-venda">
-                            <input type="radio" 
-                                value={"kg"}
-                                name="type-venda"
-                            />
-                            <label>Kg</label>
-                        </div>
-                        <div  className="tipo-venda">
-                            <input type="radio" 
-                                name="type-venda"
-                                value={"unidade"}
-                                required
-                            />
-                            <label>Unidade</label>
-                        </div>
+                        <LabelComponent $text="Tipo de venda" />
+                        <section className="tipo-venda-area">
+                            <div className="tipo-venda">
+                                <input type="radio" 
+                                    value={"kg"}
+                                    name="type-venda"
+                                />
+                                <label>Kg</label>
+                            </div>
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"unidade"}
+                                    required
+                                />
+                                <label>Unidade</label>
+                            </div>
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"caixa"}
+                                    required
+                                />
+                                <label>Caixa</label>
+                            </div>
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"saco"}
+                                    required
+                                />
+                                <label>Saco</label>
+                            </div>
+                        </section>
                     </section>
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}

@@ -286,7 +286,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     <section className="box-products">
                         <ul className="header-list">
                             <li>Produto</li>
-                            <li>Qnt | kg</li>
+                            <li>Und | kg</li>
                             <li>Valor</li>
                             <li>Val Total</li>
                             <li>#</li>
@@ -299,9 +299,11 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         
                                         <li>
                                             <input
+                                                style={{width: "60px"}}
                                                 type="text"
                                                 value={item.quantidade === "0.000" ? "" : item.quantidade}
                                                 className="quant"
+                                                placeholder="0.000"
                                                 onChange={(e) => {
                                                     const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
 
@@ -346,7 +348,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 }}
                                                 required
                                             />
-                                            Kg
+                                            <span>Kg</span>
                                         </li>
 
                                         ) : (
@@ -355,6 +357,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 type="number"
                                                 value={item.quantidade}
                                                 className="quant"
+                                                placeholder="0"
                                                 onChange={e => {
                                                     const valorDigitado = e.target.value;
                                                     setItensVenda(prev => {
@@ -368,7 +371,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                                 }}
                                                 required
                                             />
-                                            QT
+                                            <span>Und</span>
                                         </li>
                                         )
                                     }
@@ -377,22 +380,22 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                         <li>
                                             <input
                                                 type="text"
+                                                placeholder="0,00"
                                                 value={
-                                                item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
-                                                    ? Number(item.valor_unitario).toLocaleString("pt-BR", {
+                                                    item.valor_unitario === "" ? "" :
+                                                    item.valor_unitario.toLocaleString("pt-BR", {
                                                         minimumFractionDigits: 2,
                                                         maximumFractionDigits: 2,
                                                     })
-                                                    : ""
                                                 }
                                                 onChange={(e) => {
                                                     const entrada = e.target.value;
 
-                                                    if (entrada === "") {
+                                                    if (entrada === "0,0") {
                                                             setItensVenda((prev) => {
                                                             const copia = [...prev];
                                                             const itemAtual = copia[index];
-                                                            itemAtual.valor_unitario = 0;
+                                                            itemAtual.valor_unitario = "";
                                                             itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
                                                             return copia;
                                                         });
@@ -412,7 +415,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
                                                         return copia;
                                                     });
-                                                                                                    }}
+                                                }}
                                                 required
                                             />
                                         </li>
@@ -421,22 +424,22 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                             <li>
                                                 <input
                                                     type="text"
+                                                    placeholder="0,00"
                                                     value={
-                                                        item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
-                                                        ? Number(item.valor_unitario).toLocaleString("pt-BR", {
+                                                        item.valor_unitario === "" ? "" :
+                                                        item.valor_unitario.toLocaleString("pt-BR", {
                                                             minimumFractionDigits: 2,
                                                             maximumFractionDigits: 2,
-                                                            })
-                                                        : ""
+                                                        })
                                                     }
                                                     onChange={(e) => {
                                                         const entrada = e.target.value;
                                                         // Permite campo vazio
-                                                        if (entrada === "") {
+                                                        if (entrada === "0,0") {
                                                             setItensVenda((prev) => {
                                                                 const copia = [...prev];
                                                                 const itemAtual = copia[index];
-                                                                itemAtual.valor_unitario = 0;
+                                                                itemAtual.valor_unitario = "";
                                                                 itemAtual.valor_total = (itemAtual.quantidade || 0) * 0;
                                                                 return copia;
                                                             });

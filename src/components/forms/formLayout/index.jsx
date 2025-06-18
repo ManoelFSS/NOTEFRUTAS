@@ -58,7 +58,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
         event.preventDefault();
 
         const getEmail = localStorage.getItem("email");
-        // const tipoVenda = event?.target["type-venda"].value;
+        const tipoVenda = event?.target["type-venda"].value;
 
 
         const userAdm = {
@@ -126,7 +126,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
             name: event.target.name?.value || "",
             description: event.target.description?.value || "",
             category: category || "",
-            // Type_sales: tipoVenda || "",
+            Type_sales: tipoVenda || "",
             stock: event.target.stock?.value || 0,
             createdat: new Date(),
             status: "Indesponivel",
@@ -139,6 +139,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
             name: event.target.name?.value || "",
             description: event.target.description?.value || "",
             category: category || "",
+            Type_sales: tipoVenda || "",
         };
 
         const venda = {

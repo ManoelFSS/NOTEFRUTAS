@@ -72,8 +72,10 @@ export const Container = styled.div`
 
         .inputs-area {
             display: flex;
+            justify-content: space-between;
             gap: 60px;
             padding-top: 5px;
+            padding-right: 20px;
 
             h6 {
                 font-size: 0.7rem;
@@ -98,8 +100,10 @@ export const Container = styled.div`
 
         .date {
             display: flex;
+            justify-content: space-between;
             gap: 46px;
             padding-top: 10px;
+            padding-right: 10px;
 
             .date-area,  .Pacelament-area {
                 display: flex;
@@ -343,12 +347,10 @@ export const Container = styled.div`
 
                 li:nth-child(2) {
                     display: flex;
-                    gap: 5px;
-                    padding-right:  10px;
                     width: 100px;
 
                     input {
-                        width: 100%;
+                        width: 50px;
                         height: 100%;
                         border: none;
                         outline: none;
@@ -362,6 +364,19 @@ export const Container = styled.div`
                     input[type=number]::-webkit-outer-spin-button {
                         -webkit-appearance: none;
                         margin: 0;
+                    }
+
+                    span {
+                        display: flex;
+                        height: 100%;
+                        padding: 0 5px;
+                        align-items: center;
+                        justify-content: center;
+                        font-weight: 500;
+                        font-size: 0.7rem;
+                        background-color: rgb(141, 141, 141);
+                        color:  #fff;
+                       
                     }
                 }
 

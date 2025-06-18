@@ -167,7 +167,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                             <p>Produto</p>
                         </li>
                         <li>
-                            <span>Tipo Unid</span>
+                            <span>Und | Kg</span>
                         </li>
                         <li>
                             <p>Valor</p>
@@ -190,7 +190,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                         : produto?.quantidade
                                     }
                                 </p>
-                                <span>{produto?.Type_sales === "unidade" ? "qt" : "kg"}</span>
+                                <span>{produto?.Type_sales === "unidade" ? "Und" : "kg"}</span>
                             </li>
                             <li>
                                 <p>{produto?.valor_unitario?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
