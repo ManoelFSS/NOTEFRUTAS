@@ -58,8 +58,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
         event.preventDefault();
 
         const getEmail = localStorage.getItem("email");
-        const tipoVenda = event?.target["type-venda"].value;
-
+        const tipoVenda = event?.target["type-venda"]?.value || "";
 
         const userAdm = {
             name: event.target.name?.value || "",
