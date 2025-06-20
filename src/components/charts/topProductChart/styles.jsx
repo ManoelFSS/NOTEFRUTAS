@@ -8,7 +8,7 @@ export const Container = styled.div`
     border-radius: 8px;
     min-width: 190px;
     width: 240px;
-    height: 170px;
+    height: 200px;
     padding: 8px;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
 
@@ -46,7 +46,7 @@ export const Container = styled.div`
     }
 
     .chart-main {
-        padding:  0px;
+        padding:  0px 0;
     }
 
     .chart-footer {

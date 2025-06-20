@@ -155,7 +155,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
                     ))}
                 </div>
             </div>
-            <div className="chart-main" style={{ height: "214px" }}>
+            <div className="chart-main" style={{ height: "180px" }}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

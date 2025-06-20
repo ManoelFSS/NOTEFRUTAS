@@ -217,7 +217,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                     </div>
                 </div>
             </div>
-            <div className="chart-main" style={{ height:  "200px"}}>
+            <div className="chart-main" style={{ height:  "190px"}}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

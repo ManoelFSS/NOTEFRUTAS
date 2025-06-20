@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container_dashboard = styled.div`
     width: 100%;
-    padding: 15px 0px ;
+    padding: 10px 0px ;
     background-color:rgb(255, 255, 255);
     height: calc(100vh - 45px);
     overflow: auto;

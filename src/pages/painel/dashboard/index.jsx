@@ -120,11 +120,11 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     text="do Mês"
                     icon={<FaCartArrowDown  className="icon" />}
                     width="250px"
-                    height="350px"
+                    height="410px"
                 >
                     <ChartPizza 
                         data={dados.vendas} 
-                        pizzHeight={140}
+                        pizzHeight={170}
                         pizzWidth={220}
                         innerRadius={20}
                         outerRadius={50}
@@ -136,11 +136,11 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     text="do Mês"
                     icon={<FaCartArrowDown  className="icon" />}
                     width="250px"
-                    height="350px"
+                    height="410px"
                 >
                     <ChartPizza 
                         data={dados.vendas} 
-                        pizzHeight={140}
+                        pizzHeight={170}
                         pizzWidth={220}
                         innerRadius={20}
                         outerRadius={50}
@@ -152,11 +152,11 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     text="Total cadastrados"
                     icon={<BsFillPersonLinesFill   className="icon" />}
                     width="250px"
-                    height="350px"
+                    height="410px"
                 >
                     <ChartPizza 
                         data={dados.clientes} 
-                        pizzHeight={180}
+                        pizzHeight={250}
                         pizzWidth={220}
                         innerRadius={30}
                         outerRadius={60}
@@ -168,11 +168,11 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     text="Total cadastrados"
                     icon={<FaHandshake   className="icon" />}
                     width="250px"
-                    height="350px"
+                    height="410px"
                 >
                     <ChartPizza 
                         data={dados.fornecedores} 
-                        pizzHeight={180}
+                        pizzHeight={250}
                         pizzWidth={220}
                         innerRadius={30}
                         outerRadius={60}

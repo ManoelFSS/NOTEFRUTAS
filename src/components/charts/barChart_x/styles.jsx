@@ -18,7 +18,7 @@ export const Container_bar_x = styled.div`
         cursor: pointer;
 
         .bar {
-            width:150px;
+            width:140px;
             height: 5px;
             background-color: var( --color-bg-secondary-element);
             border-radius: 5px;
@@ -27,7 +27,7 @@ export const Container_bar_x = styled.div`
             
 
             .bar-fill {
-                width: 150px;
+                width: 140px;
                 height: 100%;
                 border-radius: 5px;
                 background-color: #f2f2f2;
@@ -56,7 +56,7 @@ export const Container_bar_x = styled.div`
             }
             100% {
                 opacity: 1;
-                width: 40px;
+                width: 70px;
             }
         }
 
