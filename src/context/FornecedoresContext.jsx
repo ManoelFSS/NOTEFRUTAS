@@ -455,7 +455,7 @@ export const FornecedoresProvider = ({ children }) => {
     return (
         <FornecedoresContext.Provider
             value={{
-                loading, messege, closeModal, setCloseModal,
+                loading, closeModal, setCloseModal,
                 fornecedores, setFornecedores,
                 caunterFornecedores, setCaunterFornecedores,
                 name, setName, phone, setPhone, cpf, setCpf,
