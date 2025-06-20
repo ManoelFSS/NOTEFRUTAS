@@ -13,7 +13,6 @@ import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
-import { set } from "mongoose"
 
 const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 

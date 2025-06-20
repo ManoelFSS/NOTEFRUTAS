@@ -28,9 +28,6 @@ import { HiOutlineInformationCircle } from 'react-icons/hi';
 import { HiMiniShoppingCart } from "react-icons/hi2";
 import { GiShoppingCart } from "react-icons/gi";
 import { IoMdPerson } from "react-icons/io";
-
-
-
 // hooks
 import useSelect from "../../../hooks/useSelect"
 // context
