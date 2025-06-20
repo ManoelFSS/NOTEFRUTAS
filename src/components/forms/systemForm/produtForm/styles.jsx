@@ -4,15 +4,29 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100svh;
+    height: 100vh;
     width: 100%;
     position: fixed;
     top: 0;
     left: 0;
     background-color: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
+    z-index: 99999;
     animation-name: faid;
     animation-duration: 0.4s;
+    padding: 20px 5px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background:rgba(241, 241, 241, 0);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: #FF9D00;
+    }
 
     @keyframes faid {
         from {opacity: 0}
@@ -48,6 +62,38 @@ export const Container = styled.div`
                     font-size: 0.8rem;
                     font-weight: 500;
                 }
+            }
+        }
+
+        .peso-medio {
+            .peso {
+                display: flex;
+                align-items: center;
+            }
+
+            input {
+                height: 35px;
+                width: 60px;
+                padding: 0 10px;
+                border-radius: 5px;
+                border: none;
+                outline: none;
+                box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.26);
+                font-size: 1rem;
+                font-weight: 500;
+                transition: background-color 0.3s ease;
+            }
+
+            span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 35px;
+                border-radius: 0 5px 5px 0;
+                background-color:rgb(126, 126, 126);
+                outline: none;
+                color: #fff;
+                width: 40px;
             }
         }
     }

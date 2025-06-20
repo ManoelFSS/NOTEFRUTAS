@@ -13,6 +13,7 @@ import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
+import { set } from "mongoose"
 
 const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
@@ -27,7 +28,8 @@ const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
         name, 
         setName,
         setState,
-        tipoDeVenda, setTipoDeVenda
+        tipoDeVenda, setTipoDeVenda,
+        pesoMedio, setPesoMedio,
     } = useProduct();
 
     const [select, setSelect] = useState(category);
@@ -130,8 +132,59 @@ const data = [
                             setState={setCategory}
                         />
                     </section>
+
+                    <section className="box">
+                        <LabelComponent $text="Tipo de compra" />
+                        <p style={{fontSize: "14px", paddingBottom: "5px"}}>Como será comprado ao fornecedor ?</p>
+                        <section className="tipo-venda-area">
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"unidade"}
+                                    required
+                                />
+                                <label>Unidade</label>
+                            </div>
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"caixa"}
+                                    required
+                                />
+                                <label>Caixa</label>
+                            </div>
+                            <div  className="tipo-venda">
+                                <input type="radio" 
+                                    name="type-venda"
+                                    value={"saco"}
+                                    required
+                                />
+                                <label>Saco</label>
+                            </div>
+                        </section>
+                    </section>    
+                    
+                    <section className="box peso-medio">
+                        <LabelComponent $text="Peso medio" />
+                        <div className="peso">
+                            <input
+                                type="text"
+                                value={pesoMedio}
+                                className="quant"
+                                placeholder="0"
+                                onChange={(e) => {
+                                    const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
+                                    setPesoMedio(entrada);
+                                }}
+                                required
+                            />
+                            <span>Kg</span>
+                        </div>
+                    </section>
+
                     <section className="box">
                         <LabelComponent $text="Tipo de venda" />
+                        <p style={{fontSize: "14px", paddingBottom: "5px"}}>Como será vendido para o cliente ?</p>
                         <section className="tipo-venda-area">
                             <div className="tipo-venda">
                                 <input type="radio" 
@@ -166,6 +219,7 @@ const data = [
                             </div>
                         </section>
                     </section>
+                    
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
                 </FormLayout>
