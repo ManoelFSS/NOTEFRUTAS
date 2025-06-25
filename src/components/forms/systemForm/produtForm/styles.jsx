@@ -73,7 +73,7 @@ export const Container = styled.div`
 
             input {
                 height: 35px;
-                width: 60px;
+                width: 80px;
                 padding: 0 10px;
                 border-radius: 5px;
                 border: none;

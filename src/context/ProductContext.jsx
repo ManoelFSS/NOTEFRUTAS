@@ -22,7 +22,7 @@ export const ProductProvider = ({ children }) => {
     const [idProduct, setIdProduct] = useState('');// controle do campo idProduct
     const[ state, setState] = useState('');// controle do campo state
     const [tipoDeVenda, setTipoDeVenda] = useState('');// controle do campo adminId
-    const [pesoMedio, setPesoMedio] = useState('');// controle do campo adminId
+    const [pesoMedio, setPesoMedio] = useState(0);// controle do campo adminId
 
     const [images, setImages] = useState([]);// controle do campo images
 
@@ -234,7 +234,9 @@ export const ProductProvider = ({ children }) => {
                 images, setImages,
                 state, setState,
                 month, setMonth,
-                year, setYear
+                year, setYear,
+                pesoMedio, setPesoMedio,
+                tipoDeVenda, setTipoDeVenda
             }}>
         {children}
         </ProductContext.Provider>

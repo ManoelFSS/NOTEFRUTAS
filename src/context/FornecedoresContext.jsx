@@ -196,15 +196,18 @@ export const FornecedoresProvider = ({ children }) => {
     };
 
     const atualizarEstoqueProdutos = async (itensComCompraId) => {
+
         try {
             for (const item of itensComCompraId) {
                 const { produto_id, quantidade } = item;
 
                 const { data: produto, error: erroBusca } = await supabase
                     .from("produtos")
-                    .select("stock")
+                    .select("stock,  peso_medio")
                     .eq("id", produto_id)
                     .single();
+
+                console.log(produto);
 
                 if (erroBusca) {
                     console.error(`Erro ao buscar produto ${produto_id}:`, erroBusca.message);
@@ -212,13 +215,15 @@ export const FornecedoresProvider = ({ children }) => {
                 }
 
                 const novoEstoque = Math.max(produto.stock + quantidade, 0);
+                const novoPesoTotal = Math.max(produto.peso_medio * novoEstoque, 0);
                 const statusAtualizado = novoEstoque === 0 ? "Indisponivel" : "Disponivel";
 
                 const { error: erroUpdate } = await supabase
                     .from("produtos")
                     .update({
                         stock: novoEstoque,
-                        status: statusAtualizado
+                        status: statusAtualizado,
+                        peso_total: novoPesoTotal
                     })
                     .eq("id", produto_id);
 
@@ -284,7 +289,7 @@ export const FornecedoresProvider = ({ children }) => {
                 }
             }
 
-            // 1. Inserir a venda e obter o ID
+            // 1. Inserir a compra e obter o ID
             const { data: compraInserida, error: vendaErro } = await supabase
                 .from("compras")
                 .insert([compraData])
@@ -295,7 +300,7 @@ export const FornecedoresProvider = ({ children }) => {
             const compraId = compraInserida?.[0]?.id;
             console.log("Compra cadastrada com ID:", compraId);
 
-            // 2. Inserir os itens da venda usando o venda_id
+            // 2. Inserir os itens da compra usando o compra_id
             const itensCompraId = itensCompra.map((item) => ({
                 ...item,
                 compra_id: compraId
@@ -309,7 +314,7 @@ export const FornecedoresProvider = ({ children }) => {
             // 3. Atualizar o estoque dos produtos
             await atualizarEstoqueProdutos(itensCompraId);
 
-            // 4. Inserir as parcelas da venda usando o venda_id
+            // 4. Inserir as parcelas da compra usando o compra_id
             if(parcelasItensCompra.length > 0) {
                 const parcelasItems = parcelasItensCompra.map((item) => ({
                     ...item,

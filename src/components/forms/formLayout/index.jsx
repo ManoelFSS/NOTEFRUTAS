@@ -18,7 +18,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
     } = useAuthContext()
 
     const {setReloadDashboard, reloadDashboard} = useDashboard()
-    const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category, pesoMedio, setPesoMedio } = useProduct()
+    const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category, pesoMedio,  tipoDeVenda } = useProduct()
 
     const { 
             cadastrarCliente, 
@@ -58,7 +58,6 @@ const FormLayout = ({event, children, $height, state, $color }) => {
         event.preventDefault();
 
         const getEmail = localStorage.getItem("email");
-        const tipoVenda = event?.target["type-venda"]?.value || "";
 
         const userAdm = {
             name: event.target.name?.value || "",
@@ -125,13 +124,14 @@ const FormLayout = ({event, children, $height, state, $color }) => {
             name: event.target.name?.value || "",
             description: event.target.description?.value || "",
             category: category || "",
-            Type_sales: tipoVenda || "",
+            Type_sales:  tipoDeVenda || "",
             stock: event.target.stock?.value || 0,
             createdat: new Date(),
             status: "Indesponivel",
             adminid: userId,
             caunterproduct: caunterProduct + 1,
-            peso_medio: pesoMedio || 0
+            peso_medio: pesoMedio || 0,
+            peso_total: 0,
         };
 
         const editProduct = {
@@ -139,8 +139,8 @@ const FormLayout = ({event, children, $height, state, $color }) => {
             name: event.target.name?.value || "",
             description: event.target.description?.value || "",
             category: category || "",
-            Type_sales: tipoVenda || "",
-            peso_medio: pesoMedio || 0
+            Type_sales: tipoDeVenda || "",
+            peso_medio: pesoMedio || 0,
         };
 
         const venda = {

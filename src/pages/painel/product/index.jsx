@@ -48,7 +48,9 @@ const Product = () => {
         setDescription,
         setCategory, category,
         setIdProduct,
-        deletarProduto
+        deletarProduto,
+        pesoMedio, setPesoMedio,
+        tipoDeVenda, setTipoDeVenda
     } = useProduct();
     
     const { setSelectForm, userId } = useAuthContext();
@@ -118,6 +120,8 @@ const Product = () => {
         setProduct(produtoSeach)
         console.log(produtoSeach)
     }
+
+    console.log(product)
 
 
 
@@ -219,17 +223,19 @@ const Product = () => {
                                                         setSelectForm("editar produto");
                                                         setIdProduct(item.id);
                                                         setBtnName("Editar produto");
+                                                        setPesoMedio(item.peso_medio);
+                                                        setTipoDeVenda(item.Type_sales);
                                                     }}
                                                 />,
                                     },
                                     {
                                         icon: <MdDeleteForever 
-                                                    className="icon" 
-                                                    style={{ color: "rgb(224, 2, 2)" }} 
-                                                    onClick={() => {
-                                                        hendledeliteProduct(item.id);
-                                                    }}
-                                                />,
+                                            className="icon" 
+                                            style={{ color: "rgb(224, 2, 2)" }} 
+                                            onClick={() => {
+                                                hendledeliteProduct(item.id);
+                                            }}
+                                        />,
                                     },
                                 ]}
                                 />
@@ -289,6 +295,8 @@ const Product = () => {
                                             setSelectForm("editar produto");
                                             setIdProduct(item.id);
                                             setBtnName("Editar produto");
+                                            setPesoMedio(item.peso_medio);
+                                            setTipoDeVenda(item.Type_sales);
                                         }}
                                     />
                                     <MdDeleteForever 

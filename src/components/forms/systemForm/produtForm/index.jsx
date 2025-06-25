@@ -13,11 +13,14 @@ import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
+import { set } from "mongoose"
 
 const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
 
     const { loading, images, setImages } = useProduct ();
     const [imagens, setImagens] = useState([]);
+    const [visiblePeso, setVisiblePeso] = useState(false);
+    
     
     const {
         category, 
@@ -32,6 +35,8 @@ const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
     } = useProduct();
 
     const [select, setSelect] = useState(category);
+
+    console.log( tipoDeVenda )
 
 
     const url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ1Zx0zi5m3O4aBpmqUiaTUnoTmTGOPe2Qj4mbGaOysw_pOKK-u4LEfdukorH_AzWr2wA&usqp=CAU";
@@ -65,7 +70,6 @@ const data = [
     { category: "Grãos e Cereais" },
     { category: "Ervas e Temperos" },
 ];
-
 
     return (
         <Container >
@@ -133,91 +137,93 @@ const data = [
                     </section>
 
                     <section className="box">
-                        <LabelComponent $text="Tipo de compra" />
-                        <p style={{fontSize: "14px", paddingBottom: "5px"}}>Como será comprado ao fornecedor ?</p>
-                        <section className="tipo-venda-area">
-                            <div  className="tipo-venda">
-                                <input type="radio" 
-                                    name="type-venda"
-                                    value={"unidade"}
-                                    required
-                                />
-                                <label>Unidade</label>
-                            </div>
-                            <div  className="tipo-venda">
-                                <input type="radio" 
-                                    name="type-venda"
-                                    value={"caixa"}
-                                    required
-                                />
-                                <label>Caixa</label>
-                            </div>
-                            <div  className="tipo-venda">
-                                <input type="radio" 
-                                    name="type-venda"
-                                    value={"saco"}
-                                    required
-                                />
-                                <label>Saco</label>
-                            </div>
-                        </section>
-                    </section>    
-                    
-                    <section className="box peso-medio">
-                        <LabelComponent $text="Peso medio" />
-                        <div className="peso">
-                            <input
-                                type="text"
-                                value={pesoMedio}
-                                className="quant"
-                                placeholder="0"
-                                onChange={(e) => {
-                                    const entrada = e.target.value.replace(/\D/g, ""); // remove tudo que não é número
-                                    setPesoMedio(entrada);
-                                }}
-                                required
-                            />
-                            <span>Kg</span>
-                        </div>
-                    </section>
-
-                    <section className="box">
                         <LabelComponent $text="Tipo de venda" />
                         <p style={{fontSize: "14px", paddingBottom: "5px"}}>Como será vendido para o cliente ?</p>
                         <section className="tipo-venda-area">
                             <div className="tipo-venda">
                                 <input type="radio" 
-                                    value={"kg"}
+                                    checked={tipoDeVenda === "kg"}
+                                    value={tipoDeVenda}
                                     name="type-venda"
+                                    onChange={() => { 
+                                        setVisiblePeso(true)
+                                        setTipoDeVenda("kg")
+                                    }}
                                 />
                                 <label>Kg</label>
                             </div>
                             <div  className="tipo-venda">
                                 <input type="radio" 
+                                    checked={tipoDeVenda === "unidade"}
                                     name="type-venda"
-                                    value={"unidade"}
+                                    value={tipoDeVenda}
                                     required
+                                    onChange={() => {
+                                        setVisiblePeso(false)
+                                        setTipoDeVenda("unidade")
+                                    }}
                                 />
                                 <label>Unidade</label>
                             </div>
                             <div  className="tipo-venda">
                                 <input type="radio" 
+                                    checked={tipoDeVenda === "caixa"}
                                     name="type-venda"
-                                    value={"caixa"}
+                                    value={tipoDeVenda}
                                     required
+                                    onChange={() => {
+                                        setVisiblePeso(false)
+                                        setTipoDeVenda("caixa")
+                                    }}
                                 />
                                 <label>Caixa</label>
                             </div>
                             <div  className="tipo-venda">
                                 <input type="radio" 
+                                    checked={tipoDeVenda === "saco"}
                                     name="type-venda"
-                                    value={"saco"}
+                                    value={tipoDeVenda}
                                     required
+                                    onChange={() => {
+                                        setVisiblePeso(false)
+                                        setTipoDeVenda("saco")
+                                    }}
                                 />
                                 <label>Saco</label>
                             </div>
                         </section>
                     </section>
+
+                    { (visiblePeso || tipoDeVenda === "kg") &&
+                        <section className="box peso-medio">
+                            <LabelComponent $text="Peso medio" />
+                            <p style={{fontSize: "14px", paddingBottom: "5px"}}>Informe o peso medio [ caixa, saco, unidade ]</p>
+                            <div className="peso">
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                    value={pesoMedio === "" ? "" : pesoMedio}
+                                    className="quant"
+                                    placeholder="Ex: 1.5"
+                                    onChange={(e) => {
+                                        const entrada = e.target.value.replace(",", "."); // aceita vírgula ou ponto
+                                        if (entrada === "") {
+                                        setPesoMedio(""); // permite apagar tudo
+                                        } else {
+                                            const numero = Number(entrada);
+                                            if (!isNaN(numero)) {
+                                                setPesoMedio(numero);
+                                            }
+                                        }
+                                    }}
+                                    required
+                                />
+
+                                <span>Kg</span>
+                            </div>
+                        </section>
+                    }
                     
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}

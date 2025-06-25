@@ -195,49 +195,68 @@ export const ClientesProvider = ({ children }) => {
     const atualizarEstoqueProdutos = async (itensComVendaId) => {
         try {
             for (const item of itensComVendaId) {
-            const { produto_id, quantidade } = item;
+                const { produto_id, quantidade } = item;
 
-            // Buscar o produto atual no banco
-            const { data: produto, error: erroBusca } = await supabase
-                .from("produtos")
-                .select("stock")
-                .eq("id", produto_id)
-                .single();
+                // Buscar o produto atual no banco
+                const { data: produto, error: erroBusca } = await supabase
+                    .from("produtos")
+                    .select("stock, peso_medio, peso_total, Type_sales")
+                    .eq("id", produto_id)
+                    .single();
 
-            if (erroBusca) {
-                console.error(`Erro ao buscar produto ${produto_id}:`, erroBusca.message);
-                continue;
-            }
+                if (erroBusca) {
+                    console.error(`Erro ao buscar produto ${produto_id}:`, erroBusca.message);
+                    continue;
+                }
 
-            if (!produto || produto.stock <= 0) {
-                console.warn(`Produto ${produto_id} sem estoque. Nenhuma alteração feita.`);
-                continue;
-            }
+                if (!produto || produto.stock <= 0) {
+                    console.warn(`Produto ${produto_id} sem estoque. Nenhuma alteração feita.`);
+                    continue;
+                }
 
-            const novoEstoque = Math.max(produto.stock - quantidade, 0);
+                let novoEstoque = 0;
+                let novoPesoTotal = produto.peso_total;
+                console.log("peso total", novoPesoTotal);
 
-            const statusAtualizado = novoEstoque === 0 ? "Indisponivel" : "Disponivel";
+                if (produto.Type_sales !== "kg") {
+                    // Venda por unidade
+                    novoEstoque = Math.max(produto.stock - quantidade, 0);
+                } else {
+                    // Venda por peso
+                    const quantidadeEmKg = quantidade / 1000;  // converte g para kg
+                    novoPesoTotal = Math.max(produto.peso_total - quantidadeEmKg, 0);
+                    novoEstoque = Math.floor(novoPesoTotal / produto.peso_medio);
+                    novoEstoque = Math.max(novoEstoque, 0);
 
-            // Atualizar o estoque e status
-            const { error: erroUpdate } = await supabase
-                .from("produtos")
-                .update({ 
-                stock: novoEstoque,
-                status: statusAtualizado
-                })
-                .eq("id", produto_id);
+                    if(novoPesoTotal < produto.peso_medio) {
+                        novoPesoTotal = 0;
+                    }
+                }
 
-            if (erroUpdate) {
-                console.error(`Erro ao atualizar produto ${produto_id}:`, erroUpdate.message);
-            } else {
-                console.log(`Produto ${produto_id} atualizado: estoque=${novoEstoque}, status=${statusAtualizado}`);
-            }
+                const statusAtualizado = novoEstoque === 0 ? "Indisponivel" : "Disponivel";
+
+                // Atualizar o estoque e status
+                const { error: erroUpdate } = await supabase
+                    .from("produtos")
+                    .update({ 
+                        stock: novoEstoque,
+                        peso_total: novoPesoTotal,
+                        status: statusAtualizado
+                    })
+                    .eq("id", produto_id);
+
+                if (erroUpdate) {
+                    console.error(`Erro ao atualizar produto ${produto_id}:`, erroUpdate.message);
+                } else {
+                    console.log(`Produto ${produto_id} atualizado: estoque=${novoEstoque}, peso_total=${novoPesoTotal}, status=${statusAtualizado}`);
+                }
             }
         } catch (err) {
             console.error("Erro geral ao atualizar estoques:", err.message);
             throw err;
         }
     };
+
 
     const atualizarStatusParaDebitos = async (cliente_id, status)  => {
         setCloseModal(null);
