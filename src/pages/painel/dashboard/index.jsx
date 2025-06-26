@@ -90,6 +90,23 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         />
                     } 
                 />
+
+                <CardDashboard 
+                    $toogleMenu={$toogleMenu}
+                    $moneyHoje={dados.parcelasHoje} 
+                    $moneyAtrasado={dados.parcelasAtrasadas}
+                    $moneyTotal={dados.parcelasHoje + dados.parcelasAtrasadas}
+                    text="A Receber" 
+                    cor={"rgb(255, 255, 255)"}
+                    cor2={"rgb(2, 119, 16)"}
+                    visible={false}
+                    icon={
+                        <FaHandHoldingUsd   
+                            className="icon"
+                            style={{ color:"rgb(2, 119, 16)"}}
+                        />
+                    } 
+                />
             </section>
             
             <section className="charts-container">
@@ -116,14 +133,14 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 </section>
 
                 <TopProductsChart 
-                    title="Vendas" 
+                    title="Compras" 
                     text="do Mês"
                     icon={<FaCartArrowDown  className="icon" />}
                     width="250px"
                     height="410px"
                 >
                     <ChartPizza 
-                        data={dados.vendas} 
+                        data={dados.compras} 
                         pizzHeight={170}
                         pizzWidth={220}
                         innerRadius={20}

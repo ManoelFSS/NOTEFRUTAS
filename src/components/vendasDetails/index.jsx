@@ -186,7 +186,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p>
                                     {
                                         produto?.Type_sales?.toLowerCase() === "kg"
-                                        ? Number(produto?.quantidade) / 1000
+                                        ? Number(produto?.quantidade) 
                                         : produto?.quantidade
                                     }
                                 </p>

@@ -25,7 +25,7 @@ export const Container_dashboard = styled.div`
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
-        gap: 15px;
+        gap: 10px;
         padding: 0 10px;
     }
 

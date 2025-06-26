@@ -104,6 +104,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                 valor_total: "",
                 created_at: new Date(),
                 Type_sales: produto.Type_sales,
+                peso_medio: produto.peso_medio
             }
         ]);
         setModalProduct(false)

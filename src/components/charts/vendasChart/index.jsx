@@ -136,7 +136,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
     return (
         <Container>
             <div className="chart-header">
-                <h3>Controle de Vendas</h3>
+                <h3>Vendas</h3>
                 <div className="selects-ano-mes">
                     <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
                 </div>

@@ -135,7 +135,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                 <div className="datails-client">
                     <div className="datails-date">
                         <div>
-                            <h4>Cliente</h4>
+                            <h4>Fornecedor</h4>
                             <p className="name">{vendaFilter?.name}</p>
                         </div>
                         <div>

@@ -23,6 +23,7 @@ export const ProductProvider = ({ children }) => {
     const[ state, setState] = useState('');// controle do campo state
     const [tipoDeVenda, setTipoDeVenda] = useState('');// controle do campo adminId
     const [pesoMedio, setPesoMedio] = useState(0);// controle do campo adminId
+    const [stock, setStock] = useState(0);// controle do campo adminId
 
     const [images, setImages] = useState([]);// controle do campo images
 
@@ -88,8 +89,20 @@ export const ProductProvider = ({ children }) => {
 
     const editarProduto = async (novosDados, id) => {
         setLoading(true);
+        console.log(novosDados.Type_sales);
+        console.log(novosDados.stock);
+        console.log(novosDados.peso_medio);
+        console.log(novosDados.peso_total);
 
         try {
+
+            if(novosDados.Type_sales === "kg") {
+                novosDados.peso_total = novosDados.stock * novosDados.peso_medio;
+            }else {
+                novosDados.peso_total = 0;
+                novosDados.peso_medio = 0;
+            }
+
             const { error } = await supabase
             .from('produtos')
             .update(novosDados)
@@ -236,7 +249,8 @@ export const ProductProvider = ({ children }) => {
                 month, setMonth,
                 year, setYear,
                 pesoMedio, setPesoMedio,
-                tipoDeVenda, setTipoDeVenda
+                tipoDeVenda, setTipoDeVenda,
+                stock, setStock
             }}>
         {children}
         </ProductContext.Provider>

@@ -223,8 +223,8 @@ export const ClientesProvider = ({ children }) => {
                     novoEstoque = Math.max(produto.stock - quantidade, 0);
                 } else {
                     // Venda por peso
-                    const quantidadeEmKg = quantidade / 1000;  // converte g para kg
-                    novoPesoTotal = Math.max(produto.peso_total - quantidadeEmKg, 0);
+                    // const quantidadeEmKg = quantidade / 1000;  // converte g para kg
+                    novoPesoTotal = Math.max(produto.peso_total - quantidade, 0);
                     novoEstoque = Math.floor(novoPesoTotal / produto.peso_medio);
                     novoEstoque = Math.max(novoEstoque, 0);
 
@@ -330,9 +330,12 @@ export const ClientesProvider = ({ children }) => {
                 if (item.Type_sales === "kg") {
                     // Transforma "10.000" → 10000 (gramas)
                     quantidadeCorrigida = parseInt(item.quantidade.replace(".", ""), 10);
+                    quantidadeCorrigida = Math.floor(quantidadeCorrigida / 1000);
+                    console.log(quantidadeCorrigida);
                 } else {
                     // Garante que unidade esteja como número
                     quantidadeCorrigida = Number(item.quantidade);
+                    console.log(quantidadeCorrigida);
                 }
 
                 return {

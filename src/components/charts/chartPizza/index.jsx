@@ -32,16 +32,16 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
         
         if (color === "Total") {
             return 'rgba(228, 228, 228, 0.87)';
-        } else if (["Vendas Hoje",].includes(color)) {
+        } else if (["Hoje",].includes(color)) {
             return 'rgb(4, 36, 141)';
-        }  else if (["Vendas com parcelas a vencer hoje"].includes(color)) {
+        }  else if (["Parcelas a vencer hoje"].includes(color)) {
             return 'rgb(43, 36, 254)';
         } 
-        else if (["Vendas Pagas",].includes(color)) {
+        else if (["Pagas",].includes(color)) {
             return 'rgb(0, 191, 10)';
-        } else if (["Vendas com pagamento pendente",].includes(color)) {
+        } else if (["Pagamento pendente",].includes(color)) {
             return 'rgb(255, 203, 31)';
-        } else if ([ "Vendas com parcelas atrasadas"].includes(color))  {
+        } else if ([ "Parcelas atrasadas"].includes(color))  {
             return 'rgb(247, 132, 0)';
         } else if (["Débitos pendentes"].includes(color))  {
             return 'rgb(255, 208, 0)';
@@ -51,7 +51,7 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
             return 'rgb(3, 186, 150)';
         } else if (["Débitos a Pagar"].includes(color)) {
             return 'rgb(233, 158, 20)';
-        } else if (["Vendas cancelada"].includes(color)) {
+        } else if (["Cancelada"].includes(color)) {
             return 'rgb(255, 0, 0)';
         }else {
             return color;

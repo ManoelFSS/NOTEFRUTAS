@@ -74,7 +74,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                 // barThickness: 10,
             },
             {
-                label: 'vendidas | Mês',
+                label: 'vendas | Mês',
                 data: vendidos,
                 backgroundColor: 'rgb(0, 72, 255)',
                 minBarLength:5,
@@ -133,17 +133,20 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                     label: function (context) {
                         const label = context.dataset.label || '';
                         const value = context.raw;
-                        
-                        // Se for o dataset "Esgotado", mostra valor negativo
+                        const index = context.dataIndex;
+
+                        const item = vendas[index]; // aqui acessamos o item da venda correspondente
+
                         if (label === 'Valor total em Vendas | Mês') {
-                            return `${label}:${value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-                        }else {
-                            return `${label}: ${value} Unid`; 
+                            return `${label}: ${value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                         }
-                        
-                        // Outros normais
-                        return `${label}: ${value}`;
-                    },
+
+                        if (item?.Type_sales === 'kg' && label === 'vendas | Mês') {
+                            return `${label}: ${value} Kg`;
+                        } else {
+                            return `${label}: ${value} Unid`;
+                        }
+                    }
                 },
             },
         },

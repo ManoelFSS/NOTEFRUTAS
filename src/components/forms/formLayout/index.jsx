@@ -18,7 +18,7 @@ const FormLayout = ({event, children, $height, state, $color }) => {
     } = useAuthContext()
 
     const {setReloadDashboard, reloadDashboard} = useDashboard()
-    const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category, pesoMedio,  tipoDeVenda } = useProduct()
+    const { cadastrarProduct, editarProduto, caunterProduct, idProduct, category, pesoMedio,  tipoDeVenda, stock } = useProduct()
 
     const { 
             cadastrarCliente, 
@@ -140,7 +140,9 @@ const FormLayout = ({event, children, $height, state, $color }) => {
             description: event.target.description?.value || "",
             category: category || "",
             Type_sales: tipoDeVenda || "",
+            stock: stock || 0,
             peso_medio: pesoMedio || 0,
+            peso_total: 0,
         };
 
         const venda = {

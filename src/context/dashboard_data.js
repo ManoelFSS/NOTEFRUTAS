@@ -282,14 +282,134 @@ export const getResumoVendas = async (adminid) => {
 
     return [
         { name: 'Total', value: total },
-        { name: 'Vendas Hoje', value: hojeCount },
-        { name: 'Vendas com parcelas a vencer hoje', value: vendasAReceberHoje.length },
-        { name: 'Vendas Pagas', value: pagas },
-        { name: 'Vendas com pagamento pendente', value: pendentes },
-        { name: 'Vendas com parcelas atrasadas', value: vendasAtrasadas.length },
-        { name: 'Vendas cancelada', value: canceladas }
+        { name: 'Hoje', value: hojeCount },
+        { name: 'Parcelas a vencer hoje', value: vendasAReceberHoje.length },
+        { name: 'Pagas', value: pagas },
+        { name: 'Pagamento pendente', value: pendentes },
+        { name: 'Parcelas atrasadas', value: vendasAtrasadas.length },
+        { name: 'Cancelada', value: canceladas }
     ];
 };
+
+
+
+
+
+
+
+export const getResumoCompras = async (adminid) => {
+    const now = new Date();
+    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+    
+    const hoje = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
+    const hojeInicio = `${hoje}T00:00:00`;
+    const hojeFim = `${hoje}T23:59:59`;
+
+    const filtroMes = (query) =>
+        query
+            .gte('created_at', primeiroDia)
+            .lte('created_at', ultimoDia);
+
+    // Total de compras no mês
+    const { count: total, error: errorTotal } = await filtroMes(
+        supabase
+            .from('compras')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+    );
+    if (errorTotal) throw errorTotal;
+
+    // Vendas criadas hoje
+    const { count: hojeCount, error: errorHoje } = await supabase
+        .from('compras')
+        .select('*', { count: 'exact', head: true })
+        .eq('adminid', adminid)
+        .gte('created_at', hojeInicio)
+        .lte('created_at', hojeFim);
+    if (errorHoje) throw errorHoje;
+
+    // Vendas pagas no mês
+    const { count: pagas, error: errorPagas } = await filtroMes(
+        supabase
+            .from('compras')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Paga')
+    );
+    if (errorPagas) throw errorPagas;
+
+    // Vendas pendentes no mês
+    const { count: pendentes, error: errorPendentes } = await filtroMes(
+        supabase
+            .from('compras')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Pendente')
+    );
+    if (errorPendentes) throw errorPendentes;
+
+    // Vendas canceladas no mês
+    const { count: canceladas, error: errorCanceladas } = await filtroMes(
+        supabase
+            .from('compras')
+            .select('*', { count: 'exact', head: true })
+            .eq('adminid', adminid)
+            .eq('status', 'Cancelada')
+    );
+    if (errorCanceladas) throw errorCanceladas;
+
+    // IDs das vendas do mês
+    const { data: vendasMes, error: errorVendasMes } = await filtroMes(
+        supabase
+            .from('compras')
+            .select('id')
+            .eq('adminid', adminid)
+    );
+    if (errorVendasMes) throw errorVendasMes;
+
+    const idsVendasMes = vendasMes.map(v => v.id);
+
+    // Parcelas com status "A vencer" e vencendo HOJE
+    const { data: parcelasHoje, error: errorParcelas } = await supabase
+        .from('parcelas_compra')
+        .select('compra_id')
+        .in('status', ['A vencer', 'Hoje'])
+        .gte('data_vencimento', hojeInicio)
+        .lte('data_vencimento', hojeFim);
+    if (errorParcelas) throw errorParcelas;
+
+    // Filtrar apenas vendas do mês
+    const vendasAReceberHoje = [
+        ...new Set(
+            parcelasHoje
+                .filter(p => idsVendasMes.includes(p.compra_id))
+                .map(p => p.compra_id)
+        )
+    ];
+
+    // Parcelas "Atrasadas"
+    const { data: parcelasAtrasadas, error: errorAtrasadas } = await supabase
+        .from('parcelas_compra')
+        .select('compra_id')
+        .eq('status', 'Atrasada');
+    if (errorAtrasadas) throw errorAtrasadas;
+
+    const vendasAtrasadas = [...new Set(parcelasAtrasadas.map(p => p.venda_id))];
+
+    return [
+        { name: 'Total', value: total },
+        { name: 'Hoje', value: hojeCount },
+        { name: 'Parcelas a vencer hoje', value: vendasAReceberHoje.length },
+        { name: 'Pagas', value: pagas },
+        { name: 'Pagamento pendente', value: pendentes },
+        { name: 'Parcelas atrasadas', value: vendasAtrasadas.length },
+        { name: 'Cancelada', value: canceladas }
+    ];
+};
+
+
+
 
 
 
@@ -467,7 +587,7 @@ export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSe
     // Buscar produtos
     const { data: produtos, error: errorProdutos } = await supabase
         .from('produtos')
-        .select('id, name, category, stock')
+        .select('id, name, category, stock, Type_sales')
         .eq('adminid', adminid);
 
     if (errorProdutos) throw errorProdutos;
@@ -500,12 +620,13 @@ export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSe
     const resultado = produtos
         .filter(p => mapaTotais[p.id])
         .map(p => ({
-        id: p.id,
-        name: p.name,
-        category: p.category,
-        stock: p.stock,
-        valor_total: mapaTotais[p.id].valor_total,
-        quantidade: mapaTotais[p.id].quantidade,
+            id: p.id,
+            Type_sales: p.Type_sales,
+            name: p.name,
+            category: p.category,
+            stock: p.stock,
+            valor_total: mapaTotais[p.id].valor_total,
+            quantidade: mapaTotais[p.id].quantidade,
         }));
 
     return resultado;
