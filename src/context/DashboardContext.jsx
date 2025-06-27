@@ -15,7 +15,6 @@ import {
 } from './dashboard_data';
 // context
 import { useAuthContext } from "./AuthContext";
-import { get } from 'mongoose';
 
 const DashboardContext = createContext();
 
