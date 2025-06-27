@@ -18,7 +18,7 @@ import { useAuthContext } from "../../../context/AuthContext";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const VendasChart = ({ vendas, $height, $ocult }) => {
+const VendasChart = ({ vendas, $height, $ocult, title, legend,  bg_colors}) => {
 
     const {setMonth, setYear, comparativoVendas} = useDashboard();
     const { user } = useAuthContext();
@@ -37,22 +37,22 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
         datasets: [
             {
                 label: '',
-                data: vendaAnterior,
+                data: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"],
                 backgroundColor: 'rgba(0, 72, 255, 0)',  // invisível
                 minBarLength: 0,
                 // barThickness: 10,
             },
             {
-                label: 'Vendas do mês anterior',
+                label: legend[0],
                 data: vendaAnterior,
-                backgroundColor: 'rgb(91, 113, 114)',
+                backgroundColor:  bg_colors[0],
                 minBarLength: 0,
                 // barThickness: 10,
             },
             {
-                label: 'Vendas do mês atual',
+                label: legend[1],
                 data: vendaAtual,
-                backgroundColor: ' #00A91F',
+                backgroundColor:  bg_colors[1],
                 minBarLength: 0,
                 // barThickness: 10,
             },
@@ -136,7 +136,7 @@ const VendasChart = ({ vendas, $height, $ocult }) => {
     return (
         <Container>
             <div className="chart-header">
-                <h3>Vendas</h3>
+                <h3>{title}</h3>
                 <div className="selects-ano-mes">
                     <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
                 </div>

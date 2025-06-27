@@ -11,7 +11,7 @@ export const Container = styled.div`
     min-width: 240px;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
 
     .card-header {
         display: flex;
@@ -78,6 +78,7 @@ export const Container = styled.div`
         font-size: 0.8rem;
         font-weight: 600;
         color: var( --color-text-secondary );
+        border-radius: 0px 0px 8px 8px;
     }
 
     .alert {

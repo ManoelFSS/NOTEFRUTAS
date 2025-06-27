@@ -19,8 +19,8 @@ export const Container = styled.div`
         gap: 10px;
         
         h3 {
-            font-size: 1rem;
-            font-weight: 900;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: #000;
             text-align: center;
         }

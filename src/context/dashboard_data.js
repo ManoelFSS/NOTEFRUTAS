@@ -45,10 +45,10 @@ export const getResumoFinanceiro = async (adminid) => {
 
 
 
-export const getParcelasAtrasadas = async (adminid) => {
+export const getParcelasAtrasadas = async (adminid, tabela1, tabela2, idRef) => {
     // Buscar IDs das vendas PENDENTES desse admin
     const { data: vendasPendentes, error: vendasError } = await supabase
-        .from('vendas')
+        .from(`${tabela1}`)
         .select('id')
         .eq('adminid', adminid)
         .eq('status', 'Pendente');
@@ -61,10 +61,10 @@ export const getParcelasAtrasadas = async (adminid) => {
 
     // Buscar parcelas com status "Atrasada" ligadas às vendas pendentes
     const { data: parcelasAtrasadas, error: parcelasError } = await supabase
-        .from('parcelas_venda')
+        .from(`${tabela2}`)
         .select('valor_parcela')
         .eq('status', 'Atrasada')
-        .in('venda_id', idsVendas);
+        .in(`${idRef}`, idsVendas);
 
     if (parcelasError) throw parcelasError;
 
@@ -75,7 +75,7 @@ export const getParcelasAtrasadas = async (adminid) => {
 
 
 
-export const getTotalParcelasVencimentoHoje = async (adminid) => {
+export const getTotalParcelasVencimentoHoje = async (adminid, tabela) => {
     const now = new Date()
     const diaAtual = now.getDate().toString().padStart(2, '0')
     const mesAtual = (now.getMonth() + 1).toString().padStart(2, '0')
@@ -84,7 +84,7 @@ export const getTotalParcelasVencimentoHoje = async (adminid) => {
     const dataHoje = `${anoAtual}-${mesAtual}-${diaAtual}`
 
     const { data: parcelasHoje, error } = await supabase
-        .from('parcelas_venda')
+        .from(`${tabela}`)
         .select('valor_parcela')
         .eq('adminid', adminid)
         .eq('data_vencimento', dataHoje)
@@ -96,6 +96,11 @@ export const getTotalParcelasVencimentoHoje = async (adminid) => {
 
     return total
 }
+
+
+
+
+
 
 
 export const getResumoClientes = async (adminid) => {
@@ -577,6 +582,77 @@ export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSel
     ];
 };
 
+
+export const getComparativoComprasPorDia = async (adminid, anoSelecionado, mesSelecionado) => {
+    // Ajusta mesSelecionado de 1-12 para 0-11 (ex.: 5 para maio vira 4)
+    const mesAjustado = mesSelecionado - 1;
+
+    // Ajusta o mês anterior considerando ano e mês selecionados
+    const dataAtual = new Date(anoSelecionado, mesAjustado, 1);
+    const dataAnterior = new Date(anoSelecionado, mesAjustado - 1, 1);
+    
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth();
+
+    const anoAnterior = dataAnterior.getFullYear();
+    const mesAnterior = dataAnterior.getMonth();
+
+    const getLimitesDoMes = (ano, mes) => {
+        const primeiro = new Date(ano, mes, 1);
+        const ultimo = new Date(ano, mes + 1, 0, 23, 59, 59);
+        return [primeiro.toISOString(), ultimo.toISOString()];
+    };
+
+    const [inicioAtual, fimAtual] = getLimitesDoMes(anoAtual, mesAtual);
+    const [inicioAnterior, fimAnterior] = getLimitesDoMes(anoAnterior, mesAnterior);
+
+    const { data: vendasAtual, error: erroAtual } = await supabase
+        .from('compras')
+        .select('created_at, valor_total')
+        .gte('created_at', inicioAtual)
+        .lte('created_at', fimAtual)
+        .eq('adminid', adminid)
+        .neq('status', 'Cancelada'); // <- Adicionado filtro
+
+    if (erroAtual) throw erroAtual;
+
+    const { data: vendasAnterior, error: erroAnterior } = await supabase
+        .from('compras')
+        .select('created_at, valor_total')
+        .gte('created_at', inicioAnterior)
+        .lte('created_at', fimAnterior)
+        .eq('adminid', adminid)
+        .neq('status', 'Cancelada'); // <- Adicionado filtro
+
+    if (erroAnterior) throw erroAnterior;
+
+    const agruparPorDia = (vendas, ano, mes) => {
+        const diasNoMes = new Date(ano, mes + 1, 0).getDate();
+        const totaisPorDia = Array(diasNoMes).fill(0);
+        for (const venda of vendas) {
+            const data = new Date(venda.created_at);
+            const dia = data.getDate(); // 1 a 31
+            totaisPorDia[dia - 1] += venda.valor_total;
+        }
+        return totaisPorDia;
+    };
+
+    const vendasPorDiaAtual = agruparPorDia(vendasAtual, anoAtual, mesAtual);
+    const vendasPorDiaAnterior = agruparPorDia(vendasAnterior, anoAnterior, mesAnterior);
+
+    // Gera os rótulos de 1 até o maior número de dias entre os dois meses
+    const diasNoMesSelecionado = new Date(anoSelecionado, mesSelecionado, 0).getDate();
+    const labels = Array.from({ length: diasNoMesSelecionado }, (_, i) => `Dia ${i + 1}`);
+
+    while (vendasPorDiaAtual.length < diasNoMesSelecionado) vendasPorDiaAtual.push(0);
+    while (vendasPorDiaAnterior.length < diasNoMesSelecionado) vendasPorDiaAnterior.push(0);
+
+    return [
+        vendasPorDiaAnterior, // índice 0: mês anterior
+        vendasPorDiaAtual,    // índice 1: mês selecionado
+        labels                // índice 2: labels do gráfico
+    ];
+};
 
 
 export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSelecionado) => {

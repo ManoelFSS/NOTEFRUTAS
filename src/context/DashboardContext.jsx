@@ -10,10 +10,12 @@ import {
     getTotalParcelasVencimentoHoje,
     getParcelasAtrasadas,
     getComparativoVendasPorDia,
+    getComparativoComprasPorDia,
     getResumoProdutosPorPeriodo
 } from './dashboard_data';
 // context
 import { useAuthContext } from "./AuthContext";
+import { get } from 'mongoose';
 
 const DashboardContext = createContext();
 
@@ -30,6 +32,7 @@ export const DashboardProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [dados, setDados] = useState({});
     const [comparativoVendas, setComparativoVendas] = useState([]);
+    const [comparativoCompras, setComparativoCompras] = useState([]);
     const [comparativoProduto, setComparativoProduto] = useState([]);
     const [reloadDashboard, setReloadDashboard] = useState(null);
 
@@ -41,8 +44,10 @@ export const DashboardProvider = ({ children }) => {
             try {
                 const [
                     financeiro,
-                    parcelasHoje,
-                    parcelasAtrasadas,
+                    parcelasVendasHoje,
+                    parcelasComprasHoje,
+                    parcelasAtrasadasVendas,
+                    parcelasAtrasadasCompras,
                     clientes,
                     fornecedores,
                     compras,
@@ -51,8 +56,10 @@ export const DashboardProvider = ({ children }) => {
                     clientesMais,
                 ] = await Promise.all([
                     getResumoFinanceiro(userId),
-                    getTotalParcelasVencimentoHoje(userId),
-                    getParcelasAtrasadas(userId),
+                    getTotalParcelasVencimentoHoje(userId, "parcelas_venda"),
+                    getTotalParcelasVencimentoHoje(userId, "parcelas_compra"),
+                    getParcelasAtrasadas(userId, "vendas", "parcelas_venda", "venda_id"),
+                    getParcelasAtrasadas(userId, "compras", "parcelas_compra", "compra_id"),
                     getResumoClientes(userId),
                     getResumoFornecedores(userId),
                     getResumoCompras(userId),
@@ -63,8 +70,10 @@ export const DashboardProvider = ({ children }) => {
 
                 setDados({
                     financeiro,
-                    parcelasHoje,
-                    parcelasAtrasadas,
+                    parcelasVendasHoje,
+                    parcelasComprasHoje,
+                    parcelasAtrasadasVendas,
+                    parcelasAtrasadasCompras,
                     clientes,
                     fornecedores,
                     compras,
@@ -92,6 +101,16 @@ export const DashboardProvider = ({ children }) => {
         getComparativoVendas();
     }, [year , month, userId, reloadDashboard ]);
 
+    useEffect(() => {
+        if (!userId) return;
+        const getComparativoCompras = async () => {
+            const getComparativoCompras = await getComparativoComprasPorDia(userId, year, month);
+            setComparativoCompras(getComparativoCompras || []);
+            setLoading(false);
+        }
+        getComparativoCompras();
+    }, [year , month, userId, reloadDashboard ]);
+
 
 
     useEffect(() => {
@@ -117,6 +136,7 @@ export const DashboardProvider = ({ children }) => {
                 yearProdutos, setYearProduto,
                 loading, setLoading, 
                 comparativoVendas,
+                comparativoCompras,
                 comparativoProduto,
                 dados, 
                 reloadDashboard, setReloadDashboard

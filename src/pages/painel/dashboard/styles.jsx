@@ -60,7 +60,7 @@ export const Container_dashboard = styled.div`
 
     .charts-container-vendas {
         width: 100%;
-        padding: 0px 10px ;
+        padding: 5px 10px ;
         overflow: auto;
 
         .chart-vendas {

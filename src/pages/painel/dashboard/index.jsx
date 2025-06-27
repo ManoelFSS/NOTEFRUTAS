@@ -21,6 +21,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
     const {
         comparativoVendas, 
+        comparativoCompras,
         comparativoProduto,
         dados 
     } = useDashboard();
@@ -59,7 +60,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     } 
                 />
 
-                <CardDashboard 
+                {/* <CardDashboard 
                     $toogleMenu={$toogleMenu}
                     $money={"0"} 
                     text="Pagar Hoje" 
@@ -72,13 +73,30 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                             style={{ color: " #FF9D00" }}
                         />
                     } 
+                /> */}
+
+                <CardDashboard 
+                    $toogleMenu={$toogleMenu}
+                    $moneyHoje={dados.parcelasComprasHoje} 
+                    $moneyAtrasado={dados.parcelasAtrasadasCompras}
+                    $moneyTotal={dados.parcelasComprasHoje + dados.parcelasAtrasadasCompras}
+                    text="A Pagar" 
+                    cor={"rgb(255, 255, 255)"}
+                    cor2={" #FF9D00"}
+                    visible={false}
+                    icon={
+                        <RiMoneyDollarCircleFill   
+                            className="icon"
+                            style={{ color: " #FF9D00" }}
+                        />
+                    } 
                 />
                 
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $moneyHoje={dados.parcelasHoje} 
-                    $moneyAtrasado={dados.parcelasAtrasadas}
-                    $moneyTotal={dados.parcelasHoje + dados.parcelasAtrasadas}
+                    $moneyHoje={dados.parcelasVendasHoje} 
+                    $moneyAtrasado={dados.parcelasAtrasadasVendas}
+                    $moneyTotal={dados.parcelasVendasHoje + dados.parcelasAtrasadasVendas}
                     text="A Receber" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={"rgb(2, 119, 16)"}
@@ -91,22 +109,6 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     } 
                 />
 
-                <CardDashboard 
-                    $toogleMenu={$toogleMenu}
-                    $moneyHoje={dados.parcelasHoje} 
-                    $moneyAtrasado={dados.parcelasAtrasadas}
-                    $moneyTotal={dados.parcelasHoje + dados.parcelasAtrasadas}
-                    text="A Receber" 
-                    cor={"rgb(255, 255, 255)"}
-                    cor2={"rgb(2, 119, 16)"}
-                    visible={false}
-                    icon={
-                        <FaHandHoldingUsd   
-                            className="icon"
-                            style={{ color:"rgb(2, 119, 16)"}}
-                        />
-                    } 
-                />
             </section>
             
             <section className="charts-container">
@@ -198,16 +200,32 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
             </section>
 
             <section className="charts-container-vendas">
-                <section className="chart-vendas">
-                    <VendasChart vendas={comparativoVendas}  />
-                </section>
-            </section>   
-            
-            <section className="charts-container-vendas">
                 <section className="chart-vendas"> 
                     <StockProductChart vendas={comparativoProduto} />
                 </section>
-            </section>       
+            </section>    
+
+            <section className="charts-container-vendas">
+                <section className="chart-vendas">
+                    <VendasChart 
+                        vendas={comparativoVendas}  
+                        title="Vendas"
+                        legend={['Vendas do mês anterior', 'Vendas do mês atual']}
+                        bg_colors={['rgb(64, 72, 108)', ' #00A91F']}
+                    />
+                </section>
+            </section>   
+
+            <section className="charts-container-vendas">
+                <section className="chart-vendas">
+                    <VendasChart 
+                        vendas={comparativoCompras}  
+                        title="Compras"
+                        legend={['Compras do mês anterior', 'Compras do mês atual']}
+                        bg_colors={['rgb(139, 139, 139)', ' #FF9D00']}
+                    />
+                </section>
+            </section>    
         </Container_dashboard>
     )
 }
