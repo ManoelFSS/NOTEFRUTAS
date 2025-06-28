@@ -77,24 +77,24 @@ const Menu = ({$setToogleMenu}) => {
                         Finanças
                     </li>
                 </Link> */}
-                <Link  className="link" to="/reports" onClick={() => $setToogleMenu(false)}>
+                {/* <Link  className="link" to="/reports" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/reports" ? "active" : ""}>
                         <FaSquarePollVertical className="icon" />
                         Relatórios
                     </li>
-                </Link>
+                </Link> */}
                 <Link className="link" to="/settings" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/settings" ? "active" : ""}>
                         <FaBuildingCircleExclamation className="icon" />
                         Empresa
                     </li>
                 </Link>
-                <Link className="link" to="/users" onClick={() => $setToogleMenu(false)}>
+                {/* <Link className="link" to="/users" onClick={() => $setToogleMenu(false)}>
                     <li className={activeLink === "/users" ? "active" : ""}>
                         <MdAdminPanelSettings className="icon" />
                         Administrador
                     </li>
-                </Link>
+                </Link> */}
             </ul>
         </Nav>
     )

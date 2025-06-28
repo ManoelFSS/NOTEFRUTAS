@@ -75,12 +75,11 @@ export const Container_datails = styled.div`
         h2 {
             width: 100%;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 1rem;
             font-weight: 900;
             color: #fff;
             background-color:rgba(127, 127, 127, 0.95);
-            padding: 5px 0;
-            margin-bottom: 6px;
+            padding: 8px 0;
         }
 
         .datails-client {
@@ -181,31 +180,36 @@ export const Container_datails = styled.div`
                         text-align: center;
                         font-size: 0.7rem;
                         font-weight: 600;
-                        padding: 5px 10px 10px;
                     }
                 }
 
                 li:nth-child(1){
                     p {
-                        width:80px;
+                        width:90px;
                     }
                 }
 
                 li:nth-child(2){
-                    p {
-                        width:70px;
+                    display: flex;
+                    flex-direction: row;
+                    width: 70px;
+
+                    span {
+                        font-size: 0.7rem;
+                        color: #ffffff;
+                        padding: 0;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:60px;
+                        width:90px;
                     }
                 }
 
                 li:nth-child(4){
                     p {
-                        width: 88px;
+                        width: 90px;
                     }
                 }
             }
@@ -214,16 +218,15 @@ export const Container_datails = styled.div`
                 display: flex;
                 width: 100%;
                 list-style: none;
+                background-color: #f2f2f2f2;
 
                 .status {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                     font-size: 0.7rem;
-                    font-weight: 800;
-                    color: #fff;
-                    height: 18px;
+                }
 
+                .cancel-icon {
+                    color: red;
+                    font-size: 1rem;
                 }
 
                 .checkbox {
@@ -237,19 +240,16 @@ export const Container_datails = styled.div`
 
                 li {
                     display: flex;
-                    flex-direction: column;
                     align-items: center;
                     font-weight: 600;
                     color: #000;
-                    border-radius: 4px;
-
+                    height: 26px;
 
                     p {
                         width: 100%;
                         text-align: center;
                         font-size: 0.6rem;
                         font-weight: 500;
-                        padding: 5px 6px;
                     }
 
                     span {
@@ -257,37 +257,46 @@ export const Container_datails = styled.div`
                         text-align: center;
                         font-size: 0.7rem;
                         font-weight: 600;
-                        padding: 5px 10px 10px;
                     }
                 }
 
                 li:nth-child(1){
                     p {
-                        width:80px;
+                        width:90px;
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(2){
+                    display: flex;
+                    width: 70px;
+
                     p {
-                        width:70px;
+                        font-size: 0.8rem;
+                    }
+
+                    span {
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(3){
                     p {
-                        width:60px;
+                        width:90px;
+                        font-size: 0.8rem;
                     }
                 }
 
                 li:nth-child(4){
                     p {
-                        width: 88px;
+                        width: 90px;
+                        font-size: 0.8rem;
                     }
                 }
             }
 
             .payment-list:nth-child(even) {
-                background-color: #f2f2f2f2;
+                background-color:rgba(225, 225, 225, 0.95);
             };
 
             .payment-total {
@@ -295,7 +304,8 @@ export const Container_datails = styled.div`
                 align-items: flex-end;
                 flex-direction: column;
                 padding: 5px 5px 0;
-                font-size: 0.7rem;;
+                font-size: 0.8rem;
+                font-weight: 700;
 
                 .title {
                     font-weight: 900;
@@ -309,7 +319,6 @@ export const Container_datails = styled.div`
                     width: 100%;
                     justify-content: space-between;
                     align-items: center;
-                    border:solid 1px rgba(0, 126, 42, 0);
 
                     span {
                         font-size: 1rem;

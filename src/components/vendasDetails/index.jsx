@@ -29,6 +29,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
     const {contarVendasPendentesOuAtrasadas, vendas, setVendas, idVenda, editarParcelaStatus, buscarVendasPorAdmin, editarVenda, setIdVenda } = useVendas();
 
     const [vendaFilter, setVendaFilter] = useState({});
+    console.log(vendaFilter);
     const [idParcela, setIdParcela] = useState('');
     const [confirmPacela, setConfirmPacela] = useState(false);
     const [messege, setMessege] = useState(null);
@@ -235,7 +236,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
                                 <p className="status">{parcela?.status}</p>
                             </li>
                             <li>
-                                <p  style={{ width: "60px", paddingLeft: "30px" }}>
+                                <p  style={{}}>
                                     {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
                                         <input 
                                             className="checkbox"

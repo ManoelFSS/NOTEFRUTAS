@@ -3,6 +3,8 @@ import { Container_datails } from "./styles"
 // icons
 import { FaWindowClose } from "react-icons/fa";
 import { FaFileDownload  } from "react-icons/fa";
+import { FcCancel } from "react-icons/fc";
+
 // components
 import Loading from "../loading";
 import Messege from "../messege";
@@ -54,10 +56,11 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
             await editarParcelaStatus(idParcela, 'Paga');
 
             const getVendas = await buscarComprasPorAdmin(userId, itemsPorPage, paginacao, ano, mes);
+            // console.log(getVendas);
             setCompras(getVendas);
 
             const getVendaItem = getVendas.find(venda => venda.id === idCompra);
-            const getParcelas = await getVendaItem?.parcelas_venda.filter(parcela => parcela.status === 'A vencer');
+            const getParcelas = await getVendaItem?.parcelas_compra?.filter(parcela => parcela.status === 'A vencer');
             console.log(getVendaItem);
             console.log(getParcelas);
 
@@ -79,7 +82,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
             setTextBtn('OK');
             setMessege({success: true, title: "Parcela confirmada com sucesso", message: "A parcela foi confirmada como Pago"});
 
-            const parcelaItem = await  getVendaItem ?.parcelas_venda.find(parcela => parcela.id === idParcela);
+            const parcelaItem = await  getVendaItem ?.parcelas_compra.find(parcela => parcela.id === idParcela);
             console.log(parcelaItem);
 
             if (parcelaItem) {
@@ -105,7 +108,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
         hendleStatusVenda ();
     }, [confirmPacela]);
 
-    const confirmaPagamento  = (id) => {
+    const confirmaPagamento  = (id, table) => {
         setTextBtn('Cancelar');
         setMessege({success: true, title: "Tem certeza que deseja  Confirmar  o pagamento dessa Parcela ?", message: "Atenção ao confirmar o pagamento dessa parcela Não pode ser desfeito"});
         setIdParcela(id);
@@ -166,10 +169,10 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                             <p>Produto</p>
                         </li>
                         <li>
-                            <p>Qnt</p>
+                            <span>Und | Kg</span>
                         </li>
                         <li>
-                            <p>Val Unt</p>
+                            <p>Valor</p>
                         </li>
                         <li>
                             <p>Val Total</p>
@@ -201,13 +204,13 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                     <h5>Parcelas</h5>
                     <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
                         <li>
-                            <p>Data venc</p>
-                        </li>
-                        <li>
-                            <p>status</p>
+                            <p>Data Venc</p>
                         </li>
                         <li>
                             <p style={{ width: "70px" }}>Valor</p>
+                        </li>
+                        <li>
+                            <p>Status</p>
                         </li>
                         <li>
                             <p style={{ width: "60px", paddingLeft: "25px" }}>Ação</p>
@@ -215,24 +218,27 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                     </ul>
                     {vendaFilter?.parcelas_compra?.length > 0 && 
                         vendaFilter?.parcelas_compra?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
-                        <ul className="payment-list" key={index} >
+                        <ul className="payment-list" key={index} style={{ 
+                                backgroundColor: parcela?.status === "A vencer" ? "rgba(255, 230, 0, 0.06)" : parcela?.status === "Hoje" ? "rgba(5, 34, 122, 0.11) " : parcela?.status === "Paga" ? "rgba(23, 170, 7, 0.11)" : parcela?.status === "Atrasada" ? "rgba(255, 0, 204, 0.09)" : "rgba(232, 8, 8, 0.09)" }} >
                             <li>
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
-                            </li>
-                            <li>
-                                <p className="status" style={{ color: parcela?.status === "Paga" ? "rgb(12, 103, 4)" :parcela?.status === "A vencer" ? "rgb(0, 0, 0)" :parcela?.status === "Hoje" ? "rgb(5, 34, 122) " : "rgb(232, 8, 8)" }}>{parcela?.status}</p>
                             </li>
                             <li>
                                 <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                             <li>
+                                <p className="status">{parcela?.status}</p>
+                            </li>
+                            <li>
                                 <p  style={{ width: "60px", paddingLeft: "30px" }}>
-                                    <input 
-                                        className="checkbox"
-                                        type="checkbox" 
-                                        checked={parcela?.status === "Paga"}
-                                        onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
-                                    />
+                                    {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
+                                        <input 
+                                            className="checkbox"
+                                            type="checkbox" 
+                                            checked={parcela?.status === "Paga"}
+                                            onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
+                                        />
+                                    }
                                 </p>
                             </li>
                         </ul>
@@ -265,7 +271,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                     </div>
                 </div>
                 <div className="datails-download">
-                    <p>{vendaFilter?.status === "Cancelada" && "Venda cancelada"}</p>
+                    <p>{vendaFilter?.status === "Cancelada" && "Compra cancelada"}</p>
                     <FaFileDownload 
                         className="icon" 
                         onClick={() => {

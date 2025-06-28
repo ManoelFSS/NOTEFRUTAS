@@ -75,12 +75,11 @@ export const Container_datails = styled.div`
         h2 {
             width: 100%;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 1rem;
             font-weight: 900;
             color: #fff;
             background-color:rgba(127, 127, 127, 0.95);
-            padding: 5px 0;
-            margin-bottom: 6px;
+            padding: 8px 0;
         }
 
         .datails-client {

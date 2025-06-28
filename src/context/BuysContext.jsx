@@ -155,7 +155,7 @@ export const BuysProvider = ({ children }) => {
 
     const editarParcelaStatus = async (parcela_id, status)  => {
         const { data, error } = await supabase
-            .from('parcelas_venda') // substitua pelo nome correto da sua tabela
+            .from('parcelas_compra') // substitua pelo nome correto da sua tabela
             .update({ status: status })
             .eq('id', parcela_id); // ou 'parcela_id', dependendo do nome do campo
 
