@@ -62,6 +62,11 @@ export const Container = styled.div`
         font-size: 0.9rem;
         transition: background-color 0.3s ease;
 
+        .link {
+            text-decoration: none;
+            color: var( --color-text-primary );
+        }
+
         &:hover {
             background-color:rgb(210, 210, 210);
         }

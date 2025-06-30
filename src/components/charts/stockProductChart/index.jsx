@@ -181,6 +181,29 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
     return (
         <Container >
             <div className="chart-header">
+                <div>
+                    <h3>Grafico Controle de Estoque</h3>
+                    <div className="custom-legend">
+                        {data.datasets.map((dataset, index) => (
+                            dataset.label && (
+                                <div key={index} className="legend-item">
+                                    <span
+                                        className="legend-color"
+                                        style={{ backgroundColor: dataset.backgroundColor }}
+                                    ></span>
+                                    {dataset.label}
+                                </div>
+                            )
+                        ))}
+                        <div className="legend-item">
+                            <span
+                                className="legend-color"
+                                style={{ backgroundColor: "red" }}
+                            ></span>
+                            {"Esgotado"}
+                        </div>
+                    </div>
+                </div>
                 <Select 
                     data={vendas} 
                     select={select} 
@@ -193,31 +216,8 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
                     $paginacao={paginacao} 
                     $setPaginacao={setPaginacao}
                 />
-                <h3>Controle de Estoque</h3>
-
                 <div className="selects-ano-mes">
                     <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
-                </div>
-                
-                <div className="custom-legend">
-                    {data.datasets.map((dataset, index) => (
-                        dataset.label && (
-                            <div key={index} className="legend-item">
-                                <span
-                                    className="legend-color"
-                                    style={{ backgroundColor: dataset.backgroundColor }}
-                                ></span>
-                                {dataset.label}
-                            </div>
-                        )
-                    ))}
-                    <div className="legend-item">
-                        <span
-                            className="legend-color"
-                            style={{ backgroundColor: "red" }}
-                        ></span>
-                        {"Esgotado"}
-                    </div>
                 </div>
             </div>
             <div className="chart-main" style={{ height:  "190px"}}>

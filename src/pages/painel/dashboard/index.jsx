@@ -140,6 +140,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     icon={<FaCartArrowDown  className="icon" />}
                     width="250px"
                     height="410px"
+                    link="/buys"
                 >
                     <ChartPizza 
                         data={dados.compras} 
@@ -156,6 +157,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     icon={<FaCartArrowDown  className="icon" />}
                     width="250px"
                     height="410px"
+                    link="/sales"
                 >
                     <ChartPizza 
                         data={dados.vendas} 
@@ -172,6 +174,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     icon={<BsFillPersonLinesFill   className="icon" />}
                     width="250px"
                     height="410px"
+                    link="/clients"
                 >
                     <ChartPizza 
                         data={dados.clientes} 
@@ -188,6 +191,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     icon={<FaHandshake   className="icon" />}
                     width="250px"
                     height="410px"
+                    link="/suppliers"
                 >
                     <ChartPizza 
                         data={dados.fornecedores} 
@@ -209,7 +213,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 <section className="chart-vendas">
                     <VendasChart 
                         vendas={comparativoVendas}  
-                        title="Vendas"
+                        title="Grafico de Vendas"
                         legend={['Vendas do mês anterior', 'Vendas do mês atual']}
                         bg_colors={['rgb(64, 72, 108)', ' #00A91F']}
                     />
@@ -220,7 +224,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 <section className="chart-vendas">
                     <VendasChart 
                         vendas={comparativoCompras}  
-                        title="Compras"
+                        title="Grafico de Compras"
                         legend={['Compras do mês anterior', 'Compras do mês atual']}
                         bg_colors={['rgb(139, 139, 139)', ' #FF9D00']}
                     />

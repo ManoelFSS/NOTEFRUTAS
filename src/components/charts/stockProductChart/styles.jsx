@@ -1,15 +1,16 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-    background-color: #fff;
+    background-color:rgb(255, 255, 255);
     border-radius: 8px;
     border: solid 2px #ccc;
-    padding: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+    padding: 10px 0;
     margin-top: 10px;
 
 
     @media (max-width: 1068px) {
-        width: 1000px;
+        width: 1200px;
     }
 
     .chart-header {
@@ -21,10 +22,9 @@ export const Container = styled.div`
         gap: 10px;
 
         h3 {
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 900;
             color: #000;
-            text-align: center;
         }
 
         .custom-legend {
@@ -32,8 +32,9 @@ export const Container = styled.div`
             align-items: center;
             justify-content: flex-start;
             flex-wrap: wrap;
-            width: 270px;
-            gap: 3px;
+            width: 300px;
+            gap: 5px;
+            padding-top:10px;
 
             .legend-item {
                 display: flex;
@@ -67,8 +68,8 @@ export const Container = styled.div`
         height: 200px;
         justify-content: center;
         width: 100%;
-        padding: 10px 10px 0px;
-        border-top: solid 2px #ccc;
+        padding: 0px 10px;
+        background-color:rgb(255, 255, 255);
 
         @media (max-width: 1320px) {
             height: 200px;

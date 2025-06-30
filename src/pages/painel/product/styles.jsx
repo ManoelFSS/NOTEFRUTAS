@@ -76,7 +76,7 @@ export const ContainerTable = styled.section`
         height: calc(100vh - 134px);
         
         &::-webkit-scrollbar {
-            width: 3px;
+            width: 8px;
         }
         
         &::-webkit-scrollbar-track {
@@ -199,7 +199,7 @@ export const ContainerTable = styled.section`
             height: auto;
             
             &::-webkit-scrollbar {
-                width: 5px;
+                width: 8px;
             }
             
             &::-webkit-scrollbar-track {

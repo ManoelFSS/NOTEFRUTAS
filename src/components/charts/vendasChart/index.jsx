@@ -136,26 +136,28 @@ const VendasChart = ({ vendas, $height, $ocult, title, legend,  bg_colors}) => {
     return (
         <Container>
             <div className="chart-header">
-                <h3>{title}</h3>
+                <div>
+                    <h3>{title}</h3>
+                    <div className="custom-legend">
+                        {data.datasets.map((dataset, index) => (
+                            dataset.label && (
+                                <div key={index} className="legend-item">
+                                    <span
+                                        className="legend-color"
+                                        style={{ backgroundColor: dataset.backgroundColor }}
+                                    ></span>
+                                    {dataset.label}
+                                </div>
+                            )
+                        ))}
+                    </div>
+                </div>
+                
                 <div className="selects-ano-mes">
                     <MonthYearSelector userRegisterYear={user?.createdat?.slice(0, 4)} onChange={handleDateChange} />
                 </div>
-
-                <div className="custom-legend">
-                    {data.datasets.map((dataset, index) => (
-                        dataset.label && (
-                            <div key={index} className="legend-item">
-                                <span
-                                    className="legend-color"
-                                    style={{ backgroundColor: dataset.backgroundColor }}
-                                ></span>
-                                {dataset.label}
-                            </div>
-                        )
-                    ))}
-                </div>
             </div>
-            <div className="chart-main" style={{ height: "180px" }}>
+            <div className="chart-main" style={{ height: "165px" }}>
                 <Bar data={data} options={options} plugins={[verticalLabelPlugin]} />
             </div>
         </Container>

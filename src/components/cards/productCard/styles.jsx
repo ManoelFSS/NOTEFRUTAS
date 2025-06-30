@@ -10,14 +10,9 @@ export const Container = styled.div`
     align-items: center;
     gap: 10px;
     background-color: #fff;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
     transform: scale(0.95);
     transition: transform 0.3s ease;
-    cursor: pointer;
-
-    &:hover {
-        transform: scale(1);
-    }
 
     .headerCard {
         display: flex;

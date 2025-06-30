@@ -4,10 +4,10 @@ export const Container = styled.div`
     background-color: #fff;
     border-radius: 8px;
     border: solid 2px #ccc;
-    padding: 10px;
+    padding: 10px 0;
 
     @media (max-width: 1068px) {
-        width: 1000px;
+        width: 1200px;
     }
     
     .chart-header {
@@ -22,7 +22,7 @@ export const Container = styled.div`
             font-size: 1.4rem;
             font-weight: 600;
             color: #000;
-            text-align: center;
+            padding-bottom: 10px;
         }
         
         .custom-legend {
@@ -60,7 +60,7 @@ export const Container = styled.div`
         display: flex;
         justify-content: center;
         width: 100%;
-        padding: 10px;
+        padding:0 10px;
     }
 
 `

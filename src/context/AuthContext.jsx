@@ -198,7 +198,7 @@ useEffect(() => {
                 success: true,
                 title: 'Cadastro Realizado com sucesso ✅',
                 message: `
-                ✅ Bem-vindo ao Trin-Flow! 🎉\n
+                ✅ Bem-vindo ao Note Frutas! 🎉\n
                 Estamos felizes por ter você com a gente!
                 Agora você faz parte de uma plataforma que vai transformar sua experiência.\n
                 Explore, aproveite e conte conosco nessa jornada.\n

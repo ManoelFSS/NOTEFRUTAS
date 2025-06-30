@@ -9,8 +9,8 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 10px;
-    background-color: #fff;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.3);
+    background-color:rgb(226, 226, 226);
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
 
     .headerCard {
         display: flex;

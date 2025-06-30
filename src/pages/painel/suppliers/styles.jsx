@@ -70,11 +70,12 @@ export const ContainerTable = styled.section`
         flex-wrap: wrap;
         gap: 10px;
         width: 100%;
-        padding: 5px;
+        padding: 14px 0;
         overflow: auto;
+        height: calc(100vh - 130px);
         
         &::-webkit-scrollbar {
-            width: 3px;
+            width: 8px;
         }
         
         &::-webkit-scrollbar-track {
@@ -91,7 +92,7 @@ export const ContainerTable = styled.section`
         flex-direction: column;
         align-items: center;
         width: 100%;
-        min-width: 1140px;
+        min-width: 1200px;
         // height: calc(100vh - 130px);
         // border: 2px solid rgb(178, 15, 15);
 
@@ -198,7 +199,7 @@ export const ContainerTable = styled.section`
             height: calc(100vh - 192px);
             
             &::-webkit-scrollbar {
-                width: 5px;
+                width: 8px;
             }
             
             &::-webkit-scrollbar-track {
@@ -222,7 +223,7 @@ export const ContainerTable = styled.section`
                 padding: 5px 0;
 
                 &:nth-child(even) {
-                    background-color:rgba(175, 188, 179, 0.29);
+                    background-color: #E5E5E5;
                 }
 
                 li {

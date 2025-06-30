@@ -1,6 +1,7 @@
 import { Container } from "./styles"
+import {Link} from 'react-router-dom'
 
-const TopProductChart= ({children, title, text, icon, width,  height}) => {
+const TopProductChart= ({children, title, text, icon, width,  height, link}) => {
     
     return (
         <Container style={{ height: height}} >
@@ -17,7 +18,7 @@ const TopProductChart= ({children, title, text, icon, width,  height}) => {
                 {children}  
             </div>
             <div className="chart-footer">
-                <p>Ver Mais</p>
+                <Link className="link" to={link}><p>Ver Mais</p></Link> 
             </div>
         </Container>
     )
