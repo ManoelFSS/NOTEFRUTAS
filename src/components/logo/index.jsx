@@ -1,16 +1,12 @@
 import { Image } from "./styles"
 import LogoTipo from "../../assets/perfil.png"
-// context 
-import { useAuthContext } from "../../context/AuthContext"
 
-const Logo = ({$width}) => {
-
-    const { user } = useAuthContext();
+const Logo = ({$width, photo}) => {
 
     return (
         <Image 
             $width={$width}
-            src={user?.urlPhoto ? user?.urlPhoto : LogoTipo}
+            src={photo ? photo : LogoTipo}
             alt="Logo tipo do Trin-Flow, uma ingrenagem com grafico de financas em 2d" 
         />
     )

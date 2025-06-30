@@ -31,7 +31,7 @@ const Menu = ({$setToogleMenu}) => {
     return (
         <Nav>
             <div className="logo">
-                <Logo />
+                <Logo photo={user?.url_image} />
                 <h3>{user?.name?.split(" ")[0] || "Usuário"}</h3>
             </div>
             <ul>
