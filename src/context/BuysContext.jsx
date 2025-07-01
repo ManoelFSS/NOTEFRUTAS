@@ -80,34 +80,31 @@ export const BuysProvider = ({ children }) => {
    // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
     const buscarComprasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
         try {
-            // Validar parâmetros
             if (!adminId || limitepage <= 0 || paginacao < 1 || !ano || !mes) {
                 throw new Error("Parâmetros inválidos: adminId, limitepage, paginacao, ano ou mes");
             }
 
-            // Construir intervalo de datas (do primeiro ao último dia do mês)
-            const inicioMes = new Date(ano, mes - 1, 1).toISOString(); // dia 1
-            const fimMes = new Date(ano, mes, 0, 23, 59, 59, 999).toISOString(); // último dia do mês
+            const inicioMes = `${ano}-${String(mes).padStart(2, '0')}-01T00:00:00.000Z`;
+            const fimMes = new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999)).toISOString();
 
-            // Calcular range para paginação
+
             const from = (paginacao - 1) * limitepage;
             const to = from + limitepage - 1;
 
-            // Contar total de vendas do mês ou com status pendente/atrasada com created_at <= fimMes
+            // COUNT
             const { count, error: countError } = await supabase
                 .from("compras")
                 .select("id", { count: "exact", head: true })
                 .eq("adminid", adminId)
                 .or(
-                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes}),and(status.eq.Atrasada,created_at.lte.${fimMes})`
+                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),status.eq.Pendente`
                 );
 
             if (countError) throw countError;
 
-            // Atualiza o contador
             setCaunterCompras(count);
 
-            // Buscar vendas com dados das parcelas e itens
+            // SELECT
             const { data, error } = await supabase
                 .from("compras")
                 .select(`
@@ -117,7 +114,7 @@ export const BuysProvider = ({ children }) => {
                 `)
                 .eq("adminid", adminId)
                 .or(
-                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes}),and(status.eq.Atrasada,created_at.lte.${fimMes})`
+                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),status.eq.Pendente`
                 )
                 .order("contador_compras", { ascending: true })
                 .range(from, to);
@@ -130,6 +127,7 @@ export const BuysProvider = ({ children }) => {
             throw error;
         }
     };
+
     
     const buscarComprasSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];

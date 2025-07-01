@@ -72,59 +72,60 @@ export const VendasProvider = ({ children }) => {
     };
 
 
-   // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
-    const buscarVendasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
-        try {
-            // Validar parâmetros
-            if (!adminId || limitepage <= 0 || paginacao < 1 || !ano || !mes) {
-                throw new Error("Parâmetros inválidos: adminId, limitepage, paginacao, ano ou mes");
+    // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
+        const buscarVendasPorAdmin = async (adminId, limitepage, paginacao, ano, mes) => {
+            try {
+                // Validar parâmetros
+                if (!adminId || limitepage <= 0 || paginacao < 1 || !ano || !mes) {
+                    throw new Error("Parâmetros inválidos: adminId, limitepage, paginacao, ano ou mes");
+                }
+
+                // Construir intervalo de datas (do primeiro ao último dia do mês)
+                const inicioMes = `${ano}-${String(mes).padStart(2, '0')}-01T00:00:00.000Z`;
+                const fimMes = new Date(Date.UTC(ano, mes, 0, 23, 59, 59, 999)).toISOString();
+
+                // Calcular range para paginação
+                const from = (paginacao - 1) * limitepage;
+                const to = from + limitepage - 1;
+
+                // Contar total de vendas do mês ou com status pendente (tiramos 'Atrasada')
+                const { count, error: countError } = await supabase
+                    .from("vendas")
+                    .select("id", { count: "exact", head: true })
+                    .eq("adminid", adminId)
+                    .or(
+                        `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes})`
+                    );
+
+                if (countError) throw countError;
+
+                // Atualiza o contador
+                setCaunterVendas(count);
+
+                // Buscar vendas com dados das parcelas e itens
+                const { data, error } = await supabase
+                    .from("vendas")
+                    .select(`
+                        *,
+                        parcelas_venda(*),
+                        itens_venda(*)
+                    `)
+                    .eq("adminid", adminId)
+                    .or(
+                        `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes})`
+                    )
+                    .order("contador_vendas", { ascending: true })
+                    .range(from, to);
+
+                if (error) throw error;
+
+                return data;
+            } catch (error) {
+                console.error("Erro ao buscar vendas:", error);
+                throw error;
             }
+        };
 
-            // Construir intervalo de datas (do primeiro ao último dia do mês)
-            const inicioMes = new Date(ano, mes - 1, 1).toISOString(); // dia 1
-            const fimMes = new Date(ano, mes, 0, 23, 59, 59, 999).toISOString(); // último dia do mês
-
-            // Calcular range para paginação
-            const from = (paginacao - 1) * limitepage;
-            const to = from + limitepage - 1;
-
-            // Contar total de vendas do mês ou com status pendente/atrasada com created_at <= fimMes
-            const { count, error: countError } = await supabase
-                .from("vendas")
-                .select("id", { count: "exact", head: true })
-                .eq("adminid", adminId)
-                .or(
-                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes}),and(status.eq.Atrasada,created_at.lte.${fimMes})`
-                );
-
-            if (countError) throw countError;
-
-            // Atualiza o contador
-            setCaunterVendas(count);
-
-            // Buscar vendas com dados das parcelas e itens
-            const { data, error } = await supabase
-                .from("vendas")
-                .select(`
-                    *,
-                    parcelas_venda(*),
-                    itens_venda(*)
-                `)
-                .eq("adminid", adminId)
-                .or(
-                    `and(created_at.gte.${inicioMes},created_at.lte.${fimMes}),and(status.eq.Pendente,created_at.lte.${fimMes}),and(status.eq.Atrasada,created_at.lte.${fimMes})`
-                )
-                .order("contador_vendas", { ascending: true })
-                .range(from, to);
-
-            if (error) throw error;
-
-            return data;
-        } catch (error) {
-            console.error("Erro ao buscar vendas:", error);
-            throw error;
-        }
-    };
     
     const buscarVendasSeach = async (searchText, adminId) => {
         if (!searchText || !adminId) return [];

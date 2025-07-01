@@ -31,7 +31,7 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
     const hendleColor = (color) => {
         
         if (color === "Total") {
-            return 'rgba(228, 228, 228, 0.87)';
+            return 'rgb(120, 133, 119)';
         } else if (["Hoje",].includes(color)) {
             return 'rgb(4, 36, 141)';
         }  else if (["Parcelas a vencer hoje"].includes(color)) {
