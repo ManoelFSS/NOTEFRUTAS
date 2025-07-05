@@ -206,76 +206,78 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                     </div>
                 </div>
 
-                <div className="datails-payment">
-                    <h5>Parcelas</h5>
-                    <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
-                        <li style={{ width: "90px" }}>
-                            <p>Data Venc</p>
-                        </li>
-                        <li style={{ width: "90px" }}>
-                            <p>Valor</p>
-                        </li>
-                        <li style={{ width: "90px" }}>
-                            <p>Status</p>
-                        </li>
-                        <li style={{ width: "70px" }}>
-                            <p>Ação</p>
-                        </li>
-                    </ul>
-                    {vendaFilter?.parcelas_compra?.length > 0 && 
-                        vendaFilter?.parcelas_compra?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
-                        <ul className="payment-list" key={index} style={{ 
-                                backgroundColor: parcela?.status === "A vencer" ? "rgba(255, 230, 0, 0.06)" : parcela?.status === "Hoje" ? "rgba(5, 34, 122, 0.11) " : parcela?.status === "Paga" ? "rgba(23, 170, 7, 0.11)" : parcela?.status === "Atrasada" ? "rgba(255, 0, 204, 0.09)" : "rgba(232, 8, 8, 0.09)" }} >
+                { vendaFilter?.parcelas_compra?.length > 0 &&
+                    <div className="datails-payment">
+                        <h5>Parcelas</h5>
+                        <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
                             <li style={{ width: "90px" }}>
-                                <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
+                                <p>Data Venc</p>
                             </li>
                             <li style={{ width: "90px" }}>
-                                <p>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                <p>Valor</p>
                             </li>
                             <li style={{ width: "90px" }}>
-                                <p className="status">{parcela?.status}</p>
+                                <p>Status</p>
                             </li>
                             <li style={{ width: "70px" }}>
-                                <p>
-                                    {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
-                                        <input 
-                                            className="checkbox"
-                                            type="checkbox" 
-                                            checked={parcela?.status === "Paga"}
-                                            onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
-                                        />
-                                    }
-                                </p>
+                                <p>Ação</p>
                             </li>
                         </ul>
-                    )}
-                    <div className="payment-total">
-                        <div className="title">
-                            <p >Parcelas</p>
-                        </div>
-                        <div>
-                            <h4>Total: {vendaFilter?.parcelas_compra?.length}</h4>
-                            <p style={{ color: "red" }}>{vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
-                        </div>
-                        <div>
-                            <h4>Pagas: {vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status === "Paga").length}</h4>
-                            <p style={{ color: "green" }}>
-                                <span>-</span>{" "}
-                                {
-                                    (
-                                    vendaFilter?.parcelas_compra
-                                        ?.filter((parcela) => parcela.status === "Paga")
-                                        .reduce((total, parcela) => total + Math.round(Number(parcela.valor_parcela || 0) * 100), 0) / 100
-                                    ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                                }
-                            </p>
-                        </div>
-                        <div>
-                            <h4>Pendentes: {vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status !== "Paga").length}</h4>
-                            <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                        {vendaFilter?.parcelas_compra?.length > 0 && 
+                            vendaFilter?.parcelas_compra?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
+                            <ul className="payment-list" key={index} style={{ 
+                                    backgroundColor: parcela?.status === "A vencer" ? "rgba(255, 230, 0, 0.06)" : parcela?.status === "Hoje" ? "rgba(5, 34, 122, 0.11) " : parcela?.status === "Paga" ? "rgba(23, 170, 7, 0.11)" : parcela?.status === "Atrasada" ? "rgba(255, 0, 204, 0.09)" : "rgba(232, 8, 8, 0.09)" }} >
+                                <li style={{ width: "90px" }}>
+                                    <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
+                                </li>
+                                <li style={{ width: "90px" }}>
+                                    <p>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                                </li>
+                                <li style={{ width: "90px" }}>
+                                    <p className="status">{parcela?.status}</p>
+                                </li>
+                                <li style={{ width: "70px" }}>
+                                    <p>
+                                        {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
+                                            <input 
+                                                className="checkbox"
+                                                type="checkbox" 
+                                                checked={parcela?.status === "Paga"}
+                                                onChange={() => vendaFilter?.status !== "Cancelada" && parcela?.status !== "Paga" && confirmaPagamento(parcela?.id)}
+                                            />
+                                        }
+                                    </p>
+                                </li>
+                            </ul>
+                        )}
+                        <div className="payment-total">
+                            <div className="title">
+                                <p >Parcelas</p>
+                            </div>
+                            <div>
+                                <h4>Total: {vendaFilter?.parcelas_compra?.length}</h4>
+                                <p style={{ color: "red" }}>{vendaFilter?.valor_restante?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                            </div>
+                            <div>
+                                <h4>Pagas: {vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status === "Paga").length}</h4>
+                                <p style={{ color: "green" }}>
+                                    <span>-</span>{" "}
+                                    {
+                                        (
+                                        vendaFilter?.parcelas_compra
+                                            ?.filter((parcela) => parcela.status === "Paga")
+                                            .reduce((total, parcela) => total + Math.round(Number(parcela.valor_parcela || 0) * 100), 0) / 100
+                                        ).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                                    }
+                                </p>
+                            </div>
+                            <div>
+                                <h4>Pendentes: {vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status !== "Paga").length}</h4>
+                                <p>{(vendaFilter?.valor_restante - vendaFilter?.parcelas_compra?.filter((parcela) => parcela.status === "Paga").reduce((total, parcela) => total + parcela.valor_parcela, 0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
                 <div className="datails-download">
                     <p 
                         style={{ backgroundColor: vendaFilter?.status === "Cancelada" ? "red" : vendaFilter?.status === "Paga" ? "green" : " #FFCB1F" }}
