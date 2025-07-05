@@ -165,32 +165,38 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
 
                 <div className="datails-payment">
                     <ul className="payment-header" >
-                        <li>
+                        <li style={{width: "90px"}}>
                             <p>Produtos</p>
                         </li>
-                        <li>
-                            <span>Und | Kg</span>
+                        <li style={{width: "60px"}}>
+                            <p>Quant</p>
                         </li>
-                        <li>
+                        <li style={{width: "40px"}}>
+                            <p>Tipo</p>
+                        </li>
+                        <li style={{width: "80px"}}>
                             <p>Valor</p>
                         </li>
-                        <li>
+                        <li style={{width: "75px"}}>
                             <p>Val Total</p>
                         </li>
                     </ul>
                     {vendaFilter?.itens_compra?.length > 0 && 
                         vendaFilter?.itens_compra?.map((produto, index) =>
                         <ul className="payment-list" key={index} >
-                            <li>
+                            <li style={{width: "90px"}}>
                                 <p>{produto?.name}</p>
                             </li>
-                            <li>
+                            <li style={{width: "60px"}}>
                                 <p>{produto?.quantidade}</p>
                             </li>
-                            <li>
+                            <li style={{width: "40px"}}>
+                                <p>{produto?.Type_sales === "unidade" ? "Und" : produto?.Type_sales !== "kg" ? produto?.Type_sales : "Kg" } Und</p>
+                            </li>
+                            <li style={{width: "80px"}}>
                                 <p>{produto?.valor_unitario?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
-                            <li>
+                            <li style={{width: "75px"}}>
                                 <p>{produto?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
                         </ul>
@@ -203,34 +209,34 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                 <div className="datails-payment">
                     <h5>Parcelas</h5>
                     <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
-                        <li>
+                        <li style={{ width: "90px" }}>
                             <p>Data Venc</p>
                         </li>
-                        <li>
-                            <p style={{ width: "70px" }}>Valor</p>
+                        <li style={{ width: "90px" }}>
+                            <p>Valor</p>
                         </li>
-                        <li>
+                        <li style={{ width: "90px" }}>
                             <p>Status</p>
                         </li>
-                        <li>
-                            <p style={{ width: "60px", paddingLeft: "25px" }}>Ação</p>
+                        <li style={{ width: "70px" }}>
+                            <p>Ação</p>
                         </li>
                     </ul>
                     {vendaFilter?.parcelas_compra?.length > 0 && 
                         vendaFilter?.parcelas_compra?.sort((p1, p2) => new Date(p1.data_vencimento) - new Date(p2.data_vencimento)).map((parcela, index) =>
                         <ul className="payment-list" key={index} style={{ 
                                 backgroundColor: parcela?.status === "A vencer" ? "rgba(255, 230, 0, 0.06)" : parcela?.status === "Hoje" ? "rgba(5, 34, 122, 0.11) " : parcela?.status === "Paga" ? "rgba(23, 170, 7, 0.11)" : parcela?.status === "Atrasada" ? "rgba(255, 0, 204, 0.09)" : "rgba(232, 8, 8, 0.09)" }} >
-                            <li>
+                            <li style={{ width: "90px" }}>
                                 <p>{parcela?.data_vencimento.split('T')[0].split('-').reverse().join('/')}</p>
                             </li>
-                            <li>
-                                <p  style={{ width: "70px" }}>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
+                            <li style={{ width: "90px" }}>
+                                <p>{parcela?.valor_parcela?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             </li>
-                            <li>
+                            <li style={{ width: "90px" }}>
                                 <p className="status">{parcela?.status}</p>
                             </li>
-                            <li>
-                                <p  style={{ width: "60px", paddingLeft: "30px" }}>
+                            <li style={{ width: "70px" }}>
+                                <p>
                                     {parcela?.status === "Cancelada" ? <FcCancel className="cancel-icon" /> : 
                                         <input 
                                             className="checkbox"

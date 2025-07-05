@@ -174,43 +174,6 @@ export const Container_datails = styled.div`
                         color: rgba(255, 255, 255, 0.95);
                         padding: 5px 6px;
                     }
-
-                    span {
-                        width: 100%;
-                        text-align: center;
-                        font-size: 0.7rem;
-                        font-weight: 600;
-                    }
-                }
-
-                li:nth-child(1){
-                    p {
-                        width:90px;
-                    }
-                }
-
-                li:nth-child(2){
-                    display: flex;
-                    flex-direction: row;
-                    width: 70px;
-
-                    span {
-                        font-size: 0.7rem;
-                        color: #ffffff;
-                        padding: 0;
-                    }
-                }
-
-                li:nth-child(3){
-                    p {
-                        width:90px;
-                    }
-                }
-
-                li:nth-child(4){
-                    p {
-                        width: 90px;
-                    }
                 }
             }
 
@@ -248,49 +211,8 @@ export const Container_datails = styled.div`
                     p {
                         width: 100%;
                         text-align: center;
-                        font-size: 0.6rem;
-                        font-weight: 500;
-                    }
-
-                    span {
-                        width: 100%;
-                        text-align: center;
                         font-size: 0.7rem;
-                        font-weight: 600;
-                    }
-                }
-
-                li:nth-child(1){
-                    p {
-                        width:90px;
-                        font-size: 0.8rem;
-                    }
-                }
-
-                li:nth-child(2){
-                    display: flex;
-                    width: 70px;
-
-                    p {
-                        font-size: 0.8rem;
-                    }
-
-                    span {
-                        font-size: 0.8rem;
-                    }
-                }
-
-                li:nth-child(3){
-                    p {
-                        width:90px;
-                        font-size: 0.8rem;
-                    }
-                }
-
-                li:nth-child(4){
-                    p {
-                        width: 90px;
-                        font-size: 0.8rem;
+                        font-weight: 500;
                     }
                 }
             }
