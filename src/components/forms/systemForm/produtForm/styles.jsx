@@ -34,6 +34,7 @@ export const Container = styled.div`
     }
 
     .form-area {
+        // width: 250px;
         position: relative;
         margin: auto;
         animation-name: animatop;
@@ -69,6 +70,13 @@ export const Container = styled.div`
             .peso {
                 display: flex;
                 align-items: center;
+            }
+
+            p {
+                font-size: 0.7rem;
+                font-weight: 500;
+                width: 320px;
+                padding: 0 0 10px;
             }
 
             input {

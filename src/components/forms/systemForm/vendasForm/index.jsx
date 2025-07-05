@@ -693,8 +693,14 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                                     className="item" key={index} 
                                     onClick={() => {adicionarProduto(item)}}
                                 >
-                                    <img src={item.url_image} alt="" />
-                                    <p>{item.name}</p>
+                                    <div className="img-area">
+                                        <img src={item.url_image} alt="" />
+                                        <p>{item.name}</p>
+                                    </div>
+                                    <div className="stock-area">
+                                        <p>{item.stock}</p>
+                                        <span>{item.Type_sales === "kg" ? "Itens" : item.Type_sales === "unidade" ? "Unid" : item.Type_sales}</span>
+                                    </div>
                                 </div>
                             ))}
                         </section>

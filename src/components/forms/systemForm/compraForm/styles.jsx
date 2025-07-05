@@ -4,7 +4,7 @@ export const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100svh;
+    height: 100vh;
     width: 100%;
     position: fixed;
     top: 0;
@@ -172,7 +172,7 @@ export const Container = styled.div`
                 overflow-y: auto;
 
                 &::-webkit-scrollbar {
-                    width: 3px;
+                    width: 5px;
                 }
                 
                 &::-webkit-scrollbar-track {
@@ -181,6 +181,7 @@ export const Container = styled.div`
                 
                 &::-webkit-scrollbar-thumb {
                     background: #FF9D00;
+                    cursor: pointer;
                 }
 
                 .item {
@@ -200,6 +201,18 @@ export const Container = styled.div`
                     transform: scale(0.95);
                     margin-bottom: 10px;
 
+                    .img-area {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .stock-area {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
+
                     img {
                         width: 40px;
                         height: 40px;
@@ -208,6 +221,11 @@ export const Container = styled.div`
                     p {
                         font-weight: 900;
                         font-size: 1rem;
+                    }
+
+                    span {
+                        font-weight: 500;
+                        font-size: 0.8rem;
                     }
 
                     &:hover {

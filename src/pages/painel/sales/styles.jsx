@@ -349,7 +349,7 @@ export const ContainerTable = styled.section`
 
                 li:nth-child(9) {
                     display: flex;
-                    width: 150px;
+                    width: 140px;
 
                     span {    
                         font-weight: 900;

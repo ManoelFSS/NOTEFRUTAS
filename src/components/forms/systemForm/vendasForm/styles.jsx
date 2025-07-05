@@ -176,7 +176,7 @@ export const Container = styled.div`
                 overflow-y: auto;
 
                 &::-webkit-scrollbar {
-                    width: 3px;
+                    width: 5px;
                 }
                 
                 &::-webkit-scrollbar-track {
@@ -203,6 +203,18 @@ export const Container = styled.div`
                     transition: border 0.3s ease;
                     transform: scale(0.95);
                     margin-bottom: 10px;
+
+                    .img-area {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                    }
+
+                    .stock-area {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    }
 
                     img {
                         width: 40px;
@@ -376,7 +388,6 @@ export const Container = styled.div`
                         font-size: 0.7rem;
                         background-color: rgb(141, 141, 141);
                         color:  #fff;
-                       
                     }
                 }
 
