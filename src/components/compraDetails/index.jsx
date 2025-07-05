@@ -191,7 +191,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                                 <p>{produto?.quantidade}</p>
                             </li>
                             <li style={{width: "40px"}}>
-                                <p>{produto?.Type_sales === "unidade" ? "Und" : produto?.Type_sales !== "kg" ? produto?.Type_sales : "Kg" } Und</p>
+                                <p>{produto?.Type_sales === "unidade" ? "Und" : produto?.Type_sales === "kg" ? "Und" : produto?.Type_sales}</p>
                             </li>
                             <li style={{width: "80px"}}>
                                 <p>{produto?.valor_unitario?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
