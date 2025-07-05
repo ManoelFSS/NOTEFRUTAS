@@ -72,7 +72,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                 const getNumeroDeVendasDoCliente = await contarCompraPendentesOuAtrasadas (userId, getVendaItem.fornecedor_id);
                 console.log("contarVendas", getNumeroDeVendasDoCliente);
                 if(getNumeroDeVendasDoCliente === 0) {
-                    await atualizarStatusParaDebitos(getVendaItem.fornecedor_id, "Em Dias");
+                    await atualizarStatusParaDebitos(getVendaItem.fornecedor_id, "Nada a Pagar");
                     console.log("cliente nao tem nemhuma venda pendente, status Em Dias");
                 }
             }

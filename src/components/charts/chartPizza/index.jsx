@@ -72,11 +72,11 @@ const ChartPizza = ({data,  pizzHeight, pizzWidth, innerRadius, outerRadius}) =>
                     cy="50%"
                     innerRadius={innerRadius}
                     outerRadius={outerRadius}
-                    paddingAngle={2}
+                    paddingAngle={0}
                     dataKey={data => data.value === 0 ? data.value : data.value}
                     label={renderLabel} // 👈 usando o label customizado
                     labelLine={false}
-                    minAngle={15}
+                    minAngle={0}
                     isAnimationActive={true}        // Ativa a animação
                     animationBegin={500}           // ⏱️ atraso de 1000ms (1 segundo)
                     animationDuration={1000} 

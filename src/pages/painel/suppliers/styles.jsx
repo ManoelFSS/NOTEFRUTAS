@@ -283,16 +283,15 @@ export const ContainerTable = styled.section`
                         font-weight: 600;
                         font-size: 1rem;
                         color: #FFF;
-                        padding: 6px 10px;
+                        padding: 8px 10px;
                         border-radius: 4px;
-                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
                     }
                 }
                 
                 .icons {
                     width: 180px;
                     justify-content: center;
-                    gap: 10px;
+                    gap: 20px;
                     
                     .icon {
                         width: 25px;

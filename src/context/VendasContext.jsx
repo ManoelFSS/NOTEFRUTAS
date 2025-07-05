@@ -3,11 +3,13 @@ import { supabase } from '../services/supabase';
 // context
 import { useAuthContext } from "./AuthContext";
 import { useClientes } from "./ClientesContext";
-
+import { useDashboard } from "./DashboardContext";
 
 const VendasContext = createContext();
 
 export const VendasProvider = ({ children }) => {
+
+    const { reloadDashboard, setReloadDashboard } = useDashboard();
     const { idClient, atualizarStatusParaDebitos, setCaunterVendas } = useClientes();
     const { userId} = useAuthContext();
 
@@ -52,6 +54,7 @@ export const VendasProvider = ({ children }) => {
                     });
                 } else {
                     console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
+                    setReloadDashboard(!reloadDashboard); // reload dasboard
                 }
 
                 const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId,  idClient);

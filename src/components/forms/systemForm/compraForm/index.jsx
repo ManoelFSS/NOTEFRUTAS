@@ -232,6 +232,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                 }
 
                 const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+                const hoje = new Date().toISOString().split("T")[0];// data atual
 
                 parcelasGeradas.push({
                     compra_id: null,
@@ -241,7 +242,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                     data_vencimento: dataParcela.toISOString().split("T")[0],
                     created_at: new Date(),
                     updated_at: new Date(),
-                    status: "A vencer",
+                    status: dataParcela.toISOString().split("T")[0] === hoje ? "Hoje" : "A vencer",
                 });
             }
 

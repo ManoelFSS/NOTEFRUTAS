@@ -3,12 +3,14 @@ import { supabase } from '../services/supabase';
 // context
 import { useAuthContext } from "./AuthContext";
 import { useFornecedores } from "./FornecedoresContext";
+import { useDashboard } from "./DashboardContext";
 
 
 const BuysContext = createContext();
 
 export const BuysProvider = ({ children }) => {
 
+    const { reloadDashboard, setReloadDashboard } = useDashboard();
     const { idFornecedor, atualizarStatusParaDebitos, setCaunterCompras } = useFornecedores();
     const { userId} = useAuthContext();
 
@@ -54,6 +56,7 @@ export const BuysProvider = ({ children }) => {
                     });
                 } else {
                     console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
+                    setReloadDashboard(!reloadDashboard); // reload dasboard
                 }
 
                 console.log(userId)

@@ -29,6 +29,8 @@ const VendasChart = ({ vendas, $height, $ocult, title, legend,  bg_colors}) => {
     const vendaAnterior = vendas[0];
     const vendaAtual = vendas[1];
 
+    console.log(vendaAnterior, vendaAtual);
+
     // Criar labels "Dia 1", "Dia 2", ... baseado no tamanho do array de dados
     const labels = comparativoVendas[2]?.map((_, index) => `Dia ${String(index + 1).padStart(2, '0')}`);
 

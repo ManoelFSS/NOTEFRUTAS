@@ -313,7 +313,7 @@ const Client = () => {
                                 <li>{item.city}</li>
                                 <li>{item.state}</li>
                                 <li>
-                                    <span style={{backgroundColor: item.status === "Em Dias" ?  "rgb(78, 138, 98)" : "rgb(211, 5, 5)" }}>
+                                    <span style={{backgroundColor: item.status === "Em Dias" ?  "rgb(78, 138, 98)" : " #FFCB1F" }}>
                                     {item.status}
                                     </span>
                                 </li>

@@ -132,7 +132,6 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
         if (valorRecebido <= 0 && formaDEPagamento === "A prazo") {
             setSelectedTipyPayment("")
-            console.log("valor recebido", valorRecebido);
         }
 
         const entrada = Number(valorDaEntrada.replace(/\D/g, "")) / 100 || 0; // Converte para centavos
@@ -140,7 +139,6 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
         setValorRestante(restante);
 
         if(restante <= 0) {
-            // setFormaDEPagamento("A vista")
             setValorRecebido(0)
             setValorDaEntrada('')
             setDataDeRecebimento('')
@@ -148,7 +146,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setTipoPagamento('')
         }
         console.log("Restante:", restante);
-    }, [valorDaEntrada, itensVenda]);////////////
+    }, [valorDaEntrada, itensVenda]);
 
     useEffect(() => {
         if(valorRestante <= 0){
@@ -159,8 +157,6 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
             setTipoCobranca('');
         }  
     }, [valorDaEntrada]);
-
-
 
     useEffect(() => {
         console.log(itensVenda)
@@ -183,63 +179,64 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
     }, []);
     
     useEffect(() => {
-    function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
-        if (!dataInicial || !quantidadeParcelas || !valorTotal) {
-            console.error("Erro ao gerar parcelas: Dados insuficientes.");
-            return [];
-        }
-
-        const tipos = {
-            "Diário": 1,
-            "Semanal": 7,
-            "Quinzenal": 15,
-            "Mensal": 30,
-        };
-
-        const dataBase = new Date(dataInicial);
-        const parcelasGeradas = [];
-
-        const totalCentavos = Math.round(valorTotal * 100);
-        const valorBaseParcela = Math.floor(totalCentavos / quantidadeParcelas);
-        const restante = totalCentavos - (valorBaseParcela * quantidadeParcelas); // Centavos que sobram
-
-        for (let i = 0; i < quantidadeParcelas; i++) {
-            let dataParcela;
-
-            console.log( quantidadeParcelas);
-
-            if (quantidadeParcelas === 1) {
-                dataParcela = new Date(dataBase); // Única parcela = data original
-            } else {
-                const diasDeDiferenca = tipos[tipoCobranca];
-                if (!diasDeDiferenca) {
-                    console.error("Tipo de cobrança inválido.");
-                    return [];
-                }
-                dataParcela = new Date(dataBase);
-                dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
+        function gerarParcelas(dataInicial, tipoCobranca, quantidadeParcelas, valorTotal) {
+            if (!dataInicial || !quantidadeParcelas || !valorTotal) {
+                console.error("Erro ao gerar parcelas: Dados insuficientes.");
+                return [];
             }
 
-            const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+            const tipos = {
+                "Diário": 1,
+                "Semanal": 7,
+                "Quinzenal": 15,
+                "Mensal": 30,
+            };
 
-            parcelasGeradas.push({
-                venda_id: null,
-                adminid: userId,
-                cliente_id: idClient,
-                valor_parcela: valorFinalParcela / 100,
-                data_vencimento: dataParcela.toISOString().split("T")[0],
-                created_at: new Date(),
-                updated_at: new Date(),
-                status: "A vencer",
-            });
+            const dataBase = new Date(dataInicial);
+            const parcelasGeradas = [];
+
+            const totalCentavos = Math.round(valorTotal * 100);
+            const valorBaseParcela = Math.floor(totalCentavos / quantidadeParcelas);
+            const restante = totalCentavos - (valorBaseParcela * quantidadeParcelas); // Centavos que sobram
+
+            for (let i = 0; i < quantidadeParcelas; i++) {
+                let dataParcela;
+
+                console.log( quantidadeParcelas);
+
+                if (quantidadeParcelas === 1) {
+                    dataParcela = new Date(dataBase); // Única parcela = data original
+                } else {
+                    const diasDeDiferenca = tipos[tipoCobranca];
+                    if (!diasDeDiferenca) {
+                        console.error("Tipo de cobrança inválido.");
+                        return [];
+                    }
+                    dataParcela = new Date(dataBase);
+                    dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
+                }
+
+                const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
+                const hoje = new Date().toISOString().split("T")[0];// data atual
+
+                parcelasGeradas.push({
+                    venda_id: null,
+                    adminid: userId,
+                    cliente_id: idClient,
+                    valor_parcela: valorFinalParcela / 100,
+                    data_vencimento: dataParcela.toISOString().split("T")[0],
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                    status: dataParcela.toISOString().split("T")[0] === hoje ? "Hoje" : "A vencer",
+                });
+            }
+
+            return parcelasGeradas;
         }
 
-        return parcelasGeradas;
-    }
-
-    const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
-    setParcelasItensVenda(resultado);
-}, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
+        const resultado = gerarParcelas(dataDeRecebimento, tipoCobranca, qtParcelas, valorRestante);
+        setParcelasItensVenda(resultado);
+    }, [qtParcelas, dataDeRecebimento, tipoCobranca, valorRestante]);
 
 
     useEffect(() => {

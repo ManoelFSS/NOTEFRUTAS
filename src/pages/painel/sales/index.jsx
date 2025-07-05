@@ -220,7 +220,7 @@ const Sales = () => {;
                                     <li>{item.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>
                                     <li>
                                         <span style={{ 
-                                            backgroundColor: item.status === "Paga" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? "rgb(58, 85, 136)" : item.status === "Atrasada" ? "rgb(193, 117, 23)" : "rgb(211, 5, 5)",
+                                            backgroundColor: item.status === "Paga" ? "rgb(78, 138, 98)" : item.status === "Pendente" ? " #FFCB1F" : "rgb(211, 5, 5)",
                                         }}>
                                             {item.status}
                                         </span>

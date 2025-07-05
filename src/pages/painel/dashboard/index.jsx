@@ -26,6 +26,8 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
         dados 
     } = useDashboard();
 
+    console.log(comparativoCompras[1])
+
 
     return (
         <Container_dashboard >
@@ -47,7 +49,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
 
                 <CardDashboard 
                     $toogleMenu={$toogleMenu}
-                    $money={"0"} 
+                    $money={comparativoCompras[1].reduce((money, item) => money + item, 0)} 
                     text="Despesas Total | Mês" 
                     cor={"rgb(255, 255, 255)"}
                     cor2={"rgb(206, 12, 12)"}

@@ -344,13 +344,12 @@ export const ContainerTable = styled.section`
                         text-align: center;
                         padding: 8px 10px;
                         border-radius: 4px;
-                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.55);
                     }
                 }
 
                 li:nth-child(9) {
                     display: flex;
-                    width: 140px;
+                    width: 150px;
 
                     span {    
                         font-weight: 900;
@@ -361,7 +360,7 @@ export const ContainerTable = styled.section`
                 .icons {
                     width: 170px;
                     justify-content: center;
-                    gap: 10px;
+                    gap: 20px;
                     
                     .icon {
                         font-size: 1.5rem;
