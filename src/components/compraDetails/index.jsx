@@ -154,7 +154,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                             <h4>CPF | CNPJ</h4>
                             <p>{vendaFilter?.cpf || "Não informado"}</p>
                         </div>
-                        <div style={{paddingLeft: "30px"}}>
+                        <div style={{paddingLeft: "60px"}}>
                             <h4>Valor total</h4>
                             <p style={{ color: "green", fontSize: "0.9rem", fontWeight: "bold" }}>{vendaFilter?.valor_total?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
                             <h4>Valor da entrada</h4>
@@ -166,7 +166,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                 <div className="datails-payment">
                     <ul className="payment-header" >
                         <li>
-                            <p>Produto</p>
+                            <p>Produtos</p>
                         </li>
                         <li>
                             <span>Und | Kg</span>
@@ -271,7 +271,9 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                     </div>
                 </div>
                 <div className="datails-download">
-                    <p>{vendaFilter?.status === "Cancelada" && "Compra cancelada"}</p>
+                    <p 
+                        style={{ backgroundColor: vendaFilter?.status === "Cancelada" ? "red" : vendaFilter?.status === "Paga" ? "green" : " #FFCB1F" }}
+                    >{vendaFilter?.status === "Cancelada" ? "Cancelada" : vendaFilter?.status === "Paga" ? "Paga" : "Pendente"}</p>
                     <FaFileDownload 
                         className="icon" 
                         onClick={() => {

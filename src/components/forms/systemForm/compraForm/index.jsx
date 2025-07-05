@@ -471,8 +471,32 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                                     {valorRestante.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
                                 </p>
                             </div>
-
                         </div>
+
+                        { valorDaEntrada > 0 &&
+                            <div className="payment-area" style={{ paddingBottom: "4px" }}>
+                                <h6>Tipo de Pagamento</h6>
+                                <div className="radio-area tipo-pagamento">
+                                    {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
+                                    <div key={tipo}>
+                                        <input 
+                                            type="radio" 
+                                            name="tipo-pagamento"
+                                            value={tipo}
+                                            checked={selectedTipyPayment === tipo}
+                                            onClick={() => {
+                                                setTipoPagamento(tipo);
+                                                handleClick(tipo);
+                                            }}
+                                            readOnly 
+                                        />
+                                        <label key={tipo}>{tipo}</label>
+                                    </div>
+                                    ))}
+                                </div>
+                            </div>
+                        }
+
                         <div className="date">
                             <div className="date-area">
                                 <label htmlFor="">Data da Recebimento</label>
@@ -533,27 +557,29 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                         </>
                     }
 
-                    <div className="payment-area" style={{ paddingBottom: "4px" }}>
-                        <h6>Tipo de Pagamento</h6>
-                        <div className="radio-area tipo-pagamento">
-                            {["Dinheiro", "Pix", "Cartão"].map((tipo) => (
-                            <div key={tipo}>
-                                <input 
-                                    type="radio" 
-                                    name="tipo-pagamento"
-                                    value={tipo}
-                                    checked={selectedTipyPayment === tipo}
-                                    onClick={() => {
-                                        setTipoPagamento(tipo);
-                                        handleClick(tipo);
-                                    }}
-                                    readOnly 
-                                />
-                                <label key={tipo}>{tipo}</label>
+                    { formaDEPagamento === "A vista" &&
+                        <div className="payment-area" style={{ paddingBottom: "4px" }}>
+                            <h6>Tipo de Pagamento</h6>
+                            <div className="radio-area tipo-pagamento">
+                                {["Dinheiro", "Pix", "Cartão"].map((tipo, index) => (
+                                <div key={tipo}>
+                                    <input 
+                                        type="radio" 
+                                        name="tipo-pagamento"
+                                        value={tipo}
+                                        checked={selectedTipyPayment === tipo}
+                                        onClick={() => {
+                                            setTipoPagamento(tipo);
+                                            handleClick(tipo);
+                                        }}
+                                        readOnly 
+                                    />
+                                    <label key={tipo}>{tipo}</label>
+                                </div>
+                                ))}
                             </div>
-                            ))}
                         </div>
-                    </div>
+                    }
                     <BtnSubmit $marginTop="20px" $text={btnName}/>
                     {loading && <Loading $marginBottom="10px" />}
                 </FormLayout>

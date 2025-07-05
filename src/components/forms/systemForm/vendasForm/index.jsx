@@ -283,7 +283,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                     </section>
                     <section className="box-products">
                         <ul className="header-list">
-                            <li>Produto</li>
+                            <li>Produtos</li>
                             <li>Und | kg</li>
                             <li>Valor</li>
                             <li>Val Total</li>
