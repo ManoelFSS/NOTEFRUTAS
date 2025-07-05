@@ -339,24 +339,24 @@ export const Container_datails = styled.div`
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 30px;
+            height: 45px;
             width: 100%;
             position: relative;
-            padding-top: 5px ;
+            padding: 10px;
+            border: solid 1px #ccc;
 
             p {
-                font-size: 1rem;
-                font-weight: 700;
-                color: #000;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: #fff;
                 border-radius: 4px;
-                padding: 4px 15px;
-                color:rgb(229, 9, 9);
+                padding: 6px 20px;
             }
 
             .icon{
                 position: absolute;
-                right: 0;
-                bottom: 0;
+                right: 10px;
+                bottom: 9px;
                 font-size: 1.7rem;
                 cursor: pointer;
                 transition: color 0.3s ease;
