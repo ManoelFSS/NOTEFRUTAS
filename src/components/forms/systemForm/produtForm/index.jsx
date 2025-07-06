@@ -218,7 +218,7 @@ const data = [
                     { (visiblePeso || tipoDeVenda === "kg") &&
                         <section className="box peso-medio">
                             <LabelComponent $text="Peso medio" />
-                            <p>Informe o peso médio de acordo com a forma de compra com o fornecedor. <br />ex: por [ caixa, saco ou unidade ].</p>
+                            <p>Informe o peso médio de acordo com a forma de compra com o fornecedor. <b>[ caixa, saco ou unidade ]</b></p>
                             <div className="peso">
                                 <input
                                     type="number"
