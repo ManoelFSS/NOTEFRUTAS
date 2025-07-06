@@ -13,8 +13,11 @@ import { FaWindowClose } from "react-icons/fa";
 import { FaUserPlus, } from "react-icons/fa";
 // context
 import { useProduct } from "../../../../context/ProductContext"
+import { useAuthContext } from "../../../../context/AuthContext"
 
 const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
+
+    const { selectForm, setSelectForm } = useAuthContext();
 
     const { loading, images, setImages } = useProduct ();
     const [imagens, setImagens] = useState([]);
@@ -31,6 +34,7 @@ const  ProductForm = ({setCloseModal, btnName, setBtnName, $color}) => {
         setState,
         tipoDeVenda, setTipoDeVenda,
         pesoMedio, setPesoMedio,
+        stock, setStock,
     } = useProduct();
 
     const [select, setSelect] = useState(category);
@@ -123,16 +127,34 @@ const data = [
                             $autoComplete="current-description" 
                         />
                     </section>
-                    <section className="box">
-                        <LabelComponent $text="Categoria" $htmlFor="category" />
-                        <Select     
-                            select={select} 
-                            setSelect={setSelect}
-                            data={data} 
-                            $width={"100%"}
-                            $ocult={true}
-                            setState={setCategory}
-                        />
+                    <section className="box stock-category ">
+                        <div>
+                            <LabelComponent $text="Categoria" $htmlFor="category" />
+                            <Select     
+                                select={select} 
+                                setSelect={setSelect}
+                                data={data} 
+                                $width={selectForm === "editar produto" ? "170px" : "100%" }
+                                $ocult={true}
+                                setState={setCategory}
+                            />
+                        </div>
+                        {selectForm === "editar produto" &&
+                            <div>
+                                <LabelComponent $text="Estoque" $htmlFor="stock" />
+                                <InputComponent 
+                                    $typeText="number" 
+                                    $textId="stock" 
+                                    $value={stock} 
+                                    $onchange={(e) => setStock(e.target.value)}
+                                    $name="stock" 
+                                    $placeholder="0" 
+                                    $autoComplete="current-stock" 
+                                    $width={"100px"}
+                                    $min="0"
+                                />
+                            </div>
+                        }
                     </section>
 
                     <section className="box">

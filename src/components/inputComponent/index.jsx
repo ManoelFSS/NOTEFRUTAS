@@ -15,7 +15,9 @@ const InputComponent = (
         $autoComplete, 
         $value,
         $onchange,
-        $required
+        $required,
+        $width,
+        $min
     }) => {
 
     const { selectForm } = useAuthContext();
@@ -61,6 +63,8 @@ const InputComponent = (
                 onChange={handleChange}
                 required={$required}
                 className="checkd"
+                style={{width: $width}}
+                min={$min}
             />
             {$typeText === "password" && 
                 <>

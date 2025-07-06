@@ -104,6 +104,12 @@ export const Container = styled.div`
                 width: 40px;
             }
         }
+
+        .stock-category {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+        }
     }
 
     @keyframes animatop {
