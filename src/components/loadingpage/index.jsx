@@ -1,5 +1,5 @@
 import { All_loading } from "./styles"
-import Logo from "../../assets/logo.png"
+import Logo from "../../assets/carrinho.png"
 import Loading from "../loading"
 
 const Loadingpage = () => {

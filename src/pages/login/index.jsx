@@ -1,6 +1,6 @@
 import { Container_login} from "./styles";
 //components
-import Logo from "../../assets/logo.png"
+import Logo from "../../assets/carrinho.png"
 import LoginForm from "../../components/forms/userForm/loginForm"
 import Register from "../../components/forms/userForm/register"
 import Password_Recovery from "../../components/forms/userForm/password_recovery"
@@ -18,8 +18,8 @@ const Login = () => {
             <section className="box-left">
                 <div className="box-container">
                     <img src={Logo} alt="logo"/>
-                    <h1>NOTE FRUTAS</h1>
-                    <p>Tudo que sua Empresa precisa.</p>
+                    <h1>CEASA DIGITAL</h1>
+                    <p>Tudo que você precisa.</p>
                     <div className="icons">
                         <FaWhatsapp className="whatsapp" onClick={() => window.open('https://wa.me/5574935050160', '_blank')} />
                         {/* <FaFacebook className="facebook" onClick={() => window.open('https://www.facebook.com/manoel.fernando.50', '_blank')} /> */}

@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react"
 import  { Container_header } from "./styles"
 // components
-import Logo from "../../assets/logo.png"
+import Logo from "../../assets/carrinho.png"
 import  Title from "../../components/title"
 import Btn from "../../components/btns/btnSubmit"
 // icons
@@ -55,7 +55,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
             <div className="title">
                 <img src={Logo} alt="logo" />
                 <Title 
-                    $text="NOTE FRUTAS" 
+                    $text="CEASA DIGITAL" 
                     $cor={"var( --color-text-primary )"} 
                     $bord={"none"}
                     padd={"0"}

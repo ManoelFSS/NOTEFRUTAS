@@ -15,6 +15,6 @@ export const All_loading = styled.div`
     z-index: 9999;
 
     img {
-        width: 140px;
+        width: 200px;
     }
 `
