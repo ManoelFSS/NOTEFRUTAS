@@ -48,7 +48,7 @@ export const Container_header = styled.div`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 30px;
+        gap: 15px;
 
         .notification {
 

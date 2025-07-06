@@ -215,7 +215,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 <section className="chart-vendas">
                     <VendasChart 
                         vendas={comparativoVendas}  
-                        title="Grafico de Vendas"
+                        title="Gráfico de Vendas"
                         legend={['Vendas do mês anterior', 'Vendas do mês atual']}
                         bg_colors={['rgb(64, 72, 108)', ' #00A91F']}
                     />
@@ -226,7 +226,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                 <section className="chart-vendas">
                     <VendasChart 
                         vendas={comparativoCompras}  
-                        title="Grafico de Compras"
+                        title="Gráfico de Compras"
                         legend={['Compras do mês anterior', 'Compras do mês atual']}
                         bg_colors={['rgb(139, 139, 139)', ' #FF9D00']}
                     />

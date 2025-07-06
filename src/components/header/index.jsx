@@ -53,7 +53,7 @@ const Header = ({$setToogleMenu, $toogleMenu, $showModalAlert, $setShowModalAler
             <IoMenu className="menu" onClick={() => $setToogleMenu(!$toogleMenu)} />
             
             <div className="title">
-                <img src={Logo} alt="logo" />
+                {/* <img src={Logo} alt="logo" /> */}
                 <Title 
                     $text="CEASA DIGITAL" 
                     $cor={"var( --color-text-primary )"} 

@@ -182,7 +182,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
         <Container >
             <div className="chart-header">
                 <div>
-                    <h3>Grafico Controle de Estoque</h3>
+                    <h3>Gráfico Controle de Estoque</h3>
                     <div className="custom-legend">
                         {data.datasets.map((dataset, index) => (
                             dataset.label && (
