@@ -114,7 +114,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                 quantidade: "",
                 valor_unitario: "",
                 valor_total: "",
-                created_at: new Date(),
+                created_at: new Date().toLocaleString('sv-SE', {timeZone: 'America/Sao_Paulo',}),
                 Type_sales: produto.Type_sales,
                 peso_medio: produto.peso_medio
             }
@@ -233,8 +233,9 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                     dataParcela.setDate(dataParcela.getDate() + i * diasDeDiferenca);
                 }
 
+
                 const valorFinalParcela = valorBaseParcela + (i < restante ? 1 : 0);
-                const hoje = new Date().toISOString().split("T")[0];// data atual
+                const hoje = new Date().toLocaleString('sv-SE', {timeZone: 'America/Sao_Paulo',});// data atual
 
                 parcelasGeradas.push({
                     compra_id: null,
@@ -242,9 +243,9 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                     fornecedor_id:  idFornecedor,
                     valor_parcela: valorFinalParcela / 100,
                     data_vencimento: dataParcela.toISOString().split("T")[0],
-                    created_at: new Date(),
+                    created_at: hoje,
                     updated_at: new Date(),
-                    status: dataParcela.toISOString().split("T")[0] === hoje ? "Hoje" : "A vencer",
+                    status: dataParcela.toISOString().split("T")[0] === hoje.split(' ')[0] ? "Hoje" : "A vencer",
                 });
             }
 

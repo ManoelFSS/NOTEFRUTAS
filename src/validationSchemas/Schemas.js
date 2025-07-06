@@ -93,7 +93,7 @@ export const recoverySchema = z.object({
 export const vendaSchema = z.object({
     contador_vendas: z.number().int().nonnegative(),
     status: z.string(),
-    created_at: z.date(), // ou z.string().transform(val => new Date(val)) se vier como string
+    created_at: z.string(), // ou z.string().transform(val => new Date(val)) se vier como string
     forma_pagamento: z.string(),
     tipo_pagamento: z.string().optional(),
     tipo_cobranca: z.string().optional(),
@@ -106,7 +106,7 @@ export const vendaSchema = z.object({
 export const compraSchema = z.object({
     contador_compras: z.number().int().nonnegative(),
     status: z.string(),
-    created_at: z.date(), // ou z.string().transform(val => new Date(val)) se vier como string
+    created_at: z.string(), // ou z.string().transform(val => new Date(val)) se vier como string
     forma_pagamento: z.string(),
     tipo_pagamento: z.string().optional(),
     tipo_cobranca: z.string().optional(),
