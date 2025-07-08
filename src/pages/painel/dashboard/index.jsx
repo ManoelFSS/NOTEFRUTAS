@@ -84,12 +84,12 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                     $moneyTotal={dados.parcelasComprasHoje + dados.parcelasAtrasadasCompras}
                     text="A Pagar" 
                     cor={"rgb(255, 255, 255)"}
-                    cor2={" #FF9D00"}
+                    cor2={" #FE7E01"}
                     visible={false}
                     icon={
                         <RiMoneyDollarCircleFill   
                             className="icon"
-                            style={{ color: " #FF9D00" }}
+                            style={{ color: " #FE7E01" }}
                         />
                     } 
                 />
@@ -228,7 +228,7 @@ const Dashboard = ({$toogleMenu, $setToogleMenu}) => {
                         vendas={comparativoCompras}  
                         title="Gráfico de Compras"
                         legend={['Compras do mês anterior', 'Compras do mês atual']}
-                        bg_colors={['rgb(139, 139, 139)', ' #FF9D00']}
+                        bg_colors={['rgb(139, 139, 139)', ' #FE7E01']}
                     />
                 </section>
             </section>    

@@ -9,14 +9,22 @@ export const Container = styled.div`
     user-select: none;
 
     .icon-left {
+        width: 25px;
+        height: 25px;
         cursor: pointer;
-        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-        font-size: 1.5rem;
+        trasition: color 0.3s ease;
+        padding: 2px;
         border-radius: 4px;
-        transition: background-color 0.3s ease;
-
+        background: rgb(255, 255, 255); /* fundo semi-transparente */
+        backdrop-filter: blur(10px); /* desfoque no fundo */
+        -webkit-backdrop-filter: blur(10px); /* Safari */
+        border: 1px solid rgb(255, 255, 255); /* borda brilhante */
+        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.43); /* sombra suave */
+        
         &:hover {
-            color: #FF9D00;
+            padding: 3px;
+            border-radius: 4px;
+            color: #FE7E01;
         }
     }
 
@@ -36,19 +44,41 @@ export const Container = styled.div`
     }
 
     button:hover, .active {
-        background-color: #FF9D00;
-        color: var( --color-text-secondary );
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        trasition: color 0.3s ease;
+        padding: 2px;
+        border-radius: 4px;
+        background: rgb(255, 255, 255); /* fundo semi-transparente */
+        backdrop-filter: blur(10px); /* desfoque no fundo */
+        -webkit-backdrop-filter: blur(10px); /* Safari */
+        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.43); /* sombra suave */
+        color: #FE7E01;
+        font-weight: 900;
+        
+        &:hover {
+            color: #007E2A;
+        }
     }
 
     .icon-right {
+        width: 25px;
+        height: 25px;
         cursor: pointer;
-        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-        font-size: 1.5rem;
+        trasition: color 0.3s ease;
+        padding: 2px;
         border-radius: 4px;
-        transition: background-color 0.3s ease;
-
+        background: rgb(255, 255, 255); /* fundo semi-transparente */
+        backdrop-filter: blur(10px); /* desfoque no fundo */
+        -webkit-backdrop-filter: blur(10px); /* Safari */
+        border: 1px solid rgb(255, 255, 255); /* borda brilhante */
+        box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.43); /* sombra suave */
+        
         &:hover {
-            color: #FF9D00;
+            padding: 3px;
+            border-radius: 4px;
+            color: #FE7E01;
         }
     }
 `

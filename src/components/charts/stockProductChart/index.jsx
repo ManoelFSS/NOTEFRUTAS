@@ -69,7 +69,7 @@ const StockProductChart = ({vendas, $height, $ocult}) => {
             {
                 label: 'Estoque atual',
                 data: estoque,
-                backgroundColor: estoque.map((stock, index) => stock <= 0 ? 'red' : 'rgb(255, 157, 0)'),
+                backgroundColor: estoque.map((stock, index) => stock <= 0 ? 'red' : ' #FE7E01'),
                 minBarLength:5, 
                 // barThickness: 10,
             },

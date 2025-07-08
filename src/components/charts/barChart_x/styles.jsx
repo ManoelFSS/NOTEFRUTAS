@@ -135,7 +135,7 @@ export const BarActive = styled.div`
     opacity: 0;
     height: 100%;
     border-radius: 5px;
-    background-color: #FF9D00;
+    background-color: #FE7E01;
     position: absolute;
     z-index: 2;
     animation: animate 0.3s   linear forwards;

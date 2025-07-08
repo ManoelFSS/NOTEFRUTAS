@@ -17,7 +17,7 @@ export const Container_dashboard = styled.div`
     }
     
     &::-webkit-scrollbar-thumb {
-        background: #FF9D00;
+        background: #FE7E01;
     }
 
     .cards {

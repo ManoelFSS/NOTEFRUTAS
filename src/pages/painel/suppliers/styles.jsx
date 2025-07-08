@@ -36,16 +36,22 @@ export const Container = styled.section`
             gap: 15px;
             
             .icon-square, .icon-list {
+                width: 25px;
+                height: 25px;
                 cursor: pointer;
-                font-size: 1.7rem;
                 trasition: color 0.3s ease;
-                box-shadow: 1px 0.5px 5px rgba(0, 0, 0, 0.4);
-                padding: 4px;
+                padding: 2px;
                 border-radius: 4px;
+                background: rgb(255, 255, 255); /* fundo semi-transparente */
+                backdrop-filter: blur(10px); /* desfoque no fundo */
+                -webkit-backdrop-filter: blur(10px); /* Safari */
+                border: 1px solid rgb(255, 255, 255); /* borda brilhante */
+                box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.43); /* sombra suave */
                 
                 &:hover {
-                    color: var( --color-icon-hover );
                     transform: scale(1.1);
+                    padding: 3px;
+                    border-radius: 4px;
                 }
             }
             
@@ -83,7 +89,7 @@ export const ContainerTable = styled.section`
         }
         
         &::-webkit-scrollbar-thumb {
-            background: #FF9D00;
+            background: #FE7E01;
         }
     }
     
@@ -138,7 +144,7 @@ export const ContainerTable = styled.section`
                     font-weight: 600;
                     font-size: 0.8rem;
                     color: #000;
-                    background-color: #FF9D00;
+                    background-color: #FE7E01;
                     border-radius: 4px;
                     color: var( --color-text-secondary );
                     box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
@@ -207,7 +213,7 @@ export const ContainerTable = styled.section`
             }
             
             &::-webkit-scrollbar-thumb {
-                background: #FF9D00;
+                background: #FE7E01;
             }
 
             .body-list {
@@ -300,14 +306,16 @@ export const ContainerTable = styled.section`
                         trasition: color 0.3s ease;
                         padding: 2px;
                         border-radius: 4px;
-                        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-                        background-color:rgb(255, 255, 255);
+                        background: rgb(255, 255, 255); /* fundo semi-transparente */
+                        backdrop-filter: blur(10px); /* desfoque no fundo */
+                        -webkit-backdrop-filter: blur(10px); /* Safari */
+                        border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
+                        box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.6); /* sombra suave */
                         
                         &:hover {
                             transform: scale(1.1);
-                            padding: 2px;
+                            padding: 3px;
                             border-radius: 4px;
-                            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
                         }
                     }
                     
@@ -319,14 +327,16 @@ export const ContainerTable = styled.section`
                         padding: 2px;
                         color: var(  --color-bg-btn-primary );
                         border-radius: 4px;
-                        box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-                        background-color:rgb(255, 255, 255);
+                        background: rgb(255, 255, 255); /* fundo semi-transparente */
+                        backdrop-filter: blur(10px); /* desfoque no fundo */
+                        -webkit-backdrop-filter: blur(10px); /* Safari */
+                        border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
+                        box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.6); /* sombra suave */
                         
                         &:hover {
                             transform: scale(1.1);
-                            padding: 2px;
+                            padding: 3px;
                             border-radius: 4px;
-                            box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
                         }
                     }
                 }
