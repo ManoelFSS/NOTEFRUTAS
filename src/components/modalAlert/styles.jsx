@@ -39,7 +39,7 @@ export const Container = styled.div`
         }
         
         &::-webkit-scrollbar-thumb {
-            background: #FF9D00;
+            background: #FE7E01;
         }
     }
 
@@ -48,7 +48,7 @@ export const Container = styled.div`
         font-size: 1rem;
         font-weight: 700;
         color: var( --color-text-secondary );
-        background-color: #FF9D00;
+        background-color: #FE7E01;
         padding: 10px 20px;
         border-radius: 6px;
         text-align: center;
@@ -84,8 +84,8 @@ export const Container = styled.div`
             gap: 5px;
             align-items: center;
             width: 100%;
-            border-top: solid 4px #FF9D00;
-            background-color:rgb(232, 232, 232);
+            border-top: solid 4px #FE7E01;
+            background-color:rgb(238, 237, 237);
             padding-bottom: 10px;
             border-radius: 0px 0px 5px 5px;
 
@@ -105,7 +105,7 @@ export const Container = styled.div`
                 p {
                     font-size: 0.8rem;
                     font-weight: 700;
-                    color:rgb(253, 143, 0);
+                    color: #FE7E01;
                 }
 
                 span {

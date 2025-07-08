@@ -35,7 +35,8 @@ export const Container_header = styled.div`
         }
 
         h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.34);
             color: var(--color-text-primary);
 
             @media (min-width:  1910px) {

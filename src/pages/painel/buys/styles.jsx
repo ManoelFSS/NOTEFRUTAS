@@ -397,7 +397,7 @@ export const ContainerTable = styled.section`
                         backdrop-filter: blur(10px); /* desfoque no fundo */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
                         border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
-                        box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.6); /* sombra suave */
+                        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.45); /* sombra suave */
                         
                         &:hover {
                             transform: scale(1.1);
@@ -418,7 +418,7 @@ export const ContainerTable = styled.section`
                         backdrop-filter: blur(10px); /* desfoque no fundo */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
                         border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
-                        box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.6); /* sombra suave */
+                        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.45); /* sombra suave */
                         
                         &:hover {
                             transform: scale(1.1);
