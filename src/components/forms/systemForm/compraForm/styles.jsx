@@ -82,11 +82,14 @@ export const Container = styled.div`
             }
 
             input {
-                height: 25px;
+                height: 30px;
                 width: 145px;
                 padding: 0 5px;
                 font-weight: 700;
                 outline: none;
+                box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.29);
+                border: none;
+                border-radius: 5px;
             }
 
             p {
@@ -112,9 +115,12 @@ export const Container = styled.div`
                 }
 
                 input {
-                    height: 25px;
+                    height:30px;
                     width: 145px;
                     padding: 0 5px;
+                    box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.29);
+                    border: none;
+                    border-radius: 5px;
                 }
             }
 
@@ -129,6 +135,10 @@ export const Container = styled.div`
 
                     input {
                         width: 40px;
+                        height: 30px;
+                        box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.29);
+                        border: none;
+                        border-radius: 5px;
                     }
 
                     p {
@@ -167,7 +177,8 @@ export const Container = styled.div`
                 height: 450px;
                 width: 90%;
                 background-color: rgb(255, 255, 255);
-                border: solid 1px rgb(195, 195, 195);
+                box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.25);
+                border-radius: 6px;
                 padding: 12px 9px;
                 overflow-y: auto;
 
@@ -180,7 +191,7 @@ export const Container = styled.div`
                 }
                 
                 &::-webkit-scrollbar-thumb {
-                    background: #FF9D00;
+                    background: #FE7E01;
                     cursor: pointer;
                 }
 
@@ -279,7 +290,7 @@ export const Container = styled.div`
             display: flex;
             list-style: none;
             justify-content: space-between;
-            background-color: #FF9D00;
+            background-color: #FE7E01;
             padding: 5px ;
             box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.34);
 
@@ -343,7 +354,7 @@ export const Container = styled.div`
                 padding: 10px 0 10px;
                 list-style: none;
                 width: 100%;
-                border-bottom: 2px solid rgb(255, 166, 0);
+                border-bottom: 2px solid #FE7E01;
 
                 li {
                     display: flex;
@@ -364,13 +375,15 @@ export const Container = styled.div`
 
                     input {
                         width: 100%;
-                        height: 100%;
+                        height: 30px;
                         border: none;
                         outline: none;
                         text-align: center;
                         font-weight: 600;
                         font-size: 0.8rem;
-                        border: solid 1px rgba(0, 0, 0, 0.55);
+                        box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.29);
+                        border: none;
+                        border-radius: 5px;
                     }
 
                     input[type=number]::-webkit-inner-spin-button, 
@@ -385,13 +398,15 @@ export const Container = styled.div`
 
                     input {
                         width: 100%;
-                        height: 100%;
+                        height: 30px;
                         border: none;
                         outline: none;
                         text-align: center;
                         font-weight: 600;
                         font-size: 0.8rem;
-                        border: solid 1px rgba(0, 0, 0, 0.55);
+                        box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.29);
+                        border: none;
+                        border-radius: 5px;
                     }
 
                     input[type=number]::-webkit-inner-spin-button, 
@@ -414,13 +429,18 @@ export const Container = styled.div`
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 20px;
+                    width: 25px;
                 }
 
                 .delete-icon {
+                    width: 20px;
+                    height: 20px;
                     font-size: 1.3rem;
                     color: red;
                     cursor: pointer;
+                    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.41);
+                    border-radius: 4px;
+                    padding: 2px;
                 }
 
                 .total-item {

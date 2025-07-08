@@ -285,7 +285,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         <ul className="header-list">
                             <li>Produtos</li>
                             <li>Und | kg</li>
-                            <li>Valor</li>
+                            <li>Val Unit</li>
                             <li>Val Total</li>
                             <li>#</li>
                         </ul>

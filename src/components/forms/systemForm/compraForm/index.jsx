@@ -316,6 +316,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                                             type="number"
                                             value={item.quantidade}
                                             className="quant"
+                                            placeholder="0"
                                             onChange={e => {
                                                 const valorDigitado = e.target.value;
                                                 setItensCompra(prev => {
@@ -334,6 +335,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
                                     <li>
                                         <input
                                             type="text"
+                                            placeholder="0.00"
                                             value={
                                                 item.valor_unitario !== null && item.valor_unitario !== undefined && item.valor_unitario !== ""
                                                 ? Number(item.valor_unitario).toLocaleString("pt-BR", {
