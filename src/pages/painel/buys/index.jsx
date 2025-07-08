@@ -216,11 +216,11 @@ const Buys = () => {;
                                 return contemTermo;
                             })
                             .map((item, index) => (
-                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toLocaleDateString('en-CA', {timeZone: 'America/Sao_Paulo',}) ? "rgba(175, 188, 179, 0.72)" : "" }}>
+                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) ? "rgba(175, 188, 179, 0.72)" : "" }}>
                                     <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                     <li>{item.name}</li>
                                     <li>{item.phone}</li>
-                                    <li>{new Date(item.created_at).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</li>
+                                    <li>{new Date(item.created_at).toLocaleDateString('pt-BR')}</li>
                                     <li>{item.forma_pagamento}</li>
                                     <li>{item.valor_total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</li>
                                     <li>{item.valor_entrada.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }</li>

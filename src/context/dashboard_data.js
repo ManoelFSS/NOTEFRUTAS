@@ -1,709 +1,303 @@
 import { supabase } from '../services/supabase';
 
 
+// RESUMO FINANCEIRO
+// Esta função busca o resumo financeiro do mês atual para um determinado adminid.
+// Utiliza uma função SQL criada no Supabase (resumo_financeiro) para fazer a agregação diretamente no banco.
 export const getResumoFinanceiro = async (adminid) => {
+    // Obtemos a data atual
     const now = new Date();
-    const mesAtual = now.getMonth() + 1;
-    const anoAtual = now.getFullYear();
-    const lastDayOfMonth = new Date(anoAtual, mesAtual, 0).getDate();
+    const mesAtual = now.getMonth() + 1; // Janeiro = 0, então somamos 1
+    const anoAtual = now.getFullYear();  // Ano atual, ex: 2025
 
-    // Buscar vendas do mês atual filtradas por adminid e que não estejam canceladas
-    const { data: vendas, error: vendasError } = await supabase
-        .from('vendas')
-        .select('id, valor_total, created_at')
-        .eq('adminid', adminid)
-        .neq('status', 'Cancelada') // <-- Aqui está o filtro novo
-        .gte('created_at', `${anoAtual}-${mesAtual.toString().padStart(2, '0')}-01`)
-        .lte('created_at', `${anoAtual}-${mesAtual.toString().padStart(2, '0')}-${lastDayOfMonth.toString().padStart(2, '0')}`);
-
-    if (vendasError) throw vendasError;
-
-    let totalVendasMes = 0;
-    let totalParcelasNaoPagasMes = 0;
-
-    for (const venda of vendas) {
-        totalVendasMes += venda.valor_total;
-
-        const { data: parcelas, error: parcelasError } = await supabase
-            .from('parcelas_venda')
-            .select('valor_parcela, status')
-            .eq('venda_id', venda.id)
-            .not('status', 'in', '(Paga,Cancelada)'); // Considera apenas parcelas não pagas e não canceladas
-
-        if (parcelasError) throw parcelasError;
-
-        for (const parcela of parcelas) {
-            totalParcelasNaoPagasMes += parcela.valor_parcela;
-        }
-    }
-
-    console.log('totalVendasMes', totalVendasMes);
-    console.log('totalParcelasNaoPagasMes', totalParcelasNaoPagasMes);
-
-    return totalVendasMes - totalParcelasNaoPagasMes;
+    // Chamamos a função RPC 'resumo_financeiro' no Supabase, passando admin_id, ano e mês
+    // Essa função retorna:
+    // - total_vendas: soma de todas as vendas do mês, exceto canceladas
+    // - total_parcelas_nao_pagas: soma das parcelas que ainda não foram pagas nem canceladas
+    const { data, error } = await supabase
+        .rpc('resumo_financeiro', {
+            admin_id: adminid,
+            ano: anoAtual,
+            mes: mesAtual
+        });
+    // Se houver erro na requisição, lançamos uma exceção
+    if (error) throw error;
+    // Extraímos os valores retornados da função
+    const { total_vendas, total_parcelas_nao_pagas } = data[0];
+    console.log("total_vendas", total_vendas);
+    console.log("total_parcelas_nao_pagas", total_parcelas_nao_pagas);
+    // Retornamos o valor líquido: total vendido - parcelas não pagas
+    return total_vendas - total_parcelas_nao_pagas;
 };
 
 
-
+// Função que busca o total de parcelas atrasadas ligadas a vendas pendentes
+// Usa uma função RPC criada no Supabase (parcelas_atrasadas_dinamico)
 export const getParcelasAtrasadas = async (adminid, tabela1, tabela2, idRef) => {
-    // Buscar IDs das vendas PENDENTES desse admin
-    const { data: vendasPendentes, error: vendasError } = await supabase
-        .from(`${tabela1}`)
-        .select('id')
-        .eq('adminid', adminid)
-        .eq('status', 'Pendente');
-
-    if (vendasError) throw vendasError;
-
-    const idsVendas = vendasPendentes.map(v => v.id);
-
-    if (idsVendas.length === 0) return 0; // Nenhuma venda pendente, retorna 0
-
-    // Buscar parcelas com status "Atrasada" ligadas às vendas pendentes
-    const { data: parcelasAtrasadas, error: parcelasError } = await supabase
-        .from(`${tabela2}`)
-        .select('valor_parcela')
-        .eq('status', 'Atrasada')
-        .in(`${idRef}`, idsVendas);
-
-    if (parcelasError) throw parcelasError;
-
-    const totalAtrasado = parcelasAtrasadas.reduce((soma, p) => soma + p.valor_parcela, 0);
-
-    return totalAtrasado;
+    // Chama a função RPC no Supabase passando os parâmetros:
+    // admin_id: ID do administrador (para filtrar os dados dele)
+    // tabela1: nome da tabela de vendas (ex: 'vendas')
+    // tabela2: nome da tabela de parcelas (ex: 'parcelas_venda')
+    // id_ref: nome da coluna que liga a parcela à venda (ex: 'venda_id')
+    const { data, error } = await supabase.rpc('parcelas_atrasadas_dinamico', {
+        admin_id: adminid,
+        tabela1,      // Tabela de vendas
+        tabela2,      // Tabela de parcelas
+        id_ref: idRef // Chave estrangeira que liga a parcela à venda
+    });
+    // Se houve erro na chamada da função RPC, lança o erro
+    if (error) throw error;
+    // Retorna o valor total de parcelas atrasadas
+    return data;
 };
 
 
+// ==============================
+// getTotalParcelasVencimentoHoje
+// - Chama função RPC no banco para buscar o total de parcelas
+//   com vencimento hoje, filtrando pelo admin e status não pago/cancelado
+// - Evita trazer todas as parcelas para o frontend, só retorna o total somado
+// - Usa SQL dinâmico para trabalhar com diferentes tabelas (ex: parcelas_venda, parcelas_compra)
+// ==============================
 
+// Função para obter o total das parcelas com vencimento hoje para um admin, usando RPC no banco
 export const getTotalParcelasVencimentoHoje = async (adminid, tabela) => {
-    const now = new Date()
-    const diaAtual = now.getDate().toString().padStart(2, '0')
-    const mesAtual = (now.getMonth() + 1).toString().padStart(2, '0')
-    const anoAtual = now.getFullYear()
-
-    const dataHoje = `${anoAtual}-${mesAtual}-${diaAtual}`
-
-    const { data: parcelasHoje, error } = await supabase
-        .from(`${tabela}`)
-        .select('valor_parcela')
-        .eq('adminid', adminid)
-        .eq('data_vencimento', dataHoje)
-        .not('status', 'in', '(Paga,Cancelada)')
-
-    if (error) throw error
-
-    const total = parcelasHoje.reduce((acc, parcela) => acc + parcela.valor_parcela, 0)
-
-    return total
+    // Chama a função SQL no banco para otimização e evitar trazer dados para aplicação
+    const { data, error } = await supabase.rpc('total_parcelas_vencimento_hoje', {
+        admin_id: adminid,
+        tabela_name: tabela,
+    });
+    if (error) throw error;
+    // data já traz o total somado das parcelas
+    return data;
 }
 
 
-
-
-
-
-
+// getResumoClientes
+// - Função que retorna um resumo de clientes para um admin:
+//   total geral, total com débitos pendentes, total de novos clientes no mês atual
+// - Chama função SQL no banco que faz as contagens otimizadas com 3 subqueries
+// - Evita fazer múltiplas queries separadas no frontend, reduzindo latência
+// ==============================
+// getResumoClientes
+// - Chama função RPC que retorna os totais desejados em uma só consulta
+// - Retorna array com os valores para total, débitos pendentes e novos do mês
 export const getResumoClientes = async (adminid) => {
-    // Total geral
-    const { count: total, error: errorTotal } = await supabase
-        .from('clientes')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid);
-
-    if (errorTotal) throw errorTotal;
-
-    // Total com status "Débitos a Pagar"
-    const { count: debitosPendentes, error: errorDebitos } = await supabase
-        .from('clientes')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .eq('status', 'Débitos a Pagar');
-
-    if (errorDebitos) throw errorDebitos;
-
-    // Total do mês/ano atual
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
-
-    const { count: novosMes, error: errorNovos } = await supabase
-        .from('clientes')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia);
-
-    if (errorNovos) throw errorNovos;
-
+    const { data, error } = await supabase.rpc('resumo_clientes', { admin_id: adminid });
+    if (error) throw error;
+    // data é array com um objeto que tem total, debitos_pendentes e novos_mes
+    const resumo = data[0];
     return [
-        { name: 'Total', value: total},               // Verde
-        { name: 'Débitos pendentes', value: debitosPendentes}, // Vermelho
-        { name: 'Novos Clientes | Mês', value: novosMes}        // Azul
+        { name: 'Total', value: resumo.total },
+        { name: 'Débitos pendentes', value: resumo.debitos_pendentes },
+        { name: 'Novos Clientes | Mês', value: resumo.novos_mes }
     ];
 };
 
 
-
+// getResumoFornecedores
+// - Função que retorna um resumo de fornecedores para um admin:
+//   total geral, total com débitos pendentes, total de novos fornecedores no mês atual
+// - Utiliza função RPC no banco para fazer contagens em uma query só
+// - Evita múltiplas consultas desnecessárias do frontend para melhorar performance
+// ==============================
+// getResumoFornecedores
+// - Busca totais gerais, débitos pendentes e novos fornecedores no mês
+// - Chama função SQL para melhor desempenho e menos queries
 export const getResumoFornecedores = async (adminid) => {
-  // Total geral
-    const { count: total, error: errorTotal } = await supabase
-        .from('fornecedores')
-        .select('id', { count: 'exact' })
-        .eq('adminid', adminid);
-
-    if (errorTotal) throw errorTotal;
-
-    // Total com status "Débitos a Pagar"
-    const { count: debitosPendentes, error: errorDebitos } = await supabase
-        .from('fornecedores')
-        .select('id', { count: 'exact' })
-        .eq('adminid', adminid)
-        .eq('status', 'Débitos a Pagar');
-
-    if (errorDebitos) throw errorDebitos;
-
-    // Total do mês/ano atual
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString();
-
-    const { count: novosMes, error: errorNovos } = await supabase
-        .from('fornecedores')
-        .select('id', { count: 'exact' })
-        .eq('adminid', adminid)
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia);
-
-    if (errorNovos) throw errorNovos;
-
+    const { data, error } = await supabase.rpc('resumo_fornecedores', { admin_id: adminid });
+    if (error) throw error;
+    const resumo = data[0];
     return [
-        { name: 'Total', value: total },                // Verde
-        { name: 'Débitos a Pagar', value: debitosPendentes }, // Vermelho
-        { name: 'Novos Fornecedores | Mês', value: novosMes }        // Azul
+        { name: 'Total', value: resumo.total },
+        { name: 'Débitos a Pagar', value: resumo.debitos_pendentes },
+        { name: 'Novos Fornecedores | Mês', value: resumo.novos_mes }
     ];
 };
-
 
 
 export const getResumoVendas = async (adminid) => {
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-    
-    const hoje = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
-    const hojeInicio = `${hoje}T00:00:00`;
-    const hojeFim = `${hoje}T23:59:59`;
-
-    const filtroMes = (query) =>
-        query
-            .gte('created_at', primeiroDia)
-            .lte('created_at', ultimoDia);
-
-    // Total de vendas no mês
-    const { count: total, error: errorTotal } = await filtroMes(
-        supabase
-            .from('vendas')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-    );
-    if (errorTotal) throw errorTotal;
-
-    // Vendas criadas hoje
-    const { count: hojeCount, error: errorHoje } = await supabase
-        .from('vendas')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .gte('created_at', hojeInicio)
-        .lte('created_at', hojeFim);
-    if (errorHoje) throw errorHoje;
-
-    // Vendas pagas no mês
-    const { count: pagas, error: errorPagas } = await filtroMes(
-        supabase
-            .from('vendas')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Paga')
-    );
-    if (errorPagas) throw errorPagas;
-
-    // Vendas pendentes no mês
-    const { count: pendentes, error: errorPendentes } = await filtroMes(
-        supabase
-            .from('vendas')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Pendente')
-    );
-    if (errorPendentes) throw errorPendentes;
-
-    // Vendas canceladas no mês
-    const { count: canceladas, error: errorCanceladas } = await filtroMes(
-        supabase
-            .from('vendas')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Cancelada')
-    );
-    if (errorCanceladas) throw errorCanceladas;
-
-    // IDs das vendas do mês
-    const { data: vendasMes, error: errorVendasMes } = await filtroMes(
-        supabase
-            .from('vendas')
-            .select('id')
-            .eq('adminid', adminid)
-    );
-    if (errorVendasMes) throw errorVendasMes;
-
-    const idsVendasMes = vendasMes.map(v => v.id);
-
-    // Parcelas com status "A vencer" e vencendo HOJE
-    const { data: parcelasHoje, error: errorParcelas } = await supabase
-        .from('parcelas_venda')
-        .select('venda_id')
-        .in('status', ['A vencer', 'Hoje'])
-        .gte('data_vencimento', hojeInicio)
-        .lte('data_vencimento', hojeFim);
-    if (errorParcelas) throw errorParcelas;
-
-    // Filtrar apenas vendas do mês
-    const vendasAReceberHoje = [
-        ...new Set(
-            parcelasHoje
-                .filter(p => idsVendasMes.includes(p.venda_id))
-                .map(p => p.venda_id)
-        )
-    ];
-
-    // Parcelas "Atrasadas"
-    const { data: parcelasAtrasadas, error: errorAtrasadas } = await supabase
-        .from('parcelas_venda')
-        .select('venda_id')
-        .eq('status', 'Atrasada');
-    if (errorAtrasadas) throw errorAtrasadas;
-
-    const vendasAtrasadas = [...new Set(parcelasAtrasadas.map(p => p.venda_id))];
-
+    // Chama a função RPC 'resumo_vendas' no banco, passando o adminid como parâmetro
+    const { data, error } = await supabase.rpc('resumo_vendas', { admin_id: adminid });
+    // Se houver erro na consulta, lança exceção
+    if (error) throw error;
+    // A função RPC retorna um array com um único objeto, pegamos o primeiro elemento
+    const resumo = data[0];
+    // Retorna um array de objetos, cada um com o nome do resumo e o respectivo valor obtido
     return [
-        { name: 'Total', value: total },
-        { name: 'Hoje', value: hojeCount },
-        { name: 'Parcelas a vencer hoje', value: vendasAReceberHoje.length },
-        { name: 'Pagas', value: pagas },
-        { name: 'Pagamento pendente', value: pendentes },
-        { name: 'Parcelas atrasadas', value: vendasAtrasadas.length },
-        { name: 'Cancelada', value: canceladas }
+            { name: 'Total', value: resumo.total },                              // Total de vendas no mês
+            { name: 'Hoje', value: resumo.hoje },                                // Vendas criadas hoje
+            { name: 'Parcelas a vencer hoje', value: resumo.parcelas_a_vencer_hoje },// Quantidade de parcelas com vencimento hoje
+            { name: 'Pagas', value: resumo.pagas },                              // Vendas pagas no mês
+            { name: 'Pagamento pendente', value: resumo.pendentes },             // Vendas com pagamento pendente no mês
+            { name: 'Parcelas atrasadas', value: resumo.parcelas_atrasadas },    // Parcelas de vendas com status atrasado
+            { name: 'Cancelada', value: resumo.canceladas },                     // Vendas canceladas no mês
     ];
 };
-
-
-
-
-
 
 
 export const getResumoCompras = async (adminid) => {
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-    
-    const hoje = new Date().toISOString().slice(0, 10); // yyyy-mm-dd
-    const hojeInicio = `${hoje}T00:00:00`;
-    const hojeFim = `${hoje}T23:59:59`;
-
-    const filtroMes = (query) =>
-        query
-            .gte('created_at', primeiroDia)
-            .lte('created_at', ultimoDia);
-
-    // Total de compras no mês
-    const { count: total, error: errorTotal } = await filtroMes(
-        supabase
-            .from('compras')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-    );
-    if (errorTotal) throw errorTotal;
-
-    // Vendas criadas hoje
-    const { count: hojeCount, error: errorHoje } = await supabase
-        .from('compras')
-        .select('*', { count: 'exact', head: true })
-        .eq('adminid', adminid)
-        .gte('created_at', hojeInicio)
-        .lte('created_at', hojeFim);
-    if (errorHoje) throw errorHoje;
-
-    // Vendas pagas no mês
-    const { count: pagas, error: errorPagas } = await filtroMes(
-        supabase
-            .from('compras')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Paga')
-    );
-    if (errorPagas) throw errorPagas;
-
-    // Vendas pendentes no mês
-    const { count: pendentes, error: errorPendentes } = await filtroMes(
-        supabase
-            .from('compras')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Pendente')
-    );
-    if (errorPendentes) throw errorPendentes;
-
-    // Vendas canceladas no mês
-    const { count: canceladas, error: errorCanceladas } = await filtroMes(
-        supabase
-            .from('compras')
-            .select('*', { count: 'exact', head: true })
-            .eq('adminid', adminid)
-            .eq('status', 'Cancelada')
-    );
-    if (errorCanceladas) throw errorCanceladas;
-
-    // IDs das vendas do mês
-    const { data: vendasMes, error: errorVendasMes } = await filtroMes(
-        supabase
-            .from('compras')
-            .select('id')
-            .eq('adminid', adminid)
-    );
-    if (errorVendasMes) throw errorVendasMes;
-
-    const idsVendasMes = vendasMes.map(v => v.id);
-
-    // Parcelas com status "A vencer" e vencendo HOJE
-    const { data: parcelasHoje, error: errorParcelas } = await supabase
-        .from('parcelas_compra')
-        .select('compra_id')
-        .in('status', ['A vencer', 'Hoje'])
-        .gte('data_vencimento', hojeInicio)
-        .lte('data_vencimento', hojeFim);
-    if (errorParcelas) throw errorParcelas;
-
-    // Filtrar apenas vendas do mês
-    const vendasAReceberHoje = [
-        ...new Set(
-            parcelasHoje
-                .filter(p => idsVendasMes.includes(p.compra_id))
-                .map(p => p.compra_id)
-        )
-    ];
-
-    // Parcelas "Atrasadas"
-    const { data: parcelasAtrasadas, error: errorAtrasadas } = await supabase
-        .from('parcelas_compra')
-        .select('compra_id')
-        .eq('status', 'Atrasada');
-    if (errorAtrasadas) throw errorAtrasadas;
-
-    const vendasAtrasadas = [...new Set(parcelasAtrasadas.map(p => p.venda_id))];
-
+    // Chama a função RPC 'resumo_compras' no banco, passando o adminid como parâmetro
+    const { data, error } = await supabase.rpc('resumo_compras', { admin_id: adminid });
+    // Se houver erro na consulta, lança exceção
+    if (error) throw error;
+    // A função RPC retorna um array com um único objeto, pegamos o primeiro elemento
+    const resumo = data[0];
+    // Retorna um array de objetos, cada um com o nome do resumo e o respectivo valor obtido
     return [
-        { name: 'Total', value: total },
-        { name: 'Hoje', value: hojeCount },
-        { name: 'Parcelas a vencer hoje', value: vendasAReceberHoje.length },
-        { name: 'Pagas', value: pagas },
-        { name: 'Pagamento pendente', value: pendentes },
-        { name: 'Parcelas atrasadas', value: vendasAtrasadas.length },
-        { name: 'Cancelada', value: canceladas }
+            { name: 'Total', value: resumo.total },                              // Total de vendas no mês
+            { name: 'Hoje', value: resumo.hoje },                                // Vendas criadas hoje
+            { name: 'Parcelas a vencer hoje', value: resumo.parcelas_a_vencer_hoje },// Quantidade de parcelas com vencimento hoje
+            { name: 'Pagas', value: resumo.pagas },                              // Vendas pagas no mês
+            { name: 'Pagamento pendente', value: resumo.pendentes },             // Vendas com pagamento pendente no mês
+            { name: 'Parcelas atrasadas', value: resumo.parcelas_atrasadas },    // Parcelas de vendas com status atrasado
+            { name: 'Cancelada', value: resumo.canceladas },                     // Vendas canceladas no mês
     ];
 };
-
-
-
-
 
 
 export const getProdutosMaisVendidos = async (adminid) => {
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-
-    // Buscar todos os produtos (apenas id e name)
-    const { data: produtos, error: errorProdutos } = await supabase
-        .from('produtos')
-        .select('id, name')
-        .eq('adminid', adminid); // se necessário filtrar por admin
-
-    if (errorProdutos) throw errorProdutos;
-
-    // Buscar todos os itens de venda do mês/ano atual
-    const { data: itensVenda, error: errorItens } = await supabase
-        .from('itens_venda')
-        .select('produto_id, valor_total, created_at')
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia);
-
-    if (errorItens) throw errorItens;
-
-    // Montar um mapa com soma total por produto
-    const mapaTotais = {};
-
-    for (const item of itensVenda) {
-        const id = item.produto_id;
-        if (!mapaTotais[id]) {
-        mapaTotais[id] = 0;
-        }
-        mapaTotais[id] += item.valor_total;
+    // Chama a função RPC 'get_produtos_mais_vendidos' no Supabase,
+    // passando o admin_id como parâmetro
+    const { data, error } = await supabase.rpc('get_produtos_mais_vendidos', {
+        admin_id: adminid
+    });
+    // Se ocorrer algum erro na chamada, exibe no console e lança o erro
+    if (error) {
+        console.error('Erro ao buscar produtos mais vendidos:', error);
+        throw error;
     }
-
-    // Montar a resposta com nome do produto e valor total
-    const resultado = produtos
-        .filter(p => mapaTotais[p.id]) // Só produtos com venda
-        .map(p => ({
-            name: p.name,
-            value: mapaTotais[p.id]
-        }));
-
-    return resultado;
+    // Retorna os dados recebidos da função RPC
+    return data;
 };
 
 
-
 export const getClientesQueMaisCompraram = async (adminid) => {
-    const now = new Date();
-    const primeiroDia = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-    const ultimoDia = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
-
-    // Buscar todos os clientes (id e nome)
-    const { data: clientes, error: errorClientes } = await supabase
-        .from('clientes')
-        .select('id, name')
-        .eq('adminid', adminid); // se necessário
-
-    if (errorClientes) throw errorClientes;
-
-    // Buscar todas as vendas do mês atual com id do cliente e valor total
-    const { data: vendas, error: errorVendas } = await supabase
-        .from('vendas')
-        .select('cliente_id, valor_total, created_at')
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia)
-        .eq('adminid', adminid); // se necessário
-
-    if (errorVendas) throw errorVendas;
-
-    // Somar valor total por cliente
-    const mapaTotais = {};
-
-    for (const venda of vendas) {
-        const id = venda.cliente_id;
-        if (!mapaTotais[id]) {
-            mapaTotais[id] = 0;
-        }
-        mapaTotais[id] += venda.valor_total;
+    // Chama a função RPC 'get_clientes_que_mais_compraram' no Supabase,
+    // passando o admin_id como parâmetro
+    const { data, error } = await supabase.rpc('get_clientes_que_mais_compraram', {
+        admin_id: adminid
+    });
+    // Se ocorrer algum erro, exibe e lança erro
+    if (error) {
+        console.error('Erro ao buscar clientes que mais compraram:', error);
+        throw error;
     }
-
-    // Montar a resposta com nome do cliente e valor total
-    const resultado = clientes
-        .filter(c => mapaTotais[c.id]) // Apenas clientes que compraram
-        .map(c => ({
-            name: c.name,
-            value: mapaTotais[c.id]
-        }))
-        .sort((a, b) => b.value - a.value); // Opcional: ordenar por valor decrescente
-
-    return resultado;
+    // Retorna a lista de clientes com seus valores totais de compras
+    return data;
 };
 
 
 export const getComparativoVendasPorDia = async (adminid, anoSelecionado, mesSelecionado) => {
-    // Ajusta mesSelecionado de 1-12 para 0-11 (ex.: 5 para maio vira 4)
-    const mesAjustado = mesSelecionado - 1;
-
-    // Ajusta o mês anterior considerando ano e mês selecionados
-    const dataAtual = new Date(anoSelecionado, mesAjustado, 1);
-    const dataAnterior = new Date(anoSelecionado, mesAjustado - 1, 1);
-    
-    const anoAtual = dataAtual.getFullYear();
-    const mesAtual = dataAtual.getMonth();
-
-    const anoAnterior = dataAnterior.getFullYear();
-    const mesAnterior = dataAnterior.getMonth();
-
-    const getLimitesDoMes = (ano, mes) => {
-        const primeiro = new Date(ano, mes, 1);
-        const ultimo = new Date(ano, mes + 1, 0, 23, 59, 59);
-        return [primeiro.toISOString(), ultimo.toISOString()];
-    };
-
-    const [inicioAtual, fimAtual] = getLimitesDoMes(anoAtual, mesAtual);
-    const [inicioAnterior, fimAnterior] = getLimitesDoMes(anoAnterior, mesAnterior);
-
-    const { data: vendasAtual, error: erroAtual } = await supabase
-        .from('vendas')
-        .select('created_at, valor_total')
-        .gte('created_at', inicioAtual)
-        .lte('created_at', fimAtual)
-        .eq('adminid', adminid)
-        .neq('status', 'Cancelada'); // <- Adicionado filtro
-
-    if (erroAtual) throw erroAtual;
-
-    const { data: vendasAnterior, error: erroAnterior } = await supabase
-        .from('vendas')
-        .select('created_at, valor_total')
-        .gte('created_at', inicioAnterior)
-        .lte('created_at', fimAnterior)
-        .eq('adminid', adminid)
-        .neq('status', 'Cancelada'); // <- Adicionado filtro
-
-    if (erroAnterior) throw erroAnterior;
-
-    const agruparPorDia = (vendas, ano, mes) => {
-        const diasNoMes = new Date(ano, mes + 1, 0).getDate();
-        const totaisPorDia = Array(diasNoMes).fill(0);
-        for (const venda of vendas) {
-            const data = new Date(venda.created_at);
-            const dia = data.getDate(); // 1 a 31
-            totaisPorDia[dia - 1] += venda.valor_total;
-        }
-        return totaisPorDia;
-    };
-
-    const vendasPorDiaAtual = agruparPorDia(vendasAtual, anoAtual, mesAtual);
-    const vendasPorDiaAnterior = agruparPorDia(vendasAnterior, anoAnterior, mesAnterior);
-
-    // Gera os rótulos de 1 até o maior número de dias entre os dois meses
-    const diasNoMesSelecionado = new Date(anoSelecionado, mesSelecionado, 0).getDate();
-    const labels = Array.from({ length: diasNoMesSelecionado }, (_, i) => `Dia ${i + 1}`);
-
-    while (vendasPorDiaAtual.length < diasNoMesSelecionado) vendasPorDiaAtual.push(0);
-    while (vendasPorDiaAnterior.length < diasNoMesSelecionado) vendasPorDiaAnterior.push(0);
-
-    return [
-        vendasPorDiaAnterior, // índice 0: mês anterior
-        vendasPorDiaAtual,    // índice 1: mês selecionado
-        labels                // índice 2: labels do gráfico
-    ];
+    const { data, error } = await supabase.rpc('get_comparativo_vendas_por_dia', {
+        admin_id: adminid,
+        ano: anoSelecionado,
+        mes: mesSelecionado,
+    });
+    if (error) {
+        console.error('Erro ao buscar comparativo de vendas por dia:', error);
+        throw error;
+    }
+    // data vem como array de objetos { dia, vendas_mes_anterior, vendas_mes_atual }
+    // Transformamos para arrays separados e labels para gráfico
+    const vendasPorDiaAnterior = [];
+    const vendasPorDiaAtual = [];
+    const labels = [];
+    data.forEach(({ dia, vendas_mes_anterior, vendas_mes_atual }) => {
+        vendasPorDiaAnterior.push(Number(vendas_mes_anterior));
+        vendasPorDiaAtual.push(Number(vendas_mes_atual));
+        labels.push(`Dia ${dia}`);
+    });
+    return [vendasPorDiaAnterior, vendasPorDiaAtual, labels];
 };
 
 
+
 export const getComparativoComprasPorDia = async (adminid, anoSelecionado, mesSelecionado) => {
-    // Ajusta mesSelecionado de 1-12 para 0-11 (ex.: 5 para maio vira 4)
-    const mesAjustado = mesSelecionado - 1;
-
-    // Ajusta o mês anterior considerando ano e mês selecionados
-    const dataAtual = new Date(anoSelecionado, mesAjustado, 1);
-    const dataAnterior = new Date(anoSelecionado, mesAjustado - 1, 1);
-    
-    const anoAtual = dataAtual.getFullYear();
-    const mesAtual = dataAtual.getMonth();
-
-    const anoAnterior = dataAnterior.getFullYear();
-    const mesAnterior = dataAnterior.getMonth();
-
-    const getLimitesDoMes = (ano, mes) => {
-        const primeiro = new Date(ano, mes, 1);
-        const ultimo = new Date(ano, mes + 1, 0, 23, 59, 59);
-        return [primeiro.toISOString(), ultimo.toISOString()];
-    };
-
-    const [inicioAtual, fimAtual] = getLimitesDoMes(anoAtual, mesAtual);
-    const [inicioAnterior, fimAnterior] = getLimitesDoMes(anoAnterior, mesAnterior);
-
-    const { data: vendasAtual, error: erroAtual } = await supabase
-        .from('compras')
-        .select('created_at, valor_total')
-        .gte('created_at', inicioAtual)
-        .lte('created_at', fimAtual)
-        .eq('adminid', adminid)
-        .neq('status', 'Cancelada'); // <- Adicionado filtro
-
-    if (erroAtual) throw erroAtual;
-
-    const { data: vendasAnterior, error: erroAnterior } = await supabase
-        .from('compras')
-        .select('created_at, valor_total')
-        .gte('created_at', inicioAnterior)
-        .lte('created_at', fimAnterior)
-        .eq('adminid', adminid)
-        .neq('status', 'Cancelada'); // <- Adicionado filtro
-
-    if (erroAnterior) throw erroAnterior;
-
-    const agruparPorDia = (vendas, ano, mes) => {
-        const diasNoMes = new Date(ano, mes + 1, 0).getDate();
-        const totaisPorDia = Array(diasNoMes).fill(0);
-        for (const venda of vendas) {
-            const data = new Date(venda.created_at);
-            const dia = data.getDate(); // 1 a 31
-            totaisPorDia[dia - 1] += venda.valor_total;
-        }
-        return totaisPorDia;
-    };
-
-    const vendasPorDiaAtual = agruparPorDia(vendasAtual, anoAtual, mesAtual);
-    const vendasPorDiaAnterior = agruparPorDia(vendasAnterior, anoAnterior, mesAnterior);
-
-    // Gera os rótulos de 1 até o maior número de dias entre os dois meses
-    const diasNoMesSelecionado = new Date(anoSelecionado, mesSelecionado, 0).getDate();
-    const labels = Array.from({ length: diasNoMesSelecionado }, (_, i) => `Dia ${i + 1}`);
-
-    while (vendasPorDiaAtual.length < diasNoMesSelecionado) vendasPorDiaAtual.push(0);
-    while (vendasPorDiaAnterior.length < diasNoMesSelecionado) vendasPorDiaAnterior.push(0);
-
-    return [
-        vendasPorDiaAnterior, // índice 0: mês anterior
-        vendasPorDiaAtual,    // índice 1: mês selecionado
-        labels                // índice 2: labels do gráfico
-    ];
+    const { data, error } = await supabase.rpc('get_comparativo_compras_por_dia', {
+        admin_id: adminid,
+        ano: anoSelecionado,
+        mes: mesSelecionado,
+    });
+    if (error) {
+        console.error('Erro ao buscar comparativo de compras por dia:', error);
+        throw error;
+    }
+    // data vem como array de objetos { dia, compras_mes_anterior, compras_mes_atual }
+    // Transformamos para arrays separados e labels para gráfico
+    const comprasPorDiaAnterior = [];
+    const comprasPorDiaAtual = [];
+    const labels = [];
+    data.forEach(({ dia, compras_mes_anterior, compras_mes_atual }) => {
+        comprasPorDiaAnterior.push(Number(compras_mes_anterior));
+        comprasPorDiaAtual.push(Number(compras_mes_atual));
+        labels.push(`Dia ${dia}`);
+    });
+    return [comprasPorDiaAnterior, comprasPorDiaAtual, labels];
 };
 
 
 export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSelecionado) => {
-    const mesAjustado = mesSelecionado - 1; // Ajusta 1-12 para 0-11
-    const primeiroDia = new Date(anoSelecionado, mesAjustado, 1).toISOString();
-    const ultimoDia = new Date(anoSelecionado, mesAjustado + 1, 0, 23, 59, 59).toISOString();
+    // const mesAjustado = mesSelecionado - 1; // Ajusta 1-12 para 0-11
+    // const primeiroDia = new Date(anoSelecionado, mesAjustado, 1).toISOString();
+    // const ultimoDia = new Date(anoSelecionado, mesAjustado + 1, 0, 23, 59, 59).toISOString();
 
-    // Buscar produtos
-    const { data: produtos, error: errorProdutos } = await supabase
-        .from('produtos')
-        .select('id, name, category, stock, Type_sales')
-        .eq('adminid', adminid);
+    // // Buscar produtos
+    // const { data: produtos, error: errorProdutos } = await supabase
+    //     .from('produtos')
+    //     .select('id, name, category, stock, Type_sales')
+    //     .eq('adminid', adminid);
 
-    if (errorProdutos) throw errorProdutos;
+    // if (errorProdutos) throw errorProdutos;
 
-    // Buscar itens de venda no período
-    const { data: itensVenda, error: errorItens } = await supabase
-        .from('itens_venda')
-        .select('produto_id, valor_total, quantidade, created_at')
-        .gte('created_at', primeiroDia)
-        .lte('created_at', ultimoDia);
+    // // Buscar itens de venda no período
+    // const { data: itensVenda, error: errorItens } = await supabase
+    //     .from('itens_venda')
+    //     .select('produto_id, valor_total, quantidade, created_at')
+    //     .gte('created_at', primeiroDia)
+    //     .lte('created_at', ultimoDia);
 
-    if (errorItens) throw errorItens;
+    // if (errorItens) throw errorItens;
 
-    // Agrupar totais por produto
-    const mapaTotais = {};
+    // // Agrupar totais por produto
+    // const mapaTotais = {};
 
-    for (const item of itensVenda) {
-        const id = item.produto_id;
-        if (!mapaTotais[id]) {
-        mapaTotais[id] = {
-            valor_total: 0,
-            quantidade: 0,
-        };
-        }
-        mapaTotais[id].valor_total += item.valor_total;
-        mapaTotais[id].quantidade += item.quantidade;
-    }
+    // for (const item of itensVenda) {
+    //     const id = item.produto_id;
+    //     if (!mapaTotais[id]) {
+    //     mapaTotais[id] = {
+    //         valor_total: 0,
+    //         quantidade: 0,
+    //     };
+    //     }
+    //     mapaTotais[id].valor_total += item.valor_total;
+    //     mapaTotais[id].quantidade += item.quantidade;
+    // }
 
-    // Montar resultado final
-    const resultado = produtos
-        .filter(p => mapaTotais[p.id])
-        .map(p => ({
-            id: p.id,
-            Type_sales: p.Type_sales,
-            name: p.name,
-            category: p.category,
-            stock: p.stock,
-            valor_total: mapaTotais[p.id].valor_total,
-            quantidade: mapaTotais[p.id].quantidade,
-        }));
+    // // Montar resultado final
+    // const resultado = produtos
+    //     .filter(p => mapaTotais[p.id])
+    //     .map(p => ({
+    //         id: p.id,
+    //         Type_sales: p.Type_sales,
+    //         name: p.name,
+    //         category: p.category,
+    //         stock: p.stock,
+    //         valor_total: mapaTotais[p.id].valor_total,
+    //         quantidade: mapaTotais[p.id].quantidade,
+    //     }));
 
-    return resultado;
+    // return resultado;
+
+    const { data, error } = await supabase
+    .rpc('get_resumo_produtos_por_periodo', {
+        p_adminid: adminid,
+        p_ano: anoSelecionado,
+        p_mes: mesSelecionado
+    });
+
+    if (error) throw error;
+
+    return data;
+
 };
