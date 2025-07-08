@@ -69,6 +69,7 @@ export const getTotalParcelasVencimentoHoje = async (adminid, tabela) => {
     });
     if (error) throw error;
     // data já traz o total somado das parcelas
+    console.log(data);
     return data;
 }
 
@@ -143,6 +144,7 @@ export const getResumoCompras = async (adminid) => {
     if (error) throw error;
     // A função RPC retorna um array com um único objeto, pegamos o primeiro elemento
     const resumo = data[0];
+    console.log(resumo);
     // Retorna um array de objetos, cada um com o nome do resumo e o respectivo valor obtido
     return [
             { name: 'Total', value: resumo.total },                              // Total de vendas no mês
@@ -238,57 +240,6 @@ export const getComparativoComprasPorDia = async (adminid, anoSelecionado, mesSe
 
 
 export const getResumoProdutosPorPeriodo = async (adminid, anoSelecionado, mesSelecionado) => {
-    // const mesAjustado = mesSelecionado - 1; // Ajusta 1-12 para 0-11
-    // const primeiroDia = new Date(anoSelecionado, mesAjustado, 1).toISOString();
-    // const ultimoDia = new Date(anoSelecionado, mesAjustado + 1, 0, 23, 59, 59).toISOString();
-
-    // // Buscar produtos
-    // const { data: produtos, error: errorProdutos } = await supabase
-    //     .from('produtos')
-    //     .select('id, name, category, stock, Type_sales')
-    //     .eq('adminid', adminid);
-
-    // if (errorProdutos) throw errorProdutos;
-
-    // // Buscar itens de venda no período
-    // const { data: itensVenda, error: errorItens } = await supabase
-    //     .from('itens_venda')
-    //     .select('produto_id, valor_total, quantidade, created_at')
-    //     .gte('created_at', primeiroDia)
-    //     .lte('created_at', ultimoDia);
-
-    // if (errorItens) throw errorItens;
-
-    // // Agrupar totais por produto
-    // const mapaTotais = {};
-
-    // for (const item of itensVenda) {
-    //     const id = item.produto_id;
-    //     if (!mapaTotais[id]) {
-    //     mapaTotais[id] = {
-    //         valor_total: 0,
-    //         quantidade: 0,
-    //     };
-    //     }
-    //     mapaTotais[id].valor_total += item.valor_total;
-    //     mapaTotais[id].quantidade += item.quantidade;
-    // }
-
-    // // Montar resultado final
-    // const resultado = produtos
-    //     .filter(p => mapaTotais[p.id])
-    //     .map(p => ({
-    //         id: p.id,
-    //         Type_sales: p.Type_sales,
-    //         name: p.name,
-    //         category: p.category,
-    //         stock: p.stock,
-    //         valor_total: mapaTotais[p.id].valor_total,
-    //         quantidade: mapaTotais[p.id].quantidade,
-    //     }));
-
-    // return resultado;
-
     const { data, error } = await supabase
     .rpc('get_resumo_produtos_por_periodo', {
         p_adminid: adminid,
