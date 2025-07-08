@@ -40,6 +40,13 @@ export const Container = styled.section`
                 font-size: 2.2rem;
                 color: #007E2A;
             }
+
+            p {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #007E2A;
+                padding: 2px 20px 0;
+            }
         }
 
         .filter {

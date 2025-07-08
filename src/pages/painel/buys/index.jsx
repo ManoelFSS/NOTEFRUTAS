@@ -35,6 +35,7 @@ import { useAuthContext } from "../../../context/AuthContext"
 import { useVendas } from "../../../context/VendasContext";
 import { useBuys } from "../../../context/BuysContext";
 import { useFornecedores } from "../../../context/FornecedoresContext";
+import { useDashboard } from "../../../context/DashboardContext";
 //image
 import Perfil from "../../../assets/perfil.png"
 // rota aninhada
@@ -42,6 +43,7 @@ import Perfil from "../../../assets/perfil.png"
 
 const Buys = () => {;
 
+    const {comparativoCompras} = useDashboard();
     const { setIdFornecedor, caunterCompras} = useFornecedores();
 
     const { 
@@ -156,6 +158,8 @@ const Buys = () => {;
         setIdCompra(id);
         setCloseBtn(true);
     }
+
+    console.log(compras)
         
 
 
@@ -165,6 +169,13 @@ const Buys = () => {;
                 <div className="title">
                     <GiShoppingCart className="icon" />
                     <Title $text="Compras" $fontSize={"1.5rem"}  $cor={"var(  --color-text-primary )"} />
+                    <p>
+                        {compras
+                            ?.filter(item => !item.status !== "Cancelada") // Remove canceladas
+                            .reduce((money, item) => money + item.valor_total, 0) // Soma só os válidos
+                            .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                        }
+                    </p>
                 </div>
                 <div className="filter">
                     <Select     

@@ -40,6 +40,28 @@ export const Container = styled.section`
                 font-size: 2.2rem;
                 color: #007E2A;
             }
+
+            p {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color:rgb(255, 0, 0);
+                padding: 2px 20px 0;
+            }
+        }
+
+        .total-compras {
+            display: flex;
+            align-items: center;
+            width: 130px;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+            
+            p {
+                font-size: 1rem;
+                color: red;
+                font-weight: 700;
+            }
         }
 
         .filter {
