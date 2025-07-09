@@ -132,6 +132,8 @@ const Sales = () => {;
     }
 
     useEffect(() => {
+
+        if(!confirmCancelaVenda) return
         if(!idVenda) return
         
         const cancelarVenda = async () => {
@@ -140,6 +142,7 @@ const Sales = () => {;
             setMessege(null);
             setIdVenda(null);
             setCloseBtn(false);
+            setConfirmCancelaVenda(false);
         }
         cancelarVenda(); 
 
@@ -219,7 +222,7 @@ const Sales = () => {;
                                 return contemTermo;
                             })
                             .map((item, index) => (
-                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) ? "rgba(175, 188, 179, 0.72)" : "" }}>
+                                <ul className="body-list" key={index} style={{ backgroundColor: item.created_at.split("T")[0] === new Date().toLocaleDateString('sv-SE', { timeZone: 'America/Sao_Paulo' }) ? "rgba(175, 188, 179, 0.8)" : "" }}>
                                     <li><img src={item.url_image ? item.url_image : Perfil} alt="avatar" /></li>
                                     <li>{item.name}</li>
                                     <li>{item.phone}</li>
@@ -245,7 +248,7 @@ const Sales = () => {;
                                         />
                                         <HiOutlineInformationCircle 
                                             className="icon" 
-                                            style={{ color: "rgb(53, 53, 53)" }} 
+                                            // style={{ hover: "rgb(53, 53, 53)" }} 
                                             onClick={() => {
                                                 setIdVenda(item.id);
                                                 setVendaModalDetails(true);
@@ -253,7 +256,7 @@ const Sales = () => {;
                                         />
                                         <TbCancel  
                                             className="icon" 
-                                            style={{ color: "rgb(224, 2, 2)" }} 
+                                            // style={{ ho: "rgb(224, 2, 2)" }} 
                                             onClick={() => {
                                                 item.status !== "Cancelada" ? hendleCancelaVenda(item.id) : setMessege({title: "Atenção", message: "Essa venda ja foi cancelada!"});
                                                 item.status === "Cancelada" && setCloseBtn(false)
@@ -278,7 +281,7 @@ const Sales = () => {;
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege setIdVenda={setIdVenda} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaVenda(!confirmCancelaVenda)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege setIdVenda={setIdVenda} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaVenda(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
             { vendaModalDetails && 
                 <VendasDetails  
                     setVendaModalDetails={setVendaModalDetails} 

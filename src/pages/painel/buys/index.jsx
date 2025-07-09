@@ -139,8 +139,10 @@ const Buys = () => {;
     }
 
     useEffect(() => {
+
+        if(!confirmCancelaCompra) return
         if(!idCompra) return
-        console.log(idCompra)
+
         
         const cancelarCompra = async () => {
             await editarCompra(idCompra, "Cancelada");
@@ -148,6 +150,7 @@ const Buys = () => {;
             setMessege(null);
             setIdCompra(null);
             setCloseBtn(false);
+            setConfirmCancelaCompra(false);
         }
         cancelarCompra(); 
 
@@ -286,7 +289,7 @@ const Buys = () => {;
                 </ContainerTable>
 
             {closeModal && <ProductForm  $color={"#fff"} setCloseModal={setCloseModal} btnName={btnName} setBtnName={setBtnName} />}
-            { messege && <Messege setIdVenda={setIdCompra} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaCompra(!confirmCancelaCompra)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
+            { messege && <Messege setIdVenda={setIdCompra} setTextBtn={setTextBtn} $buttonText={textBtn} button={closeBtn && <BtnNavigate $text="Sim" onClick={() => setConfirmCancelaCompra(true)} />} $title={messege.title} $text={messege.message} $setMessege={setMessege} /> }
             { compraModalDetails && 
                 <CompraDetails  
                     setCompraModalDetails={setCompraModalDetails} 

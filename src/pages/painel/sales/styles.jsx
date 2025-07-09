@@ -367,46 +367,54 @@ export const ContainerTable = styled.section`
                 .icons {
                     width: 170px;
                     justify-content: center;
-                    gap: 20px;
+                    gap: 10px;
                     
                     .icon {
-                        width: 25px;
-                        height: 25px;
+                        width: 35px;
+                        height: 35px;
                         cursor: pointer;
                         trasition: color 0.3s ease;
-                        padding: 2px;
+                        padding: 6px;
                         border-radius: 4px;
-                        background: rgb(255, 255, 255); /* fundo semi-transparente */
+                        background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
                         backdrop-filter: blur(10px); /* desfoque no fundo */
+                        border: 1px solid rgb(255, 255, 255); /* borda brilhante */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
-                        border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
-                        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.45); /* sombra suave */
-                        
-                        &:hover {
-                            transform: scale(1.1);
-                            padding: 3px;
-                            border-radius: 4px;
-                        }
+                        box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, 0.4), inset 1px 2px 10px 0 rgba(255, 255, 255, 0.8); /* sombra suave */
+                    }
+
+                    .icon:nth-child(2) {
+                        color:rgb(0, 0, 0);
+                    }
+
+                    .icon:nth-child(2) {
+                        color:rgb(21, 0, 255);
                     }
                     
+                    .icon:nth-child(3) {
+                        color:rgb(0, 0, 0);
+                    }
+
+                    .icon:nth-child(3) {
+                        color:rgb(255, 0, 0);
+                    }
+
                     .icon-whatsapp {
-                        width: 25px;
-                        height: 25px;
+                        width: 35px;
+                        height: 35px;
                         cursor: pointer;
                         trasition: color 0.3s ease;
-                        padding: 2px;
-                        color: var(  --color-bg-btn-primary );
+                        color:rgb(0, 133, 44);
+                        padding: 6px;
                         border-radius: 4px;
-                        background: rgb(255, 255, 255); /* fundo semi-transparente */
+                        background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
                         backdrop-filter: blur(10px); /* desfoque no fundo */
+                        border: 1px solid rgb(255, 255, 255); /* borda brilhante */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
-                        border: 1px solid rgba(255, 255, 255, 0.3); /* borda brilhante */
-                        box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.45); /* sombra suave */
-                        
+                        box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, 0.4), inset 1px 2px 10px 0 rgba(255, 255, 255, 0.8); /* sombra suave */
+
                         &:hover {
-                            transform: scale(1.1);
-                            padding: 3px;
-                            border-radius: 4px;
+                            color:rgb(0, 133, 44);
                         }
                     }
                 }
