@@ -266,12 +266,15 @@ export const Container = styled.div`
         width: 100%;
 
         .close-icon {
-            font-size: 1.2rem;
-            color: var( --color-bord-btn-primary );
+            font-size: 1.5rem;
+            color: #D30505;
             cursor: pointer;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.46);
+            border-radius: 4px;
+            padding: 3px;
 
             &:hover {
-                color: var(  --color-bg-btn-hover );
+                color:rgb(255, 0, 0);
             }
         }
     }

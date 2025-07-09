@@ -209,7 +209,7 @@ const CompraDetails = ({setCompraModalDetails, userId, itemsPorPage, paginacao, 
                 { vendaFilter?.parcelas_compra?.length > 0 &&
                     <div className="datails-payment">
                         <h5>Parcelas</h5>
-                        <ul style={{ backgroundColor:"rgb(232, 148, 13)"}} className="payment-header" >
+                        <ul style={{ backgroundColor:" #FE7E01"}} className="payment-header" >
                             <li style={{ width: "90px" }}>
                                 <p>Data Venc</p>
                             </li>

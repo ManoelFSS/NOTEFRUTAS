@@ -22,7 +22,7 @@ export const Container_datails = styled.div`
     }
     
     &::-webkit-scrollbar-thumb {
-        background: #FF9D00;
+        background: #FE7E01;
     }
 
     @media (max-width: 68px) {
@@ -281,12 +281,12 @@ export const Container_datails = styled.div`
                 font-size: 1.7rem;
                 cursor: pointer;
                 transition: color 0.3s ease;
-                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
+                box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.56);
                 border-radius: 4px;
-                padding: 2px;
+                padding: 3px;
 
                 &:hover {
-                    color: #FF9D00;
+                    color: #FE7E01;
                 }
             }
 

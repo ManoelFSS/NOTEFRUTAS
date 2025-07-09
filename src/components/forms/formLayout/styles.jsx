@@ -35,11 +35,12 @@ export const Container = styled.div`
         padding: 0px;
 
         .icon {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             position: absolute;
             top: 15px;
             left: 20px;
+            color: #007E2A;
         }
     }
 

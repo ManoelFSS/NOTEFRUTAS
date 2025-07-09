@@ -11,6 +11,7 @@ import Messege from "../../../messege"
 import { FaWindowClose } from "react-icons/fa";
 import { MdDeleteForever } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa6";
+import { IoBagHandleSharp } from "react-icons/io5";
 // context
 import { useClientes } from "../../../../context/ClientesContext"
 import { useProduct } from "../../../../context/ProductContext"
@@ -275,7 +276,7 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
                         />
                     </div>
                     <section className="logo">
-                        <FaCartPlus className="icon" />
+                        <IoBagHandleSharp className="icon" />
                         <Title $text="VENDA"  $cor={"var(  --color-text-primary )"}  />
                     </section>
                     <section className="box">
