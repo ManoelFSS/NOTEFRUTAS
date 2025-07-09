@@ -62,9 +62,12 @@ export const Container_datails = styled.div`
                 right: 0;
                 top: -3px;
                 cursor: pointer;
-                font-size: 1.2rem;
+                font-size: 1.5rem;
                 transition: color 0.3s ease;
                 color:rgb(250, 61, 61);
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.46);
+                border-radius: 4px;
+                padding: 3px;
 
                 &:hover {
                     color:rgb(209, 0, 0);

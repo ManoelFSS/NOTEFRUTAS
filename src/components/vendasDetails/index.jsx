@@ -130,7 +130,7 @@ const VendasDetails = ({setVendaModalDetails, userId, itemsPorPage, paginacao, a
         <Container_datails>
             <section ref={divRef} className="datails-container">
                 <div className="close-container">
-                    <h1>JOSIFRUTAS</h1>
+                    <h1>CEASA DIGITAL</h1>
                     <FaWindowClose className="close" onClick={() => {setVendaModalDetails(false), setIdVenda(null)}} />
                 </div>
                 <h2>Detalhes da venda</h2>

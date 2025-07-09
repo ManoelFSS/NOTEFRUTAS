@@ -85,7 +85,7 @@ const  FornecedorForm = ({setCloseModal, btnName, setBtnName}) => {
     return (
         <Container>
             <div className="form-area">
-                <FormLayout state={estadoFornecedor}>
+                <FormLayout state={estadoFornecedor} $color={"#fff"} >
                     <div className="close">
                         <FaWindowClose className="close-icon" 
                             onClick={() => {
