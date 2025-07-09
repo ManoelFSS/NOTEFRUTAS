@@ -98,7 +98,7 @@ const  CompraForm = ({setModalCompras, btnName, setBtnName, $color}) => {
 
 
     function adicionarProduto(produto) {
-        const jaExiste = itensCompra.some(item => item.produtoId === produto.id);
+        const jaExiste = itensCompra.some(item => item.produto_id === produto.id);
         if (jaExiste) {
             alert("Produto já adicionado à comprar!");
             return;

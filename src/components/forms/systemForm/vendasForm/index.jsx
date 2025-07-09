@@ -86,7 +86,8 @@ const  VendasForm = ({setModalVendas, btnName, setBtnName, $color}) => {
 
 
     function adicionarProduto(produto) {
-        const jaExiste = itensVenda.some(item => item.produtoId === produto.id);
+        console.log(produto);
+        const jaExiste = itensVenda.some(item => item.produto_id === produto.id);
         if (jaExiste) {
             alert("Produto já adicionado à venda!");
             return;
