@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'Seu Nome do App',
         short_name: 'NomeApp',
         description: 'Descrição do seu app',
-        theme_color: ' #FE7E01',
+        theme_color: 'rgb(0, 0, 0)',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
