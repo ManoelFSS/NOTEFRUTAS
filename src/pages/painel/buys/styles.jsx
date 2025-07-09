@@ -393,7 +393,7 @@ export const ContainerTable = styled.section`
                         trasition: color 0.3s ease;
                         padding: 6px;
                         border-radius: 4px;
-                        background: rgba(255, 255, 255, 0.7); /* fundo semi-transparente */
+                        background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
                         backdrop-filter: blur(10px); /* desfoque no fundo */
                         border: 1px solid rgb(255, 255, 255); /* borda brilhante */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
@@ -424,7 +424,7 @@ export const ContainerTable = styled.section`
                         color:rgb(0, 133, 44);
                         padding: 6px;
                         border-radius: 4px;
-                        background: rgba(255, 255, 255, 0.7); /* fundo semi-transparente */
+                        background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
                         backdrop-filter: blur(10px); /* desfoque no fundo */
                         border: 1px solid rgb(255, 255, 255); /* borda brilhante */
                         -webkit-backdrop-filter: blur(10px); /* Safari */
