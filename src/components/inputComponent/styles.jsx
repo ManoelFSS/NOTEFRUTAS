@@ -3,12 +3,12 @@ import styled from "styled-components";
 export const Input = styled.input`
     height: 35px;
     width: 100%;
-    background-color: #fff;
+    background-color:rgb(255, 255, 255);
     padding-left: 10px;
     border-radius: 5px;
     border: none;
     color: var( --color-text-primary );
-    box-shadow: inset 1px 2px 5px rgba(0, 0, 0, 0.26);
+    box-shadow: inset 1px 2px 8px rgb(143, 143, 143);
     border: 1px solid #ccc;
     cursor: pointer;
     font-size: 1rem;
@@ -77,38 +77,54 @@ export const Container = styled.div`
 
     .info-balloon {
         display: none;
-        width: 280px;
+        width: 310px;
+        gap: 6px;
         flex-direction: column;
         position: absolute;
-        bottom: 68px;
+        bottom: 70px;
         left: 0px;
         cursor: pointer;
         trasition: color 0.5s ease;
         color: #000;
         background-color:rgb(255, 255, 255);
+        backdrop-filter: blur(10px);
         border-radius: 6px;
-        padding: 20px 20px;
-        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.38);
+        padding: 20px 16px;
+        box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.5);
 
         h4 {
             text-align: center;
             color: var( --color-icon-hover );
             padding-bottom: 5px;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 900;
         }
 
-        span {
+        p {
             display: flex;
             align-items: center;
             height: 20px;
             width: 100%;
             gap: 10px;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: #000;
             word-spacing: 4px;
             text-transform: capitalize;
+            padding: 4px 0;
+
+            span {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 20px;
+                height: 20px;
+                border-radius: 4px;
+                color: #fff;
+                background-color: #FE7E01;
+                box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+                padding: 2px;
+            }
 
             .check-required {
                 color:  rgb(0, 0, 0);
@@ -127,8 +143,8 @@ export const Container = styled.div`
         &::after {
             content: "";
             position: absolute;
-            top: 100%;
-            left: 25%;
+            top: 99%;
+            left: 23%;
             margin-left: -10px;
             border-width: 10px;
             border-style: solid;

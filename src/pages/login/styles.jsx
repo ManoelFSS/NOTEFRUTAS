@@ -18,16 +18,25 @@ export const Container_login = styled.section`
         min-width: 280px;
         display: flex;
         justify-content: center;
+        background:rgb(255, 255, 255);
+        box-shadow: inset -2px 2px 20px rgba(0, 0, 0, 0.47);
         align-items: center;
         text-align: center;
         overflow: hidden;
         
         .box-container {
-            width: 100%;
+            width: 90%;
             margin: auto;
+            padding: 10px;
 
             img {
-                width: 150px;
+                width: 140px;
+                padding: 10px;
+                background-color:rgba(198, 205, 199, 0.95);
+                box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.7);
+                margin-bottom: 10px;
+                border-radius: 5px;
+
                 @media (min-width: 1550px) {
                     width: 25vh;
                 }
@@ -42,16 +51,17 @@ export const Container_login = styled.section`
             }
 
             h1 {
-                font-size: 22px;
+                font-size: 1.5rem;
                 font-weight: 900;
                 color: var( --color-title-primary );
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
                 @media (min-width: 1550px) {
                     font-size: 4.5vh;
                 }
             }
             
             p {
-                font-size: 16px;
+                font-size: 1rem;
                 @media (min-width: 1550px) {
                     font-size: 2.5vh;
                 }
@@ -62,13 +72,23 @@ export const Container_login = styled.section`
                 justify-content: center;
                 gap:2vh ;
                 font-size: 30px;
-                padding: 10px 0px;
-                
+                padding: 20px 0px;
+
                 .whatsapp,
                 .facebook,
                 .instagram {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 5px;
                     cursor: pointer;
+                    padding: 5px;
                     transition: all 0.3s;
+                    background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
+                    backdrop-filter: blur(10px); /* desfoque no fundo */
+                    border: 1px solid rgb(255, 255, 255); /* borda brilhante */
+                    -webkit-backdrop-filter: blur(10px); /* Safari */
+                    box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, 0.4), inset 1px 2px 10px 0 rgba(255, 255, 255, 0.8); /* sombra suave */
+                
                     
                     &:hover {
                         transform: scale(1.1);
@@ -130,7 +150,7 @@ export const Container_login = styled.section`
             display: flex;
             width: 100%;
             height: 100svh;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.3);
             overflow: auto;
             padding: 20px 10px 40px;
             position: relative;

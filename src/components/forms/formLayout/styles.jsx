@@ -3,8 +3,12 @@ import styled from "styled-components";
 export const Container = styled.div`
     min-width: 350px;
     padding: 20px 20px 30px 20px;
-    background-color: rgba(255, 255, 255, 0.69);
-    box-shadow: 1px 2px 7px rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px); /* desfoque no fundo */
+    border: 1px solid rgba(255, 255, 255, 0.5); /* borda brilhante */
+    -webkit-backdrop-filter: blur(10px); /* Safari */
+    box-shadow: 1px 2px 5px 0 rgba(255, 255, 255, 0.5), inset 1px 2px 100px 0 rgba(255, 255, 255, 0.09); /* sombra suave */
+
     border-radius: 6px;
     position: relative;
     margin: auto;
