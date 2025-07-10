@@ -20,11 +20,6 @@ const Login = () => {
                     <img src={Logo} alt="logo"/>
                     <h1>CEASA DIGITAL</h1>
                     <p>Tudo que você precisa.</p>
-                    <div className="icons">
-                        <FaWhatsapp className="whatsapp" onClick={() => window.open('https://wa.me/5574935050160', '_blank')} />
-                        {/* <FaFacebook className="facebook" onClick={() => window.open('https://www.facebook.com/manoel.fernando.50', '_blank')} /> */}
-                        <FaInstagram className="instagram" onClick={() => window.open('https://www.instagram.com/manoelfernandoplk/', '_blank')} />
-                    </div>
                 </div>
             </section>
             <section className="box-right">

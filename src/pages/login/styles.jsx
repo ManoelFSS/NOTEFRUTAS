@@ -27,7 +27,7 @@ export const Container_login = styled.section`
         .box-container {
             width: 90%;
             margin: auto;
-            padding: 10px;
+            padding: 20px;
 
             img {
                 width: 140px;
