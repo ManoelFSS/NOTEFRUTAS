@@ -18,24 +18,17 @@ export const Container_login = styled.section`
         min-width: 280px;
         display: flex;
         justify-content: center;
-        background:rgb(255, 255, 255);
-        box-shadow: inset -2px 2px 20px rgba(0, 0, 0, 0.47);
+        background-color:rgba(255, 255, 255, 0.95);
         align-items: center;
         text-align: center;
         overflow: hidden;
         
         .box-container {
-            width: 90%;
+            width: 100%;
             margin: auto;
-            padding: 20px;
 
             img {
-                width: 140px;
-                padding: 10px;
-                background-color:rgba(198, 205, 199, 0.95);
-                box-shadow: 1px 2px 8px 0 rgba(0, 0, 0, 0.7);
-                margin-bottom: 10px;
-                border-radius: 5px;
+                width: 150px;
 
                 @media (min-width: 1550px) {
                     width: 25vh;
@@ -51,10 +44,9 @@ export const Container_login = styled.section`
             }
 
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.7rem;
                 font-weight: 900;
-                color: var( --color-title-primary );
-                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+                color: #FE7E01;
                 @media (min-width: 1550px) {
                     font-size: 4.5vh;
                 }
@@ -65,52 +57,16 @@ export const Container_login = styled.section`
                 @media (min-width: 1550px) {
                     font-size: 2.5vh;
                 }
-            }
-            
-            .icons {
+            }  
+
+            @media (max-width: 320px) {
                 display: flex;
                 justify-content: center;
-                gap:2vh ;
-                font-size: 30px;
-                padding: 20px 0px;
+                align-items: center;
 
-                .whatsapp,
-                .facebook,
-                .instagram {
-                    width: 40px;
-                    height: 40px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    padding: 5px;
-                    transition: all 0.3s;
-                    background: rgba(255, 255, 255, 0); /* fundo semi-transparente */
-                    backdrop-filter: blur(10px); /* desfoque no fundo */
-                    border: 1px solid rgb(255, 255, 255); /* borda brilhante */
-                    -webkit-backdrop-filter: blur(10px); /* Safari */
-                    box-shadow: 1px 2px 6px 0 rgba(0, 0, 0, 0.4), inset 1px 2px 10px 0 rgba(255, 255, 255, 0.8); /* sombra suave */
-                
-                    
-                    &:hover {
-                        transform: scale(1.1);
-                    }
+                h1 {
+                    font-size: 1.4rem;
                 }
-                
-                .whatsapp {
-                    color: #25d366;
-                }
-                
-                .facebook {
-                    color: #4267b2;
-                }
-                
-                .instagram {
-                    color: #e1306c;
-                }
-                
-                @media (min-width: 1550px) {
-                    font-size: 4.5vh;
-                }
-                
             }
         }
         

@@ -5,7 +5,9 @@ import Loading from "../loading"
 const Loadingpage = () => {
     return (
         <All_loading> 
-            <img src={Logo} alt="logo" />
+            <section className="logo-area">
+                <img src={Logo} alt="logo" />
+            </section>
             <Loading /> 
         </All_loading>
     )

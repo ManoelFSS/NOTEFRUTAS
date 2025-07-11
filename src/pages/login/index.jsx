@@ -18,8 +18,10 @@ const Login = () => {
             <section className="box-left">
                 <div className="box-container">
                     <img src={Logo} alt="logo"/>
-                    <h1>CEASA DIGITAL</h1>
-                    <p>Tudo que você precisa.</p>
+                    <div>
+                        <h1>CEASA DIGITAL</h1>
+                        <p>Tudo que você precisa.</p>
+                    </div>
                 </div>
             </section>
             <section className="box-right">
