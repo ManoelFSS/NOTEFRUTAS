@@ -9,7 +9,7 @@
 
 [functions.update-parcelas-status]
 # Executa todo dia às 18:10 no horário de Brasília (21:10 UTC)
-schedule = "16 21 * * *"
+schedule = "31 21 * * *"
 
 
 
