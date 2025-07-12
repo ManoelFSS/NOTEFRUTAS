@@ -3,11 +3,13 @@ import { createContext, use, useContext, useEffect, useState } from "react";
 import { supabase } from '../services/supabase';
 // context
 import { useAuthContext } from "./AuthContext";
+import { useDashboard } from "./DashboardContext";
 
 const LogsContext = createContext();
 
 export const LogsProvider = ({ children }) => {
 
+    const { reloadDashboard, setReloadDashboard } = useDashboard();
     const { user, userId } = useAuthContext();
     console.log( 'userId:', userId);
 
@@ -146,6 +148,7 @@ export const LogsProvider = ({ children }) => {
                 (payload) => {
                     console.log('Novo log recebido:', payload);
                     setLogs((prev) => [payload.new, ...prev]);
+                    setReloadDashboard(!reloadDashboard);
                 }
             )
             .subscribe((status) => {
