@@ -174,7 +174,7 @@ const Buys = () => {;
                     <Title $text="Compras" $fontSize={"1.5rem"}  $cor={"var(  --color-text-primary )"} />
                     <p>
                         {compras
-                            ?.filter(item => !item.status !== "Cancelada") // Remove canceladas
+                            ?.filter(item => item.status !== "Cancelada") // Remove canceladas
                             .reduce((money, item) => money + item.valor_total, 0) // Soma só os válidos
                             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                         }

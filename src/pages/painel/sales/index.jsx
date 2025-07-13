@@ -156,6 +156,8 @@ const Sales = () => {;
 
     console.log(new Date().toISOString().split("T")[0])
 
+    console.log(vendas)
+
 
     return (
         <Container>
@@ -165,7 +167,7 @@ const Sales = () => {;
                     <Title $text="Vendas" $fontSize={"1.5rem"}  $cor={"var(  --color-text-primary )"} />
                     <p>
                         {vendas
-                            ?.filter(item => !item.status !== "Cancelada") // Remove canceladas
+                            ?.filter(item => item.status !== "Cancelada") // Remove canceladas
                             .reduce((money, item) => money + item.valor_total, 0) // Soma só os válidos
                             .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                         }

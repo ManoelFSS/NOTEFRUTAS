@@ -23,45 +23,80 @@ export const VendasProvider = ({ children }) => {
     const [idVenda, setIdVenda] = useState('');// controle do campo idClient
 
 
+    // const editarVenda = async (venda_id, status) => {
+    //     try {
+    //         const { data: vendaAtualizada, error: erroVenda } = await supabase
+    //             .from('vendas')
+    //             .update({ status })
+    //             .eq('id', venda_id);
+
+    //         if (erroVenda) {
+    //             console.error('[ERRO VENDA] Falha ao atualizar status da venda:', {
+    //                 venda_id,
+    //                 status,
+    //                 erro: erroVenda.message,
+    //             });
+    //             return;
+    //         }
+
+    //         console.log('[SUCESSO VENDA] Venda atualizada com sucesso:', vendaAtualizada);
+
+    //         if (status === "Cancelada") {
+    //             const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
+    //                 .from('parcelas_venda')
+    //                 .update({ status: "Cancelada" })
+    //                 .eq('venda_id', venda_id);
+
+    //             if (erroParcelas) {
+    //                 console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da venda:', {
+    //                     venda_id,
+    //                     erro: erroParcelas.message,
+    //                 });
+    //             } else {
+    //                 console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
+    //                 setReloadDashboard(!reloadDashboard); // reload dasboard
+    //             }
+
+    //             const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId,  idClient);
+    //             console.log("contarVendas", getNumeroDeVendasDoCliente);
+    //             if(getNumeroDeVendasDoCliente === 0) {
+    //                 await atualizarStatusParaDebitos(idClient, "Em Dias");
+    //                 console.log("cliente nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+    //             }
+    //         }
+
+    //     } catch (err) {
+    //         console.error('[ERRO GERAL] Erro inesperado ao editar a venda:', {
+    //             venda_id,
+    //             status,
+    //             erro: err.message,
+    //         });
+    //     }
+    // };
+
     const editarVenda = async (venda_id, status) => {
         try {
-            const { data: vendaAtualizada, error: erroVenda } = await supabase
-                .from('vendas')
-                .update({ status })
-                .eq('id', venda_id);
+            const { error } = await supabase.rpc('cancelar_venda', {
+                p_venda_id: venda_id,
+                p_status: status
+            });
 
-            if (erroVenda) {
-                console.error('[ERRO VENDA] Falha ao atualizar status da venda:', {
-                    venda_id,
-                    status,
-                    erro: erroVenda.message,
-                });
+            if (error) {
+                console.error('[ERRO RPC cancelar_venda]', error.message);
                 return;
             }
 
-            console.log('[SUCESSO VENDA] Venda atualizada com sucesso:', vendaAtualizada);
+            console.log('[SUCESSO] Venda atualizada com sucesso no banco');
 
             if (status === "Cancelada") {
-                const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
-                    .from('parcelas_venda')
-                    .update({ status: "Cancelada" })
-                    .eq('venda_id', venda_id);
+                setReloadDashboard(prev => !prev);
 
-                if (erroParcelas) {
-                    console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da venda:', {
-                        venda_id,
-                        erro: erroParcelas.message,
-                    });
-                } else {
-                    console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
-                    setReloadDashboard(!reloadDashboard); // reload dasboard
-                }
-
-                const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId,  idClient);
+                const getNumeroDeVendasDoCliente = await contarVendasPendentesOuAtrasadas(userId, idClient);
                 console.log("contarVendas", getNumeroDeVendasDoCliente);
-                if(getNumeroDeVendasDoCliente === 0) {
+
+                if (getNumeroDeVendasDoCliente === 0) {
                     await atualizarStatusParaDebitos(idClient, "Em Dias");
-                    console.log("cliente nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+                    console.log("cliente não tem nenhuma venda pendente, status Em Dias");
                 }
             }
 
@@ -73,6 +108,8 @@ export const VendasProvider = ({ children }) => {
             });
         }
     };
+
+
 
 
     // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas
