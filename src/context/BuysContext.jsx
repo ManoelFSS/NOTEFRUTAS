@@ -25,48 +25,84 @@ export const BuysProvider = ({ children }) => {
     const [idCompra, setIdCompra] = useState('');// controle do campo idClient
 
 
+    // const editarCompra = async (compra_id, status) => {
+    //     try {
+    //         const { data: compraAtualizada, error: erroCompra } = await supabase
+    //             .from('compras')
+    //             .update({ status })
+    //             .eq('id', compra_id);
+
+    //         if (erroCompra) {
+    //             console.error('[ERRO VENDA] Falha ao atualizar status da compra:', {
+    //                 compra_id,
+    //                 status,
+    //                 erro: erroCompra.message,
+    //             });
+    //             return;
+    //         }
+
+    //         console.log('[SUCESSO COMPRA] compra atualizada com sucesso:', compraAtualizada);
+
+    //         if (status === "Cancelada") {
+    //             const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
+    //                 .from('parcelas_compra')
+    //                 .update({ status: "Cancelada" })
+    //                 .eq('compra_id', compra_id);
+
+    //             if (erroParcelas) {
+    //                 console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da compra:', {
+    //                     compra_id,
+    //                     erro: erroParcelas.message,
+    //                 });
+    //             } else {
+    //                 console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
+    //                 setReloadDashboard(!reloadDashboard); // reload dasboard
+    //             }
+
+    //             console.log(userId)
+    //             console.log(idFornecedor)
+
+    //             const getNumeroDeVendasDoFornecedor = await contarCompraPendentesOuAtrasadas(userId, idFornecedor);
+    //             console.log("contarCompra", getNumeroDeVendasDoFornecedor);
+    //             if(getNumeroDeVendasDoFornecedor === 0) {
+    //                 await atualizarStatusParaDebitos(idFornecedor, "Nada a Pagar");
+    //                 console.log("Fornecedor nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+    //             }
+    //         }
+
+    //     } catch (err) {
+    //         console.error('[ERRO GERAL] Erro inesperado ao editar a compra:', {
+    //             compra_id,
+    //             status,
+    //             erro: err.message,
+    //         });
+    //     }
+    // };
+
+
     const editarCompra = async (compra_id, status) => {
         try {
-            const { data: compraAtualizada, error: erroCompra } = await supabase
-                .from('compras')
-                .update({ status })
-                .eq('id', compra_id);
+            const { error } = await supabase.rpc('cancelar_compra', {
+                p_compra_id: compra_id,
+                p_status: status
+            });
 
-            if (erroCompra) {
-                console.error('[ERRO VENDA] Falha ao atualizar status da compra:', {
-                    compra_id,
-                    status,
-                    erro: erroCompra.message,
-                });
+            if (error) {
+                console.error('[ERRO RPC cancelar_compra]', error.message);
                 return;
             }
 
-            console.log('[SUCESSO COMPRA] compra atualizada com sucesso:', compraAtualizada);
+            console.log('[SUCESSO] Compra atualizada com sucesso no banco');
 
             if (status === "Cancelada") {
-                const { data: parcelasAtualizadas, error: erroParcelas } = await supabase
-                    .from('parcelas_compra')
-                    .update({ status: "Cancelada" })
-                    .eq('compra_id', compra_id);
+                setReloadDashboard(prev => !prev);
 
-                if (erroParcelas) {
-                    console.error('[ERRO PARCELAS] Falha ao cancelar parcelas da compra:', {
-                        compra_id,
-                        erro: erroParcelas.message,
-                    });
-                } else {
-                    console.log('[SUCESSO PARCELAS] Parcelas canceladas com sucesso:', parcelasAtualizadas);
-                    setReloadDashboard(!reloadDashboard); // reload dasboard
-                }
+                const getNumeroDeComprasDoFornecedor = await contarCompraPendentesOuAtrasadas(userId, idFornecedor);
+                console.log("contarCompra", getNumeroDeComprasDoFornecedor);
 
-                console.log(userId)
-                console.log(idFornecedor)
-
-                const getNumeroDeVendasDoFornecedor = await contarCompraPendentesOuAtrasadas(userId, idFornecedor);
-                console.log("contarCompra", getNumeroDeVendasDoFornecedor);
-                if(getNumeroDeVendasDoFornecedor === 0) {
+                if (getNumeroDeComprasDoFornecedor === 0) {
                     await atualizarStatusParaDebitos(idFornecedor, "Nada a Pagar");
-                    console.log("Fornecedor nao tem nemhuma venda pendente, status Em Dias"); ///////////////////
+                    console.log("Fornecedor não tem nenhuma compra pendente, status Nada a Pagar");
                 }
             }
 
@@ -78,6 +114,8 @@ export const BuysProvider = ({ children }) => {
             });
         }
     };
+
+
 
 
    // Função principal para buscar vendas de um admin com paginação, incluindo pendentes ou atrasadas

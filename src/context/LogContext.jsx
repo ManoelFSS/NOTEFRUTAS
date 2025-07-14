@@ -11,7 +11,6 @@ export const LogsProvider = ({ children }) => {
 
     const { reloadDashboard, setReloadDashboard } = useDashboard();
     const { user, userId } = useAuthContext();
-    console.log( 'userId:', userId);
 
     const [logs, setLogs] = useState([]); // Lista de logs
     const [caunterLogs, setCaunterLogs] = useState(0); // Contador de logs
@@ -128,7 +127,7 @@ export const LogsProvider = ({ children }) => {
         }
 
         const userId = user.id;
-        console.log('Usuário logado:', userId);
+        // console.log('Usuário logado:', userId);
 
         // Carrega logs iniciais
         await buscarLogsPorPorAdmin(userId, 100, 1);
@@ -146,7 +145,7 @@ export const LogsProvider = ({ children }) => {
                     filter: `adminid=eq.${userId}`,
                 },
                 (payload) => {
-                    console.log('Novo log recebido:', payload);
+                    // console.log('Novo log recebido:', payload);
                     setLogs((prev) => [payload.new, ...prev]);
                     setReloadDashboard(prev => !prev);
                 }
