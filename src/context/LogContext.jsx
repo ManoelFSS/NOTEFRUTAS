@@ -148,7 +148,7 @@ export const LogsProvider = ({ children }) => {
                 (payload) => {
                     console.log('Novo log recebido:', payload);
                     setLogs((prev) => [payload.new, ...prev]);
-                    setReloadDashboard(!reloadDashboard);
+                    setReloadDashboard(prev => !prev);
                 }
             )
             .subscribe((status) => {
