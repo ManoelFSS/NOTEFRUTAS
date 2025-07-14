@@ -89,18 +89,30 @@ export const ProductProvider = ({ children }) => {
 
     const editarProduto = async (novosDados, id) => {
         setLoading(true);
-        console.log(novosDados.Type_sales);
+        // console.log(novosDados.Type_sales);
         console.log(novosDados.stock);
-        console.log(novosDados.peso_medio);
-        console.log(novosDados.peso_total);
+        // console.log(novosDados.peso_medio);
+        // console.log(novosDados.peso_total);
 
         try {
 
             if(novosDados.Type_sales === "kg") {
                 novosDados.peso_total = novosDados.stock * novosDados.peso_medio;
+                if(novosDados.stock === 0) {
+                    novosDados.status = "Indisponivel";
+                }else {
+                    novosDados.status = "Disponivel";
+                }
+                
             }else {
                 novosDados.peso_total = 0;
                 novosDados.peso_medio = 0;
+            }
+
+            if(novosDados.stock === 0) {
+                novosDados.status = "Indisponivel";
+            }else {
+                novosDados.status = "Disponivel";
             }
 
             const { error } = await supabase
@@ -109,7 +121,7 @@ export const ProductProvider = ({ children }) => {
             .eq('id', id);
 
             if (error) {
-            throw error;
+                throw error;
             }
 
             console.log('Produto atualizado com sucesso!');
