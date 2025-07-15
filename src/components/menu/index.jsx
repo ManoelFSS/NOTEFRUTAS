@@ -83,8 +83,8 @@ const Menu = ({$setToogleMenu}) => {
                         Relatórios
                     </li>
                 </Link> */}
-                <Link className="link" to="/settings" onClick={() => $setToogleMenu(false)}>
-                    <li className={activeLink === "/settings" ? "active" : ""}>
+                <Link className="link" to="/company" onClick={() => $setToogleMenu(false)}>
+                    <li className={activeLink === "/company" ? "active" : ""}>
                         <FaBuildingCircleExclamation className="icon" />
                         Empresa
                     </li>
