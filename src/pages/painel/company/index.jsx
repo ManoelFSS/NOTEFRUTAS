@@ -9,7 +9,7 @@ const Company = () => {
 
             <section className="container-company">
                 <div className="logo-company">
-                    <img src="http://localhost:5173/src/assets/carrinho.png" alt="logo" />
+                    <img src="https://ceasa-digital.netlify.app/assets/carrinho-CxB0h3LS.png" alt="logo" />
                 </div>
 
                 <div className="info-company">
