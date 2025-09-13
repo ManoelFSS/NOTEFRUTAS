@@ -84,7 +84,6 @@ const Buys = () => {;
         { name: "Valor de Entrada", icon: <GiReceiveMoney  className="icon" /> },
         { name: "Status", icon: <HiMiniStar className="icon" /> },
         { name: "Ação", icon: <PiHandTapFill className="icon" />}
-        
     ]
 
     const data = [

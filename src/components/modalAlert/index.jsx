@@ -1,4 +1,3 @@
-import { useState } from "react"
 import { Container } from "./styles"
 const  ModalAlert = ({$showModalAlert, $alert}) => {
 
